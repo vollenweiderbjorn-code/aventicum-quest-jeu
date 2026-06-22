@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aventicum Quest — Operatio Aquila</title>
+<title>Aventicum Quest Operatio Aquila</title>
 <!-- FIX11: Font preconnect + fallback -->
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,7 +24,7 @@ window._leafletFallback = false;
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" onerror="window._leafletFallback=true;window.L={map:function(){return{addLayer:function(){},setView:function(){},fitBounds:function(){},invalidateSize:function(){},on:function(){},remove:function(){}};},tileLayer:function(){return{addTo:function(){}};},marker:function(){return{addTo:function(){},bindPopup:function(){return{};},setLatLng:function(){},remove:function(){}};},divIcon:function(){return{};},latLng:function(a,b){return[a,b];},latLngBounds:function(a){return{pad:function(){return a;}};},polyline:function(){return{addTo:function(){},remove:function(){}};},control:{zoom:function(){return{addTo:function(){}};}}};console.warn('Leaflet CDN unavailable, using fallback')"></script>
 <style>
-/* ═══ AVENTICUM QUEST — WEB APP DESIGN ═══ */
+/* ═══ AVENTICUM QUEST WEB APP DESIGN ═══ */
 :root {
   /* ── TERRAIN palette ── */
   --bg: #F5F0E8;
@@ -34,7 +34,7 @@ window._leafletFallback = false;
   --gold: #3D5A30;
   --gold-dim: rgba(61,90,48,0.6);
   --gold-faint: rgba(61,90,48,0.1);
-  /* cream garde sa valeur originale — utilisé par les overlays sombres */
+  /* cream garde sa valeur originale utilisé par les overlays sombres */
   --cream: #faf7f0;
   --cream-dim: rgba(250,247,240,0.55);
   --cream-faint: rgba(250,247,240,0.06);
@@ -45,7 +45,7 @@ window._leafletFallback = false;
   --red: #C44025;
   --red-dim: rgba(196,64,37,0.65);
   --red-faint: rgba(196,64,37,0.08);
-  /* encre — texte sur fond clair */
+  /* encre texte sur fond clair */
   --ink: #1C1812;
   --ink-dim: rgba(28,24,18,0.65);
   --ink-faint: rgba(28,24,18,0.06);
@@ -677,7 +677,7 @@ html, body {
   to { transform: translateY(-8px); }
 }
 
-/* ── HUD (hidden — remplacé par nav-bar) ── */
+/* ── HUD (hidden remplacé par nav-bar) ── */
 #hud { display: none !important; }
 #inventory { display: none !important; }
 
@@ -1407,7 +1407,7 @@ html, body {
 }
 .traitor-continue-btn:active { background: rgba(201,168,76,0.1); }
 
-/* ══ CARNET DE L'AGENT — Fragments HELVETII ══ */
+/* ══ CARNET DE L'AGENT Fragments HELVETII ══ */
 #carnetPanel {
   position: fixed; inset: 0; z-index: 800;
   background: rgba(10,8,5,0.88);
@@ -1801,7 +1801,7 @@ html, body {
 .traitor-continue{margin-top:18px;font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;color:rgba(201,168,76,.35);animation:blink 1.5s ease-in-out infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
-/* ══ TERRAIN — overrides JS-hardcoded white text in enigma body ══ */
+/* ══ TERRAIN overrides JS-hardcoded white text in enigma body ══ */
 .enigma-body [style*="rgba(250,247,240"] { color: var(--ink) !important; }
 [id^="msc-"] [style*="rgba(250,247,240"] { color: var(--ink) !important; }
 
@@ -1817,7 +1817,7 @@ html, body {
 .bc-title { font-family: var(--font-display) !important; font-weight: 400; }
 .title-main { font-family: var(--font-display) !important; }
 
-/* carnet letter slots — display font for big revealed letters */
+/* carnet letter slots display font for big revealed letters */
 .carnet-slot.revealed { font-family: var(--font-display); }
 
 /* sep divider to ink/border */
@@ -1856,7 +1856,7 @@ html, body {
   background: linear-gradient(90deg, transparent, rgba(61,90,48,0.5), transparent) !important;
 }
 
-/* resume banner — JS-generated, hardcoded Cinzel + white colors */
+/* resume banner JS-generated, hardcoded Cinzel + white colors */
 #resumeBanner { background: var(--gold-faint) !important; border-color: var(--border-strong) !important; border-radius: 4px !important; }
 #resumeBanner [style*="Cinzel"] { font-family: var(--font-mono) !important; }
 #resumeBanner [style*="rgba(250,247,240"] { color: var(--ink-dim) !important; }
@@ -1910,7 +1910,7 @@ html, body {
   <div class="hud-row">
     <div class="hud-logo">AQ <span>OPERATIO AQUILA</span></div>
     <div style="display:flex;align-items:center;gap:0.8rem">
-      <div id="hudTimer" style="font-family:var(--font-mono);font-size:0.8rem;color:rgba(201,168,76,0.7);letter-spacing:0.08em;display:none">⏱ <span id="timerDisplay">90:00</span></div>
+      <div id="hudTimer" style="font-family:var(--font-mono);font-size:0.8rem;color:rgba(201,168,76,0.7);letter-spacing:0.08em;display:none">⏱ <span id="timerDisplay">120:00</span></div>
       <div class="hud-score" id="hudScore">1000 pts<small id="scoreLabel">SCORE</small></div>
     </div>
   </div>
@@ -1925,7 +1925,7 @@ html, body {
   <div class="inv-fragments" id="invFragments"></div>
 </div>
 
-<!-- ═══════ SCREEN 0 — SPLASH ═══════ -->
+<!-- ═══════ SCREEN 0 SPLASH ═══════ -->
 <div id="screen-splash" class="screen active">
   <div class="divine-light" id="divineLight" style="opacity:0"></div>
   <div id="splashEagle" style="opacity:0;transition:opacity 0.8s ease;position:relative;z-index:2">
@@ -1961,7 +1961,7 @@ html, body {
   <div id="splashSub" class="title-sub" style="opacity:0;transition:opacity 1s ease;position:relative;z-index:2">Operatio Aquila</div>
 </div>
 
-<!-- ═══════ SCREEN 1 — CODE ═══════ -->
+<!-- ═══════ SCREEN 1 CODE ═══════ -->
 <div id="screen-code" class="screen">
   <div class="code-inner" style="margin:auto">
     <div class="code-logo" style="text-align:center;margin-bottom:20px">
@@ -2005,12 +2005,12 @@ html, body {
   </div>
 </div>
 
-<!-- ═══════ SCREEN 2 — BRIEFING ═══════ -->
+<!-- ═══════ SCREEN 2 BRIEFING ═══════ -->
 <div id="screen-briefing" class="screen">
   <!-- cinematic fullscreen cards, no nav bar -->
   <div id="briefingCards" style="flex:1;position:relative;overflow:hidden;display:flex;flex-direction:column;">
 
-    <!-- CARD 0 — Ambiance nuit / titre -->
+    <!-- CARD 0 Ambiance nuit / titre -->
     <div class="bc-card active" id="bc0">
       <div class="bc-bg" style="background:radial-gradient(ellipse at 50% 30%, rgba(60,30,0,0.9) 0%, #1C1812 70%)">
         <!-- étoiles SVG -->
@@ -2058,7 +2058,7 @@ html, body {
       </div>
     </div>
 
-    <!-- CARD 1 — Le cri du gardien -->
+    <!-- CARD 1 Le cri du gardien -->
     <div class="bc-card" id="bc1">
       <div class="bc-bg" style="background:radial-gradient(ellipse at 30% 60%, rgba(80,20,0,0.85) 0%, #1C1812 65%)">
         <div class="bc-torch bc-torch-left"></div>
@@ -2074,7 +2074,7 @@ html, body {
       </div>
     </div>
 
-    <!-- CARD 2 — La mission -->
+    <!-- CARD 2 La mission -->
     <div class="bc-card" id="bc2">
       <div class="bc-bg" style="background:radial-gradient(ellipse at 70% 40%, rgba(20,40,0,0.85) 0%, #1C1812 65%)">
         <div class="bc-scroll-bg"></div>
@@ -2091,7 +2091,7 @@ html, body {
       </div>
     </div>
 
-    <!-- CARD 3 — L'appel de Jupiter / nom équipe -->
+    <!-- CARD 3 L'appel de Jupiter / nom équipe -->
     <div class="bc-card" id="bc3">
       <div class="bc-bg" style="background:radial-gradient(ellipse at 50% 20%, rgba(61,90,48,0.18) 0%, #1C1812 60%)">
         <div class="bc-rays"></div>
@@ -2116,10 +2116,10 @@ html, body {
   </div>
 </div>
 
-<!-- ═══════ SCREENS 3–14 — ÉNIGMES ═══════ -->
+<!-- ═══════ SCREENS 3–14 ÉNIGMES ═══════ -->
 <div id="enigmaContainer"></div>
 
-<!-- ═══════ SCREEN 15 — META ═══════ -->
+<!-- ═══════ SCREEN 15 META ═══════ -->
 <div id="screen-meta" class="screen">
   <div class="nav-bar">
     <div class="nav-title" id="metaRevealLabel">CODE FINAL : HELVETII</div>
@@ -2151,7 +2151,7 @@ html, body {
   <button class="traitor-continue-btn" onclick="hideTraitorReveal()">⚔ CONTINUER</button>
 </div>
 
-<!-- ═══════ SCREEN 16 — VICTOIRE ═══════ -->
+<!-- ═══════ SCREEN 16 VICTOIRE ═══════ -->
 <div id="screen-victory" class="screen">
   <div class="scroll-container" style="max-width:580px;text-align:center">
     <div id="victoryEagle" style="opacity:0">
@@ -2429,11 +2429,11 @@ function applyTranslations() {
 // y compris en mode avion, après le chargement initial de la page.
 const TOKEN_KEY = 'aq_token_v1';
 
-/* ══════ TOKEN HELPERS (legacy — conservé pour nettoyer d'anciennes sessions) ══════ */
+/* ══════ TOKEN HELPERS (legacy conservé pour nettoyer d'anciennes sessions) ══════ */
 function clearToken(){ try{ sessionStorage.removeItem(TOKEN_KEY); }catch(e){} }
 
 /* ══════ DATA ══════ */
-// Les codes valides ne sont plus dans le frontend — validation serveur uniquement
+// Les codes valides ne sont plus dans le frontend validation serveur uniquement
 
 // Nouvelle route : 8 étapes
 // 0: Hôtel de Ville  1: Tour de Benneville  2: Rue des Alpes
@@ -2451,17 +2451,17 @@ const ENIGMA_COORDS = [
 ];
 
 const BRIEFING_TEXTS = {
-  fr: `L'aquila est volée. L'aigle d'or de la Legio XXI Rapax, insigne sacré de la légion et symbole de l'honneur de Rome, a disparu cette nuit. Un traître, connu de nos rangs, l'a dissimulée quelque part dans Aventicum. Avant l'aube, il a semé des indices à travers la ville. L'Empereur Hadrien arrive dans quatre-vingt-dix minutes. Il attend l'aigle. Pas d'excuses. Pas de retard. Tu es l'agent envoyé par le légat. Ta mission : suivre la piste du traître monument par monument, déchiffrer ses indices, et ramener l'aquila. Huit monuments. Huit fragments. Un seul code. Chaque monument te livrera une lettre. Ces huit lettres, dans le bon ordre, forment le nom que tu cherches. Si tu échoues, la légion est dissoute. Commence. Le temps presse. LEGIO XXI Rapax : l'aigle sacrée, symbole de la puissance de Rome. Dans 90 minutes, l'Empereur Hadrien foule le sol de notre cité.
+  fr: `L'aquila est volée. L'aigle d'or de la Legio XXI Rapax, insigne sacré de la légion et symbole de l'honneur de Rome, a disparu cette nuit. Un traître, connu de nos rangs, l'a dissimulée quelque part dans Aventicum. Avant l'aube, il a semé des indices à travers la ville. L'Empereur Hadrien arrive dans cent vingt minutes. Il attend l'aigle. Pas d'excuses. Pas de retard. Tu es l'agent envoyé par le légat. Ta mission : suivre la piste du traître monument par monument, déchiffrer ses indices, et ramener l'aquila. Huit monuments. Huit fragments. Un seul code. Chaque monument te livrera une lettre. Ces huit lettres, dans le bon ordre, forment le nom que tu cherches. Si tu échoues, la légion est dissoute. Commence. Le temps presse. LEGIO XXI Rapax : l'aigle sacrée, symbole de la puissance de Rome. Dans 120 minutes, l'Empereur Hadrien foule le sol de notre cité.
 
 Votre mission, speculatores : suivez la piste du voleur à travers la ville, résolvez les 8 énigmes qu'il a semées sur son chemin, et rapportez l'aigle avant l'arrivée impériale.
 
 Que Jupiter guide vos pas, [TEAM]. Aventicum compte sur vous.`,
-  en: `At dawn, the keeper of the legionary treasury let out a cry that echoed across all of Aventicum: the aquila's alcove was empty, the lock untouched. Tonight, a thief dared the unthinkable, stealing the aquila of the Legio XXI Rapax, the sacred eagle, symbol of Rome's power. In 90 minutes, Emperor Hadrian will set foot in our city.
+  en: `At dawn, the keeper of the legionary treasury let out a cry that echoed across all of Aventicum: the aquila's alcove was empty, the lock untouched. Tonight, a thief dared the unthinkable, stealing the aquila of the Legio XXI Rapax, the sacred eagle, symbol of Rome's power. In 120 minutes, Emperor Hadrian will set foot in our city.
 
 Your mission, speculatores: follow the thief's trail through the city, solve the 8 riddles left in his wake, and return the eagle before the imperial arrival. Each monument will give you a letter. These eight letters, in the right order, spell the name you seek.
 
 May Jupiter guide your steps, [TEAM]. Aventicum is counting on you.`,
-  de: `Im Morgengrauen stieß der Hüter des Legionsschatzes einen Schrei aus, der ganz Aventicum durchdrang: die Nische der Aquila war leer, das Schloss unberührt. In dieser Nacht wagte ein Dieb das Undenkbare und stahl die Aquila der Legio XXI Rapax, den heiligen Adler, Symbol der Macht Roms. In 90 Minuten betritt Kaiser Hadrian den Boden unserer Stadt.
+  de: `Im Morgengrauen stieß der Hüter des Legionsschatzes einen Schrei aus, der ganz Aventicum durchdrang: die Nische der Aquila war leer, das Schloss unberührt. In dieser Nacht wagte ein Dieb das Undenkbare und stahl die Aquila der Legio XXI Rapax, den heiligen Adler, Symbol der Macht Roms. In 120 Minuten betritt Kaiser Hadrian den Boden unserer Stadt.
 
 Eure Mission, Speculatores: folgt der Spur des Diebes durch die Stadt, löst die 8 Rätsel auf seinem Weg, und bringt den Adler zurück. Jedes Monument gibt euch einen Buchstaben. Diese acht Buchstaben ergeben zusammen den Namen, den ihr sucht.
 
@@ -2470,7 +2470,7 @@ Möge Jupiter eure Schritte leiten, [TEAM]. Aventicum zählt auf euch.`
 // clue: the secret word revealed on correct answer (shown in inventory + meta)
 // type: 'text' (default) | 'vision' (photo upload + Claude AI) | 'speech' (TTS+STT) | 'oath' (photo + vocal oath)
 const ENIGMAS = [
-  // ─── ÉNIGME 1 — HÔTEL DE VILLE (Tête de Maure) ───────────────────────────
+  // ─── ÉNIGME 1 HÔTEL DE VILLE (Tête de Maure) ───────────────────────────
   { id:1, step:'I', fragment:'H', clue:'MAURE', answers:['MAURE','MOOR','MOHR'],
     fr:{ nav:{title:'Hôtel de Ville',desc:"La façade de l'Hôtel de Ville donne sur la Grand-Rue.",address:'Grand-Rue, 1580 Avenches',distance:'Point de départ',mapsUrl:'https://maps.google.com/?q=Hotel+de+Ville+Avenches'},
       narrative:"Le traître a commencé ici, au cœur de la cité, sous les yeux de tous. Sur la façade de l'Hôtel de Ville, quatre visages t'observent depuis le XVIe siècle. Trois sont taillés dans la pierre. Un seul est forgé dans le métal, l'emblème d'Avenches depuis cinq cents ans.",
@@ -2485,7 +2485,7 @@ const ENIGMAS = [
       question:"An der Rathausfassade, über dem Haupteingang und auf Höhe des ersten Stockwerks, beobachten euch seit dem 16. Jahrhundert vier geschnitzte Gesichter. Drei sind aus hellem Stein im Renaissance-Stil gehauen. Nur das vierte ist aus dunklem Metall geschmiedet und in einen schmiedeeisernen Ring gefasst: es ist das offizielle Wappenzeichen von Avenches, dasselbe, das auch auf der Stadtflagge zu sehen ist. Nur eines dieser vier Gesichter trägt einen Namen. Gebt ihn in Großbuchstaben ein.",
       hints:[{text:"Sucht das Gesicht, das nicht aus hellem Stein ist: Es ist aus dunklem Metall und von einem gut sichtbaren schmiedeeisernen Ring umrahmt, anders als die drei übrigen Köpfe.",cost:20},{text:"Dieses dunkle Gesicht ist das historische Wappenzeichen der Stadt seit dem 16. Jahrhundert. Ihr findet es auch auf der Flagge vor dem Rathaus und auf dem offiziellen Stadtwappen von Avenches.",cost:40},{text:"Die Antwort ist MOHR.",cost:80}]}
   },
-  // ─── ÉNIGME 2 — TOUR DE BENNEVILLE ───────────────────────────────────────
+  // ─── ÉNIGME 2 TOUR DE BENNEVILLE ───────────────────────────────────────
   { id:2, step:'II', fragment:'E', clue:'CIGOGNIER', answers:['CIGOGNIER'], groupMission:{fr:'Répartissez-vous autour du Cigognier, chacun observe un côté. Qui trouve l\'inscription ?',en:'Split up around the Cigognier, each person covers one side. Who finds the inscription?',de:'Verteilt euch rund um den Cigognier, jeder beobachtet eine Seite. Wer findet die Inschrift?'},
     fr:{ nav:{title:'Tour de Benneville',desc:"La tour médiévale se dresse à quelques pas de l'Hôtel de Ville.",address:'Rue de Lausanne, 1580 Avenches',distance:'~100 m de l\'Hôtel de Ville',mapsUrl:'https://maps.google.com/?q=Tour+de+Benneville+Avenches'},
       narrative:"La Tour de Benneville domine la plaine depuis le XIIIe siècle : cinq niveaux, des meurtrières, une vue imprenable. C'est depuis ici que le traître a repéré l'endroit où cacher l'aquila. Il a vu depuis le sommet ce que personne ne voit depuis le bas. Monte.",
@@ -2500,7 +2500,7 @@ const ENIGMAS = [
       question:"Steigt bis zum Gipfel des Turms. Vom Fenster mit Blick auf die Ebene erhebt sich ein römisches Monument einsam aus den Feldern, die einzige noch stehende Säule des größten Heiligtums von Aventicum. Wie heißt dieses Monument? Gebt es in Großbuchstaben ein, ohne Leerzeichen.",
       hints:[{text:"Sucht am Turmgipfel ein Fenster mit Blick auf die Ebene, über die Dächer hinweg, zum unteren Teil der Stadt. Dort, allein in den Feldern, erhebt sich ein römisches Element wie eine vergessene Wache. Es ist kein Gebäude, nur eine Säule.",cost:20},{text:"Das Monument verdankt seinen Namen den Störchen, die dort jahrhundertelang an seiner Spitze nisteten, ein großer Zugvogel, schwarz-weiß, mit langem rotem Schnabel.",cost:40},{text:"Die Antwort ist CIGOGNIER.",cost:80}]}
   },
-  // ─── ÉNIGME 3 — RUE DES ALPES (QCM visuel) ──────────────────────────────
+  // ─── ÉNIGME 3 RUE DES ALPES (QCM visuel) ──────────────────────────────
   { id:3, step:'III', fragment:'L', clue:'LOUVE', type:'qcm', answers:['A+B'], qcmEmojis:['🐺','🧙','⛑️','⚓'], qcmLabels:['A. Loup romain','B. Nain de jardin','C. Casque légionnaire','D. Ancre marine'],
     fr:{ nav:{title:'Rue des Alpes',desc:"Observez les façades des immeubles le long de la Rue des Alpes.",address:'Rue des Alpes, 1580 Avenches',distance:'~150 m de la Tour de Benneville',mapsUrl:'https://maps.google.com/?q=Rue+des+Alpes+Avenches'},
       narrative:"La Rue des Alpes relie l'Hôtel de Ville au reste de la cité. En apparence, une rue ordinaire. Mais le traître l'a longée les yeux ouverts, et il y a vu ce que personne d'autre ne voit. Deux éléments en pleine vue, invisibles à qui ne cherche pas.",
@@ -2515,7 +2515,7 @@ const ENIGMAS = [
       question:`Geht die ganze Rue des Alpes entlang und betrachtet genau die Fassaden der Gebäude selbst, Stein und Verputz, nicht Schaufenster oder Schilder. Von diesen vier Ornamenten (A, B, C, D) befinden sich ZWEI WIRKLICH an diesen Fassaden. Wähle die zwei richtigen Elemente und bestätige.`,
       hints:[{text:"Geht die ganze Straße entlang und hebt den Blick vom Gehsteig zu den Wänden, vom Erdgeschoss bis zur Höhe des ersten Stockwerks. Die zwei Ornamente sind nicht versteckt: man übersieht sie nur, wenn man nicht auf die Fassaden selbst schaut.",cost:20},{text:"Eines ist ein geschnitztes Tier, verbunden mit der Gründungslegende Roms; das andere ist eine kleine Gartenfigur, völlig unerwartet an einer Stadtfassade.",cost:40},{text:"Die zwei vorhandenen Elemente sind der römische Wolf und der Gartenzwerg. Wähle A und B, dann drücke BESTÄTIGEN.",cost:80}]}
   },
-  // ─── ÉNIGME 4 — ARÈNES (Amphithéâtre) ───────────────────────────────────
+  // ─── ÉNIGME 4 ARÈNES (Amphithéâtre) ───────────────────────────────────
   { id:4, step:'IV', fragment:'V', clue:'ARÈNE', answers:['6'], groupMission:{fr:'Cherchez ensemble le panneau du plan de restauration sur la terrasse couverte du musée, qui représente l\'amphithéâtre vu du dessus, divisé en zones numérotées.',en:'Search together for the restoration plan panel on the museum\'s covered terrace, showing the amphitheatre from above, divided into numbered zones.',de:'Sucht gemeinsam das Schild mit dem Restaurierungsplan auf der überdachten Museumsterrasse, das das Amphitheater von oben zeigt, in nummerierte Zonen unterteilt.'},
     fr:{ nav:{title:'Amphithéâtre Romain',desc:"L'amphithéâtre romain se trouve à l'entrée est de la ville, rue du Musée, Avenches.",address:'Rue du Clos 6, 1580 Avenches',distance:'~400 m de la Rue des Alpes',mapsUrl:'https://maps.google.com/?q=Amphitheatre+romain+Avenches'},
       narrative:"Neuf mille spectateurs, des gladiateurs, du sang sur le sable. L'amphithéâtre d'Avenches, construit vers 130 apr. J.-C., est l'un des mieux conservés de Suisse. Le traître a caché son message dans les chiffres mêmes de ce monument. Entre dans l'arène et compte.",
@@ -2530,7 +2530,7 @@ const ENIGMAS = [
       question:"Auf der überdachten Terrasse des Römermuseums, direkt neben dem Amphitheater, zeigt ein Schild den offiziellen Restaurierungsplan des Monuments: ein Schema von oben, das das Amphitheater in mehrere nummerierte Zonen unterteilt. Findet auf diesem Plan die Nummer der überdachten Terrasse, auf der ihr steht. Gebt diese Nummer ein.",
       hints:[{text:"Sucht das Restaurierungsschild auf der überdachten Terrasse des Römermuseums neben dem Amphitheater, auf Augenhöhe, nahe dem Terrasseneingang.",cost:20},{text:"Der Plan teilt das Amphitheater in 8 nummerierte Zonen ein, jede deckt einen anderen Abschnitt des Monuments. Findet jene, die zu eurem Standort auf der Terrasse passt.",cost:40},{text:"Die überdachte Terrasse entspricht Zone 6, wie auf dem Schild steht.",cost:80}]}
   },
-  // ─── ÉNIGME 5 — SANCTUAIRE DU CIGOGNIER ─────────────────────────────────
+  // ─── ÉNIGME 5 SANCTUAIRE DU CIGOGNIER ─────────────────────────────────
   { id:5, step:'V', fragment:'E', clue:'MARC-AURÈLE', answers:['MARC AURELE','MARC-AURELE','MARC AURÈLE','MARC-AURÈLE','MARCUS AURELIUS','MARK AUREL'],
     fr:{ nav:{title:'Sanctuaire du Cigognier',desc:"La colonne solitaire de 12 mètres est visible depuis la route.",address:'Chemin du Cigognier, 1580 Avenches',distance:'~600 m des arènes',mapsUrl:'https://maps.google.com/?q=Sanctuaire+Cigognier+Avenches'},
       narrative:"Tu es au cœur du plus grand sanctuaire d'Aventicum. En 1939, dans un égout romain sous ces pierres, des ouvriers ont mis au jour le trésor le plus précieux de Suisse romaine : un buste en or d'Empereur. Le traître sait que l'aquila mérite d'être cachée près d'ici. Mais d'abord : qui est cet Empereur ?",
@@ -2545,7 +2545,7 @@ const ENIGMAS = [
       question:"1939 wurde eine goldene Kaiserbüste in den Abwasserkanälen dieses Heiligtums entdeckt, der größte Schatz der römischen Schweiz. Dieser Kaiser herrschte von 161 bis 180 n. Chr., Krieger und Philosoph zugleich, Autor der Selbstbetrachtungen. Wer ist er? Gebt seinen Namen in Großbuchstaben ein.",
       hints:[{text:"Dieser Kaiser war auch stoischer Philosoph, selten für einen römischen Kriegsherrn. Seine Selbstbetrachtungen sind ein privates Tagebuch, geschrieben während seiner Feldzüge. Sein Buch wird noch heute gedruckt.",cost:20},{text:"Sein Vorname ist Marcus. Sein lateinischer Beiname kommt von aureus, \"golden\". Zwei Wörter. Das zweite bedeutet wörtlich \"der Goldene\" oder \"der wie Gold Glänzende\".",cost:40},{text:"Die Antwort ist MARK AUREL.",cost:80}]}
   },
-  // ─── ÉNIGME 6 — THÉÂTRE DU SELLEY (Claude Vision API) ───────────────────
+  // ─── ÉNIGME 6 THÉÂTRE DU SELLEY (Claude Vision API) ───────────────────
   { id:6, step:'VI', fragment:'T', clue:'CARTOUCHE-1903', type:'text', answers:['1903','1902'], groupMission:{fr:'Cherchez ensemble le cartouche gravé dans la pierre. Il faut deux paires d\'yeux pour le repérer.',en:'Search together for the cartouche carved in the stone. It takes two pairs of eyes to spot it.',de:'Sucht gemeinsam das in den Stein gemeißelte Kartuschenfeld. Vier Augen sehen mehr als zwei.'},
     fr:{ nav:{title:'Théâtre du Selley',desc:"Le théâtre romain du Selley est visible depuis la route cantonale.",address:'Chemin du Selley, 1580 Avenches',distance:'~300 m du Cigognier',mapsUrl:'https://maps.google.com/?q=Theatre+Selley+Avenches'},
       narrative:"Le plus grand théâtre romain de Suisse : onze mille spectateurs. Deux mille ans plus tard, des restaurateurs sont venus sauver ce qui restait et ont signé leur travail dans la pierre. Parmi des centaines de blocs, ils ont gravé un cartouche octogonal : une initiale, une date. C'est l'indice le plus discret du parcours.",
@@ -2560,7 +2560,7 @@ const ENIGMAS = [
       question:"Ein achteckiges Cartouche wurde in das untere Mauerwerk der Cavea gemeißelt, mit einem Anfangsbuchstaben und einer vierstelligen Jahreszahl. Findet es in den Sitzreihen, klein, diskret, auf Knie- oder Taillenhöhe. Die eingravierte Jahreszahl ist euer Code. Gebt die 4 Ziffern ein.",
       hints:[{text:"Suche nach einem Kalksteinblock mit einem 8-seitigen gemeißelten Rahmen (ein Achteck) im niedrigen Mauerwerk der Sitzreihen. Es ist nicht hoch oben: es ist in Reichweite.",cost:20},{text:"Ein einziger Buchstabe, Anfang des Wortes Restauration, steht vor vier Ziffern. Diese Ziffern bezeichnen ein Jahr vom ganz Anfang des 20. Jahrhunderts.",cost:40},{text:"Der Code ist 1903 (oder 1902 je nach genauen Zustand des Cartouche).",cost:0}]}
   },
-  // ─── ÉNIGME 7 — THERMES DU FORUM (TTS + STT) ────────────────────────────
+  // ─── ÉNIGME 7 THERMES DU FORUM (TTS + STT) ────────────────────────────
   { id:7, step:'VII', fragment:'I', clue:'HYPOCAUSTE', type:'text', answers:['HYPOCAUSTE','HYPOCAUST','HYPOKAUST'],
     fr:{ nav:{title:'Thermes du Forum',desc:"Les fondations des thermes romains sont visibles depuis la rue principale.",address:'Place du Bourg, 1580 Avenches',distance:'~700 m du Cigognier',mapsUrl:'https://maps.google.com/?q=Thermes+forum+Avenches'},
       narrative:"Devant toi s'étend le sous-sol des bains publics d'Aventicum. Des centaines de petits piliers de brique soutiennent le plancher disparu où les Romains vivaient et débattaient. L'air chaud y circulait : c'était le cœur technique de la vie sociale romaine. Le traître connaît ce mécanisme par cœur. C'est ton tour de le découvrir.",
@@ -2575,7 +2575,7 @@ const ENIGMAS = [
       question:"Dieser Unterboden der Thermen verbirgt ein zweiteiliges römisches Heizsystem. Beantwortet die zwei folgenden Fragen in der richtigen Reihenfolge, um diese Etappe abzuschließen.",
       hints:[{text:"Betrachtet genau die Form der kleinen Säulen vor euch: quadratische Ziegel oder Terrakotta-Scheiben, aufeinandergestapelt wie Münztürme, niedrig genug, um darüber zu steigen. Jeder einzelne Pfeiler hatte einen eigenen lateinischen Namen, nicht den Namen des ganzen Systems.",cost:20},{text:"Jeder Pfeiler heißt pila (Mehrzahl: pilae, lateinisch für „Pfahl“). Zusammen trugen diese pilae einen erhöhten Boden, unter dem heiße Luft aus einem Ofen (Praefurnium) zirkulierte: genau dieses Fußbodenheizungssystem müsst ihr im nächsten Schritt benennen.",cost:40},{text:"Schritt 1: PILAE. Schritt 2: HYPOKAUST.",cost:0}]}
   },
-  // ─── ÉNIGME 8 — PORTE DE L'EST (Vision panoramique + Serment vocal) ──────
+  // ─── ÉNIGME 8 PORTE DE L'EST (Vision panoramique + Serment vocal) ──────
   { id:8, step:'VIII', fragment:'I', clue:'AQUILA', type:'text', answers:['AVENTICUM','AVENTUCUM'],
     fr:{ nav:{title:"Porte de l'Est",desc:"La porte romaine monumentale se trouve sur le côté est du mur d'enceinte.",address:"Chemin de la Porte de l'Est, 1580 Avenches",distance:'~1 km des thermes',mapsUrl:'https://maps.google.com/?q=Porte+Est+Avenches'},
       narrative:"Tu es aux portes de l'Empire. La Porte de l'Est gardait l'entrée principale d'Aventicum, construite sous Vespasien vers l'an 72. C'est ici que le traître a caché l'aquila, convaincu que tu n'irais jamais jusqu'au bout. Il s'est trompé.",
@@ -2782,7 +2782,7 @@ function submitCode(){
   if(!code){shakeElement(document.getElementById('codeInput'));return;}
   if(!team){shakeElement(document.getElementById('teamInput'));document.getElementById('teamInput').focus();return;}
 
-  // ── Validation 100% locale — aucun appel réseau ──────────────────────
+  // ── Validation 100% locale aucun appel réseau ──────────────────────
   // Ajoute ici tous les codes d'équipe distribués avant la mission.
   const LOCAL_CODES = ['AQUILA','HELVETII','AVENCHES','TEST'];
 
@@ -2877,7 +2877,7 @@ function showTransition(nextIdx, callback) {
   const sameSpot = fromCoords[0]===toCoords[0] && fromCoords[1]===toCoords[1];
   let distStr;
   if(sameSpot){
-    // Same monument — if GPS available use real distance, otherwise "Sur place"
+    // Same monument if GPS available use real distance, otherwise "Sur place"
     if(_userPos){
       const d = haversine(_userPos, toCoords);
       distStr = d < 20 ? '< 20 m' : d + ' m';
@@ -2961,7 +2961,7 @@ function showTransition(nextIdx, callback) {
     const bounds = L.latLngBounds([fromCoords, toCoords]);
     _navMap.fitBounds(bounds.pad(0.35));
 
-    // FROM marker (current position — white dot)
+    // FROM marker (current position white dot)
     const fromIcon = L.divIcon({ className:'', html:`
       <div style="width:14px;height:14px;border-radius:50%;background:#faf7f0;border:2px solid rgba(250,247,240,0.8);box-shadow:0 0 8px rgba(250,247,240,0.5);"></div>
     `, iconSize:[14,14], iconAnchor:[7,7] });
@@ -3119,13 +3119,13 @@ function showBriefing(){
 
 function _bcPopulate(){
   const t = BC_TEXTS[currentLang] || BC_TEXTS.fr;
-  // Carte 0 — surtitre & sous-titre
+  // Carte 0 surtitre & sous-titre
   const over0 = document.querySelector('#bc0 .bc-overline');
   if(over0) over0.textContent = t.bc_overline0;
   const sub0 = document.querySelector('#bc0 .bc-subtitle');
   if(sub0) sub0.textContent = t.bc_sub0;
 
-  // Carte 1 — texte narratif
+  // Carte 1 texte narratif
   const over1 = document.querySelector('#bc1 .bc-overline');
   if(over1) over1.textContent = t.bc_overline1;
   const body1 = document.getElementById('bc1Text');
@@ -3133,7 +3133,7 @@ function _bcPopulate(){
   const btn1 = document.querySelector('#bc1 .bc-btn span:first-child');
   if(btn1) btn1.textContent = t.bc_next;
 
-  // Carte 2 — mission
+  // Carte 2 mission
   const over2 = document.querySelector('#bc2 .bc-overline');
   if(over2) over2.textContent = t.bc_overline2;
   const body2 = document.getElementById('bc2Text');
@@ -3141,13 +3141,13 @@ function _bcPopulate(){
   const btn2 = document.querySelector('#bc2 .bc-btn span:first-child');
   if(btn2) btn2.textContent = t.bc_next;
 
-  // Carte 3 — équipe + règles
+  // Carte 3 équipe + règles
   const over3 = document.querySelector('#bc3 .bc-overline');
   if(over3) over3.textContent = t.bc_overline3;
   const teamLabel = document.querySelector('.bc-team-label');
   if(teamLabel) teamLabel.textContent = t.bc_teamlabel;
   const teamName = document.getElementById('bc3TeamName');
-  if(teamName) teamName.textContent = G.teamName || '—';
+  if(teamName) teamName.textContent = G.teamName || '-';
   const body3 = document.getElementById('bc3Text');
   if(body3) body3.innerHTML = t.body3;
   const rulesCont = document.getElementById('bc3Rules');
@@ -3163,8 +3163,8 @@ function _bcPopulate(){
       t.roles.map(r=>{
         const icon = r.icon||'';
         const name = r.name||r;
-        const desc = r.desc ? ` — ${r.desc}` : '';
-        return `<div style="font-size:12px;padding:3px 0;border-bottom:1px solid rgba(200,169,110,0.15);">${icon} <strong>${name}</strong>${desc}</div>`;
+        const desc = r.desc ? ` ${r.desc}` : '';
+        return `<div style="font-size:12px;padding:3px 0;border-bottom:1px solid rgba(200,169,110,0.15);color:#ffffff;">${icon} <strong>${name}</strong>${desc}</div>`;
       }).join('');
   }
   const btnStart = document.querySelector('.bc-btn-start span');
@@ -3191,7 +3191,7 @@ function bcNext(){
 /* ══════ START ══════ */
 let _timerInterval = null;
 
-/* ═══ TIMER — compte à rebours 90 minutes ═══ */
+/* ═══ TIMER compte à rebours 90 minutes ═══ */
 const GAME_DURATION_S = 120*60; // 120 minutes
 function startTimer(){
   document.getElementById('hudTimer').style.display='block';
@@ -3342,7 +3342,7 @@ function buildEnigmaScreens(){
 
 // ── FIX 7: Multi-step enigma patch ─────────────────────────────────────────
 function patchMultiSteps(){
-  // S7 — THERMES: step1=PILAE, step2=HYPOCAUSTE
+  // S7 THERMES: step1=PILAE, step2=HYPOCAUSTE
   ENIGMAS[6].type='multi';
   ENIGMAS[6].multiSteps=[
     { stepType:'text', answers:['PILAE'],
@@ -3355,7 +3355,7 @@ function patchMultiSteps(){
       de:{q:"Diese Pfeiler stützen einen erhöhten Boden. Ein Ofen (Praefurnium) ließ heiße Luft darunter zirkulieren. Wie heißt dieses römische Fußbodenheizungssystem? In Großbuchstaben."} }
   ];
 
-  // S8 — PORTE DE L'EST: step1=QCM Helvètes, step2="4"
+  // S8 PORTE DE L'EST: step1=QCM Helvètes, step2="4"
   ENIGMAS[7].type='multi';
   ENIGMAS[7].multiSteps=[
     { stepType:'qcm', correct:'B',
@@ -3366,6 +3366,7 @@ function patchMultiSteps(){
       de:{q:"Welches Volk hatte Aventicum in der Römerzeit als Hauptstadt?",
           options:[{l:'A',t:'Die Gallier'},{l:'B',t:'Die Helvetier'},{l:'C',t:'Die Römer'},{l:'D',t:'Die Burgunder'}]} },
     { stepType:'text', answers:['4'],
+      hints:[{text:"Soustrais 72 de 476 pour obtenir le nombre d'années. Le résultat est entre 400 et 410 ans.",cost:20},{text:"476 moins 72 = 404 ans. Un siècle = 100 ans. Divise 404 par 100, puis arrondis au siècle le plus proche.",cost:40},{text:"La réponse est 4.",cost:0}],
       fr:{q:"Tu sais déjà que cette porte fut construite vers l'an 72 après J.-C., sous l'empereur Vespasien. C'est à cette époque que ce peuple administrait Aventicum comme capitale. La domination romaine en Occident s'effondre en 476 après J.-C. En arrondissant au siècle le plus proche, combien de siècles séparent l'an 72 de l'an 476 ? Entre uniquement le chiffre."},
       en:{q:"You already know this gate was built around 72 AD, under Emperor Vespasian, the very era when this people governed Aventicum as their capital. Roman rule in the West collapsed in 476 AD. Rounding to the nearest century, how many centuries separate 72 AD from 476 AD? Enter only the number."},
       de:{q:"Ihr wisst bereits, dass dieses Tor um das Jahr 72 n. Chr. unter Kaiser Vespasian erbaut wurde. Genau in jener Zeit regierte dieses Volk Aventicum als Hauptstadt. Die römische Herrschaft im Westen endete im Jahr 476 n. Chr. Auf das nächste Jahrhundert gerundet: Wie viele Jahrhunderte liegen zwischen 72 und 476 n. Chr.? Gebt nur die Zahl ein."} }
@@ -3687,7 +3688,7 @@ function toggleQCM(idx, choice, el){
     el.style.background = 'rgba(201,168,76,0.08)';
     el.style.boxShadow = '';
   }
-  // Show confirm button — search in both possible locations
+  // Show confirm button search in both possible locations
   const confirmBtn = document.getElementById('qcmConfirm-'+idx) || document.getElementById('qcmConfirmInline-'+idx);
   if(confirmBtn){
     if(sel.length === 2){
@@ -3733,7 +3734,7 @@ function selectQCM(idx, choice, el){
 /* ══════ IA / VOIX SUPPRIMÉES ══════ */
 /* Toute validation par IA (photo, vocal, serment) et tout appel réseau associé
    (api.anthropic.com, SpeechRecognition) ont été retirés. Chaque station se
-   valide uniquement en local (texte ou QCM) — aucune fonctionnalité du jeu
+   valide uniquement en local (texte ou QCM) aucune fonctionnalité du jeu
    ne dépend d'une connexion réseau après le chargement initial. */
 
 /* ══════ TRIGGER CORRECT (shared) ══════ */
@@ -3775,7 +3776,7 @@ function triggerCorrect(idx, withPoints){
 }
 
 
-/* ══ TRAITOR REVEAL — FIX 3+6 ══ */
+/* ══ TRAITOR REVEAL FIX 3+6 ══ */
 const TRAITOR_TEXTS = {
   fr: {
     label: 'IDENTITÉ DU TRAÎTRE',
@@ -3821,7 +3822,7 @@ function hideTraitorReveal() {
   }, 400);
 }
 
-/* ══════ CHECK ANSWER (text only — premium types use their own flow) ══════ */
+/* ══════ CHECK ANSWER (text only premium types use their own flow) ══════ */
 function normalize(str){
   return str.trim().toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ');
 }
@@ -3896,7 +3897,7 @@ function showMeta(){
     if(hasLetter)collectedCount++;
     card.className='clue-display-card'+(hasLetter?'':' missing');
     card.textContent=hasLetter?letters[i]:'_';
-    card.title=hasLetter?('Station '+(i+1)+' — '+letters[i]):'Non encore collecté';
+    card.title=hasLetter?('Station '+(i+1)+' '+letters[i]):'Non encore collecté';
     el.appendChild(card);
   });
   const narrative=document.getElementById('metaNarrative');
@@ -3930,7 +3931,7 @@ function showVictory(){
   const elapsed=Math.floor((Date.now()-G.startTime)/1000);
   const mins=Math.floor(elapsed/60),secs=elapsed%60;
   G.gameActive=false;
-  // Final scene text — inject into victory screen narrative if element exists
+  // Final scene text inject into victory screen narrative if element exists
   const finalSceneEl=document.getElementById('victoryFinalScene');
   if(finalSceneEl){
     const scenes={
@@ -3967,7 +3968,7 @@ function showVictory(){
 /* ══════ LEADERBOARD ══════ */
 // Aucun appel réseau : le jeu ne dépend d'aucun service externe, même pour le score final.
 function submitScoreToLeaderboard(mins, secs){
-  /* no-op — conservé pour compatibilité d'appel, ne fait rien */
+  /* no-op conservé pour compatibilité d'appel, ne fait rien */
 }
 
 function launchConfetti(){
@@ -3998,7 +3999,7 @@ function shareMidProgress(){
   shareOrCopy(text, 'midShareBtn');
 }
 
-/* ══════ SHARE HELPER — Web Share API + clipboard fallback ══════ */
+/* ══════ SHARE HELPER Web Share API + clipboard fallback ══════ */
 function shareOrCopy(text, btnId){
   if(navigator.share){
     navigator.share({title:'Aventicum Quest',text}).catch(()=>{});
