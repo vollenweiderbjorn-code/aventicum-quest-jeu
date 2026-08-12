@@ -471,6 +471,13 @@ html, body {
   padding: 4px;
 }
 .qcm-cell.selected .qcm-label { color: var(--gold); }
+.qcm-caption {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: rgba(0,0,0,0.55);
+  text-align: center;
+  padding: 0 6px;
+}
 
 /* ── FEEDBACK INLINE ── */
 .feedback {
@@ -517,6 +524,18 @@ html, body {
 }
 
 /* ── HINT/CLUE AREA ── */
+.hint-panel { margin-bottom: 8px; display: flex; flex-direction: column; gap: 6px; }
+.hint-item {
+  background: var(--gold-faint);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 4px 4px 0;
+  padding: 9px 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.4;
+  color: rgba(250,247,240,.85);
+}
 .clue-box {
   background: var(--gold-faint);
   border: 1px solid rgba(61,90,48,0.2);
@@ -2247,6 +2266,12 @@ const translations = {
     hintBtn: "🪶 Demander un indice",
     supportBtn: "📞 Appeler le support",
     hint: "Indice",
+    enigmaLabel: (n) => `ÉNIGME ${n}`,
+    fragmentCollectedLabel: "FRAGMENT COLLECTÉ",
+    nextStepLabel: "PROCHAINE ÉTAPE",
+    groupMissionLabel: "MISSION DE GROUPE",
+    selectTwoLabel: "SÉLECTIONNE 2 ÉLÉMENTS",
+    stepOfLabel: (si,total) => `🔐 ÉTAPE ${si} / ${total}`,
     codeError: "Le Sénat rejette ce code, soldat. Vérifiez votre email.",
     launchBtn: "🔱 LANCER LA MISSION",
     correctFirst: () => `Bien joué, soldat ! Indice révélé. +100 pts`,
@@ -2300,6 +2325,12 @@ const translations = {
     hintBtn: "🪶 Request a hint",
     supportBtn: "📞 Call support",
     hint: "Hint",
+    enigmaLabel: (n) => `RIDDLE ${n}`,
+    fragmentCollectedLabel: "FRAGMENT COLLECTED",
+    nextStepLabel: "NEXT STOP",
+    groupMissionLabel: "GROUP MISSION",
+    selectTwoLabel: "SELECT 2 ELEMENTS",
+    stepOfLabel: (si,total) => `🔐 STEP ${si} / ${total}`,
     codeError: "The Senate rejects this code, soldier. Check your email.",
     launchBtn: "🔱 LAUNCH THE MISSION",
     correctFirst: () => `Well done, soldier! Clue revealed. +100 pts`,
@@ -2353,6 +2384,12 @@ const translations = {
     hintBtn: "🪶 Hinweis anfordern",
     supportBtn: "📞 Support anrufen",
     hint: "Hinweis",
+    enigmaLabel: (n) => `RÄTSEL ${n}`,
+    fragmentCollectedLabel: "FRAGMENT GESAMMELT",
+    nextStepLabel: "NÄCHSTE STATION",
+    groupMissionLabel: "GRUPPENAUFTRAG",
+    selectTwoLabel: "WÄHLE 2 ELEMENTE",
+    stepOfLabel: (si,total) => `🔐 SCHRITT ${si} / ${total}`,
     codeError: "Der Senat lehnt diesen Code ab, Soldat. Prüfe deine E-Mail.",
     launchBtn: "🔱 MISSION STARTEN",
     correctFirst: () => `Gut gemacht, Soldat! Hinweis enthüllt. +100 Pkt`,
@@ -2448,14 +2485,14 @@ function clearToken(){ try{ sessionStorage.removeItem(TOKEN_KEY); }catch(e){} }
 // 3: Arènes  4: Cigognier  5: Théâtre Selley
 // 6: Thermes  7: Porte de l'Est
 const ENIGMA_COORDS = [
-  [46.87965, 7.04056],  // 0 Hôtel de Ville (Rue Centrale)
-  [46.87940, 7.04117],  // 1 Tour de Benneville (Passage de Benneville)
-  [46.87943, 7.04078],  // 2 Rue des Alpes
-  [46.88103, 7.04256],  // 3 Arènes (Amphithéâtre romain)
-  [46.88166, 7.04643],  // 4 Sanctuaire du Cigognier
-  [46.88034, 7.04894],  // 5 Théâtre du Selley
-  [46.88580, 7.04993],  // 6 Thermes du Forum
-  [46.88774, 7.05798]   // 7 Porte de l'Est
+  [46.87991, 7.04049],  // 0 Hôtel de Ville (Rue Centrale)
+  [46.87943, 7.04118],  // 1 Tour de Benneville (Passage de Benneville)
+  [46.87961, 7.04109],  // 2 Rue des Alpes
+  [46.88105, 7.04255],  // 3 Arènes (Amphithéâtre romain)
+  [46.88190, 7.04639],  // 4 Sanctuaire du Cigognier
+  [46.88026, 7.04876],  // 5 Théâtre du Selley
+  [46.88576, 7.04994],  // 6 Thermes du Forum
+  [46.88769, 7.05793]   // 7 Porte de l'Est
 ];
 
 const BRIEFING_TEXTS = {
@@ -2479,37 +2516,37 @@ Möge Jupiter eure Schritte leiten, [TEAM]. Aventicum zählt auf euch.`
 // type: 'text' (default) | 'vision' (photo upload + Claude AI) | 'speech' (TTS+STT) | 'oath' (photo + vocal oath)
 const ENIGMAS = [
   // ─── ÉNIGME 1 HÔTEL DE VILLE (Tête de Maure) ───────────────────────────
-  { id:1, step:'I', fragment:'H', clue:'MAURE', answers:['MAURE','MOOR','MOHR'],
+  { id:1, step:'I', fragment:'H', clue:'MAURE', answers:['5','CINQ','FIVE','FUNF'], /* TODO BJORN: vérifier sur place le nombre exact d'arcades et ne garder que la bonne valeur + ses variantes écrites */
     fr:{ nav:{title:'Hôtel de Ville',desc:"La façade de l'Hôtel de Ville donne sur la Grand-Rue.",address:'Grand-Rue, 1580 Avenches',distance:'Point de départ',mapsUrl:'https://maps.google.com/?q=Hotel+de+Ville+Avenches'},
-      narrative:"Le traître a commencé ici, au cœur de la cité, sous les yeux de tous. Sur la façade de l'Hôtel de Ville, quatre visages t'observent depuis le XVIe siècle. Trois sont taillés dans la pierre. Un seul est forgé dans le métal, l'emblème d'Avenches depuis cinq cents ans.",
-      question:"Sur la façade de l'Hôtel de Ville, au-dessus de la porte principale et à hauteur du premier étage, quatre visages sculptés t'observent depuis le XVIe siècle. Trois sont taillés dans la pierre claire, style Renaissance. Le quatrième, seul, est forgé dans un métal sombre et serti dans un cercle de fer forgé : c'est l'emblème officiel de la ville d'Avenches, que l'on retrouve aussi sur son drapeau. Un seul de ces quatre visages porte un nom. Entre ce nom en majuscules.",
-      hints:[{text:"Repère le visage qui n'est pas en pierre claire : il est sombre, en métal, et entouré d'un anneau de fer forgé bien visible, différent des trois autres têtes.",cost:20},{text:"Ce visage sombre est l'emblème historique de la ville depuis le XVIe siècle. Tu le retrouves sur le drapeau qui flotte devant l'Hôtel de Ville, ainsi que sur les armoiries officielles d'Avenches.",cost:40},{text:"La réponse est MAURE.",cost:80}]},
+      narrative:"Le traître a commencé ici, au cœur de la cité, sous les yeux de tous. Depuis cinq siècles, l'emblème d'Avenches, une tête de Maure forgée dans le métal sombre, monte la garde sur la façade de l'Hôtel de Ville, entourée de trois visages de pierre. C'est à elle que le traître a confié la première trace de son passage. Approche-toi. Observe ce que des générations ont regardé sans jamais le voir.",
+      question:"Place-toi face à l'Hôtel de Ville, sous le regard de la tête de Maure. Au rez-de-chaussée, la façade est percée d'arcades, ces passages voûtés sous lesquels les marchands circulent depuis des siècles. Compte-les. Ce nombre est la première clé du traître. Entre-le en chiffres.",
+      hints:[{text:"Recule de quelques pas pour voir toute la façade d'un coup. Les arcades sont les grandes ouvertures voûtées du rez-de-chaussée, celles sous lesquelles on peut passer, pas les fenêtres des étages.",cost:20},{text:"Compte uniquement les arcades de la façade principale, celle qui porte l'inscription HOTEL DE VILLE. Ne compte ni les portes latérales ni les fenêtres.",cost:40},{text:"La réponse est 5.",cost:80}]},
     en:{ nav:{title:'Town Hall',desc:"The Town Hall façade faces the Grand-Rue.",address:'Grand-Rue, 1580 Avenches',distance:'Starting point',mapsUrl:'https://maps.google.com/?q=Hotel+de+Ville+Avenches'},
-      narrative:"The traitor began here, at the heart of the city, in plain sight. Four faces watch you from the Town Hall façade, keeping guard since the 16th century. Three are carved in stone, one alone is forged in metal. That face has guarded the secret of Avenches for five hundred years.",
-      question:"On the Town Hall façade, above the main door and at first-floor height, four carved faces have watched the square since the 16th century. Three are cut from pale stone, Renaissance style. The fourth alone is forged from dark metal and set inside a wrought-iron ring: it is Avenches' official emblem, the same one shown on the town's flag. Only one of these four faces has a name. Enter it in capital letters.",
-      hints:[{text:"Find the face that isn't pale stone: it's dark metal, framed by a clearly visible wrought-iron ring, different from the other three heads.",cost:20},{text:"This dark face is the historic emblem of the city, used since the 16th century. You'll also find it on the flag flying in front of the Town Hall, and on Avenches' official coat of arms.",cost:40},{text:"The answer is MOOR.",cost:80}]},
+      narrative:"The traitor began here, at the heart of the city, in plain sight. For five centuries, the emblem of Avenches, a Moor's head forged in dark metal, has stood guard on the Town Hall façade, surrounded by three stone faces. It is to this guardian that the traitor entrusted the first trace of his passage. Come closer. Observe what generations have looked at without ever truly seeing.",
+      question:"Stand facing the Town Hall, under the gaze of the Moor's head. At ground level, the façade is pierced by arcades, the vaulted passages merchants have walked through for centuries. Count them. That number is the traitor's first key. Enter it in digits.",
+      hints:[{text:"Step back a few paces to see the whole façade at once. The arcades are the large vaulted openings at ground level, the ones you can walk under, not the windows of the upper floors.",cost:20},{text:"Count only the arcades of the main façade, the one bearing the inscription HOTEL DE VILLE. Do not count side doors or windows.",cost:40},{text:"The answer is 5.",cost:80}]},
     de:{ nav:{title:'Rathaus',desc:"Die Fassade des Rathauses zeigt zur Grand-Rue.",address:'Grand-Rue, 1580 Avenches',distance:'Startpunkt',mapsUrl:'https://maps.google.com/?q=Hotel+de+Ville+Avenches'},
-      narrative:"Der Verräter begann hier, im Herzen der Stadt, für alle sichtbar. Vier Gesichter beobachten euch an der Rathausfassade, seit dem 16. Jahrhundert Wache haltend. Drei sind aus Stein gehauen, eines allein ist aus Metall geschmiedet. Dieses Gesicht hütet das Geheimnis von Avenches seit fünfhundert Jahren.",
-      question:"An der Rathausfassade, über dem Haupteingang und auf Höhe des ersten Stockwerks, beobachten euch seit dem 16. Jahrhundert vier geschnitzte Gesichter. Drei sind aus hellem Stein im Renaissance-Stil gehauen. Nur das vierte ist aus dunklem Metall geschmiedet und in einen schmiedeeisernen Ring gefasst: es ist das offizielle Wappenzeichen von Avenches, dasselbe, das auch auf der Stadtflagge zu sehen ist. Nur eines dieser vier Gesichter trägt einen Namen. Gebt ihn in Großbuchstaben ein.",
-      hints:[{text:"Sucht das Gesicht, das nicht aus hellem Stein ist: Es ist aus dunklem Metall und von einem gut sichtbaren schmiedeeisernen Ring umrahmt, anders als die drei übrigen Köpfe.",cost:20},{text:"Dieses dunkle Gesicht ist das historische Wappenzeichen der Stadt seit dem 16. Jahrhundert. Ihr findet es auch auf der Flagge vor dem Rathaus und auf dem offiziellen Stadtwappen von Avenches.",cost:40},{text:"Die Antwort ist MOHR.",cost:80}]}
+      narrative:"Der Verräter begann hier, im Herzen der Stadt, für alle sichtbar. Seit fünf Jahrhunderten hält das Wahrzeichen von Avenches, ein Mohrenkopf aus dunklem Metall, Wache an der Rathausfassade, umgeben von drei Steingesichtern. Ihm vertraute der Verräter die erste Spur seines Weges an. Tretet näher. Beobachtet, was Generationen angesehen haben, ohne es je wirklich zu sehen.",
+      question:"Stellt euch vor das Rathaus, unter den Blick des Mohrenkopfs. Im Erdgeschoss ist die Fassade von Arkaden durchbrochen, jenen gewölbten Durchgängen, unter denen die Händler seit Jahrhunderten gehen. Zählt sie. Diese Zahl ist der erste Schlüssel des Verräters. Gebt sie in Ziffern ein.",
+      hints:[{text:"Geht ein paar Schritte zurück, um die ganze Fassade auf einen Blick zu sehen. Die Arkaden sind die großen gewölbten Öffnungen im Erdgeschoss, unter denen man hindurchgehen kann, nicht die Fenster der oberen Stockwerke.",cost:20},{text:"Zählt nur die Arkaden der Hauptfassade, jener mit der Inschrift HOTEL DE VILLE. Zählt weder Seitentüren noch Fenster.",cost:40},{text:"Die Antwort ist 5.",cost:80}]}
   },
   // ─── ÉNIGME 2 TOUR DE BENNEVILLE ───────────────────────────────────────
-  { id:2, step:'II', fragment:'E', clue:'CIGOGNIER', answers:['CIGOGNIER'], groupMission:{fr:'Répartissez-vous autour du Cigognier, chacun observe un côté. Qui trouve l\'inscription ?',en:'Split up around the Cigognier, each person covers one side. Who finds the inscription?',de:'Verteilt euch rund um den Cigognier, jeder beobachtet eine Seite. Wer findet die Inschrift?'},
+  { id:2, step:'II', fragment:'E', clue:'CIGOGNIER', answers:['CIGOGNIER','LE CIGOGNIER','CIGOGNER'], warning:{fr:'Tour ouverte de 9h à 21h (1er mai – 30 sept.) et de 9h à 17h le reste de l\'année. Max. 20 personnes en même temps dans la tour.',en:'Tower open 9am-9pm (May 1 – Sept 30) and 9am-5pm the rest of the year. Max. 20 people inside the tower at once.',de:'Turm geöffnet 9-21 Uhr (1. Mai – 30. Sept.) und 9-17 Uhr den Rest des Jahres. Max. 20 Personen gleichzeitig im Turm.'}, groupMission:{fr:'Montez ensemble au sommet, puis répartissez-vous : chacun regarde par une fenêtre différente. Qui repère la colonne solitaire dans les champs ?',en:'Climb to the top together, then split up: each person looks through a different window. Who spots the lone column in the fields?',de:'Steigt gemeinsam zum Gipfel, dann verteilt euch: jeder schaut durch ein anderes Fenster. Wer entdeckt die einsame Säule in den Feldern?'},
     fr:{ nav:{title:'Tour de Benneville',desc:"La tour médiévale se dresse à quelques pas de l'Hôtel de Ville.",address:'Rue de Lausanne, 1580 Avenches',distance:'~100 m de l\'Hôtel de Ville',mapsUrl:'https://maps.google.com/?q=Tour+de+Benneville+Avenches'},
-      narrative:"La Tour de Benneville domine la plaine depuis le XIIIe siècle : cinq niveaux, des meurtrières, une vue imprenable. C'est depuis ici que le traître a repéré l'endroit où cacher l'aquila. Il a vu depuis le sommet ce que personne ne voit depuis le bas. Monte.",
-      question:"Monte jusqu'au sommet de la tour. Depuis la fenêtre donnant sur la plaine, un monument romain se dresse seul dans les champs, la seule colonne encore debout du plus grand sanctuaire d'Aventicum. Quel est le nom de ce monument ? Entre-le en majuscules, sans espace.",
-      hints:[{text:"Cherche une fenêtre donnant vers la plaine, vers le bas de la ville, au-delà des toits. Un élément romain se dresse seul dans les champs, comme une sentinelle oubliée. Ce n'est pas un bâtiment, juste une colonne.",cost:20},{text:"Ce monument porte le nom de l'oiseau qui nichait autrefois à son sommet pendant des siècles, un grand oiseau migrateur, blanc et noir, au long bec rouge.",cost:40},{text:"La réponse est CIGOGNIER.",cost:80}]},
+      narrative:"La Tour de Benneville domine la plaine depuis le XIIIe siècle : cinq niveaux, des meurtrières, une vue imprenable. C'est d'ici que le traître a repéré sa cachette. Au loin, dans les champs, se dresse la dernière colonne du plus grand sanctuaire d'Aventicum. Pendant des siècles, des cigognes ont niché à son sommet, et les habitants ont fini par baptiser le monument du nom de cet oiseau. Monte, et trouve ce que le traître a vu.",
+      question:"Monte jusqu'au sommet de la tour. Depuis la fenêtre donnant sur la plaine, repère la colonne romaine qui se dresse seule dans les champs. Son nom vient de l'oiseau qui nichait à son sommet, la cigogne. Quel est le nom de ce monument ? Entre-le en majuscules, sans espace.",
+      hints:[{text:"Cherche une fenêtre donnant vers la plaine, au-delà des toits. Un élément romain se dresse seul dans les champs, comme une sentinelle oubliée. Ce n'est pas un bâtiment, juste une colonne.",cost:20},{text:"Le nom du monument se forme à partir du mot cigogne : c'est le lieu des cigognes, comme un pommier est l'arbre des pommes. Cigogne... ?",cost:40},{text:"La réponse est CIGOGNIER.",cost:80}]},
     en:{ nav:{title:'Benneville Tower',desc:"The medieval tower stands a few steps from the Town Hall.",address:'Rue de Lausanne, 1580 Avenches',distance:'~100 m from Town Hall',mapsUrl:'https://maps.google.com/?q=Tour+de+Benneville+Avenches'},
-      narrative:"The Benneville Tower has dominated the plain since the 13th century: five levels, arrow slits, a breathtaking view. From this vantage point, the traitor scouted where to hide the aquila. He saw from the summit what no one sees from below. Climb.",
-      question:"Climb to the top of the tower. From the window facing the plain, a Roman monument rises alone from the fields, the only standing column of Aventicum's greatest sanctuary. What is the name of this monument? Enter it in capital letters, no spaces.",
-      hints:[{text:"Look for a window facing the plain, towards the lower town, beyond the rooftops. A Roman element stands alone in the fields, like a forgotten sentinel. It is not a building, just a column.",cost:20},{text:"This monument bears the name of the bird that nested at its top for centuries, a large migratory bird, black and white, with a long red beak.",cost:40},{text:"The answer is CIGOGNIER.",cost:80}]},
+      narrative:"The Benneville Tower has dominated the plain since the 13th century: five levels, arrow slits, a breathtaking view. From this vantage point, the traitor scouted his hiding place. Far off in the fields stands the last column of Aventicum's greatest sanctuary. For centuries, storks nested at its top, and the locals ended up naming the monument after that bird: in French, a stork is a cigogne. Climb, and find what the traitor saw.",
+      question:"Climb to the top of the tower. From the window facing the plain, spot the Roman column standing alone in the fields. Its French name is built from cigogne, the stork that nested at its top. What is the name of this monument? Enter it in capital letters, no spaces, exactly as the locals write it.",
+      hints:[{text:"Look for a window facing the plain, beyond the rooftops. A Roman element stands alone in the fields, like a forgotten sentinel. It is not a building, just a column.",cost:20},{text:"Take the French word cigogne and add the ending -IER, the way French turns pomme (apple) into pommier (apple tree): the place of the storks.",cost:40},{text:"The answer is CIGOGNIER.",cost:80}]},
     de:{ nav:{title:'Benneville-Turm',desc:"Der mittelalterliche Turm steht wenige Schritte vom Rathaus entfernt.",address:'Rue de Lausanne, 1580 Avenches',distance:'~100 m vom Rathaus',mapsUrl:'https://maps.google.com/?q=Tour+de+Benneville+Avenches'},
-      narrative:"Der Benneville-Turm beherrscht die Ebene seit dem 13. Jahrhundert: fünf Stockwerke, Schießscharten, ein atemberaubender Ausblick. Von hier aus kundschaftete der Verräter aus, wo er die Aquila verstecken sollte. Er sah vom Gipfel, was niemand von unten sieht. Steigt hinauf.",
-      question:"Steigt bis zum Gipfel des Turms. Vom Fenster mit Blick auf die Ebene erhebt sich ein römisches Monument einsam aus den Feldern, die einzige noch stehende Säule des größten Heiligtums von Aventicum. Wie heißt dieses Monument? Gebt es in Großbuchstaben ein, ohne Leerzeichen.",
-      hints:[{text:"Sucht am Turmgipfel ein Fenster mit Blick auf die Ebene, über die Dächer hinweg, zum unteren Teil der Stadt. Dort, allein in den Feldern, erhebt sich ein römisches Element wie eine vergessene Wache. Es ist kein Gebäude, nur eine Säule.",cost:20},{text:"Das Monument verdankt seinen Namen den Störchen, die dort jahrhundertelang an seiner Spitze nisteten, ein großer Zugvogel, schwarz-weiß, mit langem rotem Schnabel.",cost:40},{text:"Die Antwort ist CIGOGNIER.",cost:80}]}
+      narrative:"Der Benneville-Turm beherrscht die Ebene seit dem 13. Jahrhundert: fünf Stockwerke, Schießscharten, ein atemberaubender Ausblick. Von hier aus kundschaftete der Verräter sein Versteck aus. Weit draußen in den Feldern steht die letzte Säule des größten Heiligtums von Aventicum. Jahrhundertelang nisteten Störche auf ihrer Spitze, und die Einheimischen benannten das Monument schließlich nach diesem Vogel: auf Französisch heißt der Storch cigogne. Steigt hinauf und findet, was der Verräter sah.",
+      question:"Steigt bis zum Gipfel des Turms. Vom Fenster mit Blick auf die Ebene aus entdeckt ihr die römische Säule, die einsam in den Feldern steht. Ihr französischer Name leitet sich von cigogne ab, dem Storch, der einst auf ihrer Spitze nistete. Wie heißt dieses Monument? Gebt den Namen in Großbuchstaben ein, ohne Leerzeichen, genau wie die Einheimischen ihn schreiben.",
+      hints:[{text:"Sucht am Turmgipfel ein Fenster mit Blick auf die Ebene, über die Dächer hinweg. Dort, allein in den Feldern, erhebt sich ein römisches Element wie eine vergessene Wache. Es ist kein Gebäude, nur eine Säule.",cost:20},{text:"Nehmt das französische Wort cigogne und hängt die Endung -IER an, so wie aus pomme (Apfel) ein pommier (Apfelbaum) wird: der Ort der Störche.",cost:40},{text:"Die Antwort ist CIGOGNIER.",cost:80}]}
   },
   // ─── ÉNIGME 3 RUE DES ALPES (QCM visuel) ──────────────────────────────
-  { id:3, step:'III', fragment:'L', clue:'LOUVE', type:'qcm', answers:['A+B'], qcmEmojis:['🐺','🧙','⛑️','⚓'], qcmLabels:['A. Loup romain','B. Nain de jardin','C. Casque légionnaire','D. Ancre marine'],
+  { id:3, step:'III', fragment:'L', clue:'LOUVE', type:'qcm', answers:['A+B'], qcmImages:['img/qcm-loup.jpg','img/qcm-nain.jpg','img/qcm-casque.jpg','img/qcm-ancre.jpg'], /* TODO BJORN: ajouter ces 4 photos dans le dossier img/ du repo. A et B = TES photos des vrais ornements de la rue (loup, nain). C et D = photos leurres (casque, ancre) qui ne sont PAS dans la rue. */ qcmEmojis:['🐺','🧙','⛑️','⚓'], qcmLabels:['A. Loup romain','B. Nain de jardin','C. Casque légionnaire','D. Ancre marine'],
     fr:{ nav:{title:'Rue des Alpes',desc:"Observez les façades des immeubles le long de la Rue des Alpes.",address:'Rue des Alpes, 1580 Avenches',distance:'~150 m de la Tour de Benneville',mapsUrl:'https://maps.google.com/?q=Rue+des+Alpes+Avenches'},
       narrative:"La Rue des Alpes relie l'Hôtel de Ville au reste de la cité. En apparence, une rue ordinaire. Mais le traître l'a longée les yeux ouverts, et il y a vu ce que personne d'autre ne voit. Deux éléments en pleine vue, invisibles à qui ne cherche pas.",
       question:`En remontant toute la Rue des Alpes, observe attentivement les façades des bâtiments eux-mêmes, la pierre et le crépi, pas les vitrines ni les enseignes commerciales. Parmi ces quatre ornements ci-dessous (A, B, C, D), deux sont RÉELLEMENT fixés ou sculptés sur ces façades. Sélectionne les deux bons éléments, puis confirme.`,
@@ -2539,7 +2576,7 @@ const ENIGMAS = [
       hints:[{text:"Sucht das Restaurierungsschild auf der überdachten Terrasse des Römermuseums neben dem Amphitheater, auf Augenhöhe, nahe dem Terrasseneingang.",cost:20},{text:"Der Plan teilt das Amphitheater in 8 nummerierte Zonen ein, jede deckt einen anderen Abschnitt des Monuments. Findet jene, die zu eurem Standort auf der Terrasse passt.",cost:40},{text:"Die überdachte Terrasse entspricht Zone 6, wie auf dem Schild steht.",cost:80}]}
   },
   // ─── ÉNIGME 5 SANCTUAIRE DU CIGOGNIER ─────────────────────────────────
-  { id:5, step:'V', fragment:'E', clue:'MARC-AURÈLE', answers:['MARC AURELE','MARC-AURELE','MARC AURÈLE','MARC-AURÈLE','MARCUS AURELIUS','MARK AUREL'],
+  { id:5, step:'V', fragment:'E', clue:'MARC-AURÈLE', answers:['MARC AURELE','MARC-AURELE','MARC AURÈLE','MARC-AURÈLE','MARCUS AURELIUS','MARCUS AURELIUS ANTONINUS','MARK AUREL','MARCUS AUREL'],
     fr:{ nav:{title:'Sanctuaire du Cigognier',desc:"La colonne solitaire de 12 mètres est visible depuis la route.",address:'Chemin du Cigognier, 1580 Avenches',distance:'~600 m des arènes',mapsUrl:'https://maps.google.com/?q=Sanctuaire+Cigognier+Avenches'},
       narrative:"Tu es au cœur du plus grand sanctuaire d'Aventicum. En 1939, dans un égout romain sous ces pierres, des ouvriers ont mis au jour le trésor le plus précieux de Suisse romaine : un buste en or d'Empereur. Le traître sait que l'aquila mérite d'être cachée près d'ici. Mais d'abord : qui est cet Empereur ?",
       question:"En 1939, un buste en or d'Empereur fut découvert dans les égouts de ce sanctuaire, le trésor le plus précieux de Suisse romaine. Cet Empereur régna de 161 à 180 apr. J.-C., guerrier et philosophe, auteur des Pensées encore lues aujourd'hui. Qui est-il ? Entre son nom en majuscules.",
@@ -2569,36 +2606,42 @@ const ENIGMAS = [
       hints:[{text:"Suche nach einem Kalksteinblock mit einem 8-seitigen gemeißelten Rahmen (ein Achteck) im niedrigen Mauerwerk der Sitzreihen. Es ist nicht hoch oben: es ist in Reichweite.",cost:20},{text:"Ein einziger Buchstabe, Anfang des Wortes Restauration, steht vor vier Ziffern. Diese Ziffern bezeichnen ein Jahr vom ganz Anfang des 20. Jahrhunderts.",cost:40},{text:"Der Code ist 1903 (oder 1902 je nach genauen Zustand des Cartouche).",cost:0}]}
   },
   // ─── ÉNIGME 7 THERMES DU FORUM (TTS + STT) ────────────────────────────
-  { id:7, step:'VII', fragment:'I', clue:'HYPOCAUSTE', type:'text', answers:['HYPOCAUSTE','HYPOCAUST','HYPOKAUST'],
+  { id:7, step:'VII', fragment:'I', clue:'HYPOCAUSTE', type:'text', answers:['HYPOCAUSTE','HYPOCAUST','HYPOKAUST','HYPOCAUSTUM','HYPOKAUSTE','IPOCAUSTE'],
     fr:{ nav:{title:'Thermes du Forum',desc:"Les fondations des thermes romains sont visibles depuis la rue principale.",address:'Place du Bourg, 1580 Avenches',distance:'~700 m du Cigognier',mapsUrl:'https://maps.google.com/?q=Thermes+forum+Avenches'},
       narrative:"Devant toi s'étend le sous-sol des bains publics d'Aventicum. Des centaines de petits piliers de brique soutiennent le plancher disparu où les Romains vivaient et débattaient. L'air chaud y circulait : c'était le cœur technique de la vie sociale romaine. Le traître connaît ce mécanisme par cœur. C'est ton tour de le découvrir.",
-      question:"Ce sous-sol des thermes cache un système de chauffage romain en deux parties. Réponds aux deux questions ci-dessous, dans l'ordre, pour valider cette étape.",
-      hints:[{text:"Regarde la forme exacte des petites colonnes devant toi : des briques carrées ou des disques de terre cuite, empilés les uns sur les autres comme des piles de jetons, assez bas pour qu'on puisse les enjamber. Chaque pilier individuel porte un nom latin précis, pas le nom du système entier.",cost:20},{text:"Chaque pilier s'appelle un pila (au pluriel : pilae, du latin « pieu »). Ensemble, ces pilae soutenaient un plancher surélevé sous lequel circulait l'air chaud d'un foyer (praefurnium) : c'est ce système entier de chauffage par le sol qu'il faut nommer à l'étape suivante.",cost:40},{text:"Étape 1 : PILAE. Étape 2 : HYPOCAUSTE.",cost:0}]},
+      question:"Ce sous-sol des thermes cache un système de chauffage romain. Ses centaines de petits piliers, appelés pilae, soutenaient un plancher sous lequel circulait l'air chaud. Quel est le nom de ce système de chauffage par le sol dans son ensemble ? Entre ta réponse en majuscules.",
+      hints:[{text:"Regarde la forme exacte des petites colonnes devant toi : des briques carrées ou des disques de terre cuite, empilés les uns sur les autres comme des piles de jetons, assez bas pour qu'on puisse les enjamber. Chaque pilier individuel porte un nom latin précis, pas le nom du système entier.",cost:20},{text:"Chaque pilier s'appelle un pila (au pluriel : pilae, du latin « pieu »). Ensemble, ces pilae soutenaient un plancher surélevé sous lequel circulait l'air chaud d'un foyer (praefurnium) : c'est ce système entier de chauffage par le sol qu'il faut nommer.",cost:40},{text:"La réponse est HYPOCAUSTE.",cost:0}]},
     en:{ nav:{title:'Forum Baths',desc:"The foundations of the Roman baths are visible from the main street.",address:'Place du Bourg, 1580 Avenches',distance:'~700 m from the Cigognier',mapsUrl:'https://maps.google.com/?q=Thermes+forum+Avenches'},
       narrative:"Before you stretches the underfloor of Aventicum's public baths. Hundreds of small brick pillars support the vanished floor where Romans bathed and debated. Hot air circulated here: this was the technical heart of Roman social life. The traitor knows this mechanism by heart. Now it is your turn to discover it.",
-      question:"This underfloor area of the baths hides a two-part Roman heating system. Answer the two questions below, in order, to complete this stage.",
-      hints:[{text:"Look closely at the shape of the small columns in front of you: square bricks or terracotta discs, stacked like piles of coins, low enough to step over. Each individual pillar had its own precise Latin name, not the name of the whole system.",cost:20},{text:"Each pillar is called a pila (plural: pilae, Latin for \"stake\"). Together, these pilae held up a raised floor, under which hot air from a furnace (praefurnium) circulated: that whole underfloor heating system is what you need to name in the next step.",cost:40},{text:"Step 1: PILAE. Step 2: HYPOCAUST.",cost:0}]},
+      question:"This underfloor area of the baths hides a Roman heating system. Its hundreds of small pillars, called pilae, held up a raised floor under which hot air circulated. What is the name of this underfloor heating system as a whole? Enter your answer in capital letters.",
+      hints:[{text:"Look closely at the shape of the small columns in front of you: square bricks or terracotta discs, stacked like piles of coins, low enough to step over. Each individual pillar had its own precise Latin name, not the name of the whole system.",cost:20},{text:"Each pillar is called a pila (plural: pilae, Latin for \"stake\"). Together, these pilae held up a raised floor, under which hot air from a furnace (praefurnium) circulated: that whole underfloor heating system is what you need to name.",cost:40},{text:"The answer is HYPOCAUST.",cost:0}]},
     de:{ nav:{title:'Forumthermen',desc:"Die Fundamente der römischen Thermen sind von der Hauptstraße aus sichtbar.",address:'Place du Bourg, 1580 Avenches',distance:'~700 m vom Cigognier',mapsUrl:'https://maps.google.com/?q=Thermes+forum+Avenches'},
       narrative:"Vor euch erstreckt sich der Unterboden der öffentlichen Bäder von Aventicum. Hunderte kleiner Ziegelsteinpfeiler stützen den verschwundenen Fußboden, auf dem die Römer lebten und badeten. Heißluft zirkulierte hier: das war das technische Herz des römischen Soziallebens. Der Verräter kennt diesen Mechanismus auswendig. Jetzt seid ihr an der Reihe, ihn zu entdecken.",
-      question:"Dieser Unterboden der Thermen verbirgt ein zweiteiliges römisches Heizsystem. Beantwortet die zwei folgenden Fragen in der richtigen Reihenfolge, um diese Etappe abzuschließen.",
-      hints:[{text:"Betrachtet genau die Form der kleinen Säulen vor euch: quadratische Ziegel oder Terrakotta-Scheiben, aufeinandergestapelt wie Münztürme, niedrig genug, um darüber zu steigen. Jeder einzelne Pfeiler hatte einen eigenen lateinischen Namen, nicht den Namen des ganzen Systems.",cost:20},{text:"Jeder Pfeiler heißt pila (Mehrzahl: pilae, lateinisch für „Pfahl“). Zusammen trugen diese pilae einen erhöhten Boden, unter dem heiße Luft aus einem Ofen (Praefurnium) zirkulierte: genau dieses Fußbodenheizungssystem müsst ihr im nächsten Schritt benennen.",cost:40},{text:"Schritt 1: PILAE. Schritt 2: HYPOKAUST.",cost:0}]}
+      question:"Dieser Unterboden der Thermen verbirgt ein römisches Heizsystem. Die hunderten kleinen Pfeiler, pilae genannt, trugen einen erhöhten Boden, unter dem heiße Luft zirkulierte. Wie heißt dieses Fußbodenheizungssystem insgesamt? Gebt eure Antwort in Großbuchstaben ein.",
+      hints:[{text:"Betrachtet genau die Form der kleinen Säulen vor euch: quadratische Ziegel oder Terrakotta-Scheiben, aufeinandergestapelt wie Münztürme, niedrig genug, um darüber zu steigen. Jeder einzelne Pfeiler hatte einen eigenen lateinischen Namen, nicht den Namen des ganzen Systems.",cost:20},{text:"Jeder Pfeiler heißt pila (Mehrzahl: pilae, lateinisch für „Pfahl“). Zusammen trugen diese pilae einen erhöhten Boden, unter dem heiße Luft aus einem Ofen (Praefurnium) zirkulierte: genau dieses Fußbodenheizungssystem müsst ihr benennen.",cost:40},{text:"Die Antwort ist HYPOKAUST.",cost:0}]}
   },
   // ─── ÉNIGME 8 PORTE DE L'EST (Vision panoramique + Serment vocal) ──────
-  { id:8, step:'VIII', fragment:'I', clue:'AQUILA', type:'text', answers:['AVENTICUM','AVENTUCUM'],
+  { id:8, step:'VIII', fragment:'I', clue:'AQUILA', type:'text', answers:['AVENTICUM','AVENTICVM','AVENTUCUM','AVANTICUM'],
     fr:{ nav:{title:"Porte de l'Est",desc:"La porte romaine monumentale se trouve sur le côté est du mur d'enceinte.",address:"Chemin de la Porte de l'Est, 1580 Avenches",distance:'~1 km des thermes',mapsUrl:'https://maps.google.com/?q=Porte+Est+Avenches'},
       narrative:"Tu es aux portes de l'Empire. La Porte de l'Est gardait l'entrée principale d'Aventicum, construite sous Vespasien vers l'an 72. C'est ici que le traître a caché l'aquila, convaincu que tu n'irais jamais jusqu'au bout. Il s'est trompé.",
-      question:"À la Porte de l'Est, deux questions t'attendent sur le peuple dont Aventicum fut la capitale. Réponds-y dans l'ordre pour obtenir ton dernier fragment.",
-      hints:[{text:"Cherche le panneau officiel d'information sur ou à côté de la Porte de l'Est, qui devrait nommer le peuple dont Aventicum était la capitale. Si ce panneau est inaccessible (travaux en cours), passe directement à l'indice suivant : tu n'en as pas besoin pour continuer.",cost:20},{text:"Ce peuple vivait en Suisse avant l'arrivée des Romains. Ils ont été vaincus par César en 58 av. J.-C. Leur nom latin commence par H.",cost:40},{text:"La bonne réponse est B : LES HELVÈTES (en latin : Helvetii). Sélectionne ce bouton pour valider l'étape 1.",cost:0}]},
+      question:"À la Porte de l'Est, une dernière question referme ta quête : quel est le nom latin de cette cité, capitale du peuple helvète, que tu as parcourue tout au long de cette enquête ? Entre-le en majuscules.",
+      hints:[{text:"Cherche le panneau officiel d'information sur ou à côté de la Porte de l'Est : le nom de la cité y est indiqué. Si ce panneau est inaccessible (travaux en cours), passe directement à l'indice suivant : tu n'en as pas besoin pour continuer.",cost:20},{text:"C'est le nom que tu as lu et entendu à chaque étape de ce parcours, sur les panneaux et dans le récit du traître. Il commence par A.",cost:40},{text:"La réponse est AVENTICUM.",cost:0}]},
     en:{ nav:{title:"East Gate",desc:"The monumental Roman gate is on the east side of the city wall.",address:"Chemin de la Porte de l'Est, 1580 Avenches",distance:'~1 km from the baths',mapsUrl:'https://maps.google.com/?q=Porte+Est+Avenches'},
       narrative:"You are at the gates of the Empire. The East Gate guarded Aventicum's main entrance, built under Vespasian around AD 72. This is where the traitor hid the aquila, convinced you would never come this far. He was wrong.",
-      question:"At the East Gate, two questions await you about the people whose capital Aventicum once was. Answer them in order to earn your final fragment.",
-      hints:[{text:"Look for the official information panel on or next to the East Gate, naming the people whose capital Aventicum was. If the panel is inaccessible (ongoing restoration work), skip straight to the next hint: you don't need it to continue.",cost:20},{text:"This people lived in Switzerland before the Romans arrived. They were defeated by Caesar in 58 BC. Their Latin name starts with H.",cost:40},{text:"The correct answer is B: THE HELVETII. Select that button to validate step 1.",cost:0}]},
+      question:"At the East Gate, one last question closes your quest: what is the Latin name of this city, capital of the Helvetii people, that you have walked through this whole adventure? Enter it in capital letters.",
+      hints:[{text:"Look for the official information panel on or next to the East Gate: the city's name is written there. If the panel is inaccessible (ongoing restoration work), skip straight to the next hint: you don't need it to continue.",cost:20},{text:"It's the name you've read and heard at every stop of this quest, on the panels and in the traitor's story. It starts with A.",cost:40},{text:"The answer is AVENTICUM.",cost:0}]},
     de:{ nav:{title:"Osttor",desc:"Das monumentale römische Tor befindet sich auf der Ostseite der Stadtmauer.",address:"Chemin de la Porte de l'Est, 1580 Avenches",distance:'~1 km von den Thermen',mapsUrl:'https://maps.google.com/?q=Porte+Est+Avenches'},
       narrative:"Ihr seid an den Toren des Imperiums. Das Osttor bewachte den Haupteingang von Aventicum, unter Vespasian um 72 n. Chr. erbaut. Hier versteckte der Verräter die Aquila, überzeugt, dass ihr nie so weit kommen würdet. Er irrte sich.",
-      question:"Am Osttor warten zwei Fragen zum Volk, dessen Hauptstadt Aventicum einst war. Beantwortet sie der Reihe nach, um euer letztes Fragment zu erhalten.",
-      hints:[{text:"Sucht nach der offiziellen Informationstafel am oder neben dem Osttor, auf dem das Volk steht, dessen Hauptstadt Aventicum war. Ist die Tafel nicht zugänglich (laufende Restaurierungsarbeiten), geht direkt zum nächsten Hinweis weiter, ihr braucht sie nicht, um fortzufahren.",cost:20},{text:"Dieses Volk lebte in der Schweiz vor der Ankunft der Römer. Sie wurden von Caesar 58 v. Chr. besiegt. Ihr lateinischer Name beginnt mit H.",cost:40},{text:"Die richtige Antwort ist B: DIE HELVETIER. Wählt diesen Button, um Schritt 1 zu bestätigen.",cost:0}]}
+      question:"Am Osttor schließt sich eine letzte Frage: Wie lautet der lateinische Name dieser Stadt, Hauptstadt des helvetischen Volkes, die ihr während dieser ganzen Suche durchquert habt? Gebt ihn in Großbuchstaben ein.",
+      hints:[{text:"Sucht nach der offiziellen Informationstafel am oder neben dem Osttor: der Stadtname steht dort. Ist die Tafel nicht zugänglich (laufende Restaurierungsarbeiten), geht direkt zum nächsten Hinweis weiter, ihr braucht sie nicht, um fortzufahren.",cost:20},{text:"Es ist der Name, den ihr bei jeder Station dieser Suche gelesen und gehört habt, auf den Tafeln und in der Geschichte des Verräters. Er beginnt mit A.",cost:40},{text:"Die Antwort ist AVENTICUM.",cost:0}]}
   }
 ];
+/* ══════ ROUTING (marche à pied, via OpenRouteService) ══════
+   TODO BJORN : crée une clé gratuite sur https://openrouteservice.org/dev/#/signup
+   (compte gratuit → 2000 requêtes/jour, largement suffisant), puis colle-la ci-dessous.
+   Tant que la clé est vide ou que l'appel échoue, le jeu retombe automatiquement
+   sur la ligne droite habituelle — aucun risque de casser la carte. */
+const ORS_API_KEY = 'eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjRmZTBiNWM1NjNiZjRhNzdiNWQ5Mzc5Y2I2OGYzMGY3IiwiaCI6Im11cm11cjY0In0=';
 /* ══════ STATE ══════ */
 const N_ENIGMAS = 8;
 const G = {
@@ -2794,7 +2837,13 @@ function submitCode(){
   // Ajoute ici tous les codes d'équipe distribués avant la mission.
   const LOCAL_CODES = ['AQUILA','HELVETII','AVENCHES','TEST'];
 
-  if(LOCAL_CODES.includes(code)){
+  // Codes personnels générés automatiquement après paiement Stripe, au format
+  // AQUILA-XXXXXXXX (8 caractères parmi ABCDEFGHJKLMNPQRSTUVWXYZ23456789,
+  // sans I/O/0/1 pour éviter les confusions). Voir le node "Générer Code AQUILA"
+  // dans le workflow n8n "Aventicum Quest — Paiement Stripe" pour la génération.
+  const PURCHASED_CODE_PATTERN = /^AQUILA-[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{8}$/;
+
+  if(LOCAL_CODES.includes(code) || PURCHASED_CODE_PATTERN.test(code)){
     errEl.style.display='none';
     G.teamName=team; G.code=code; G.savedCode=code;
     btn.textContent='✅ CODE ACCEPTÉ. AVE, SOLDAT';
@@ -2862,6 +2911,30 @@ const TRANSITION_MSGS = {
   ]
 };
 
+/* Retourne un tableau de [lat,lon] suivant les rues, ou null si indisponible
+   (clé absente, hors quota, pas de réseau, timeout...). Ne lève jamais d'erreur. */
+async function fetchWalkingRoute(fromCoords, toCoords){
+  if(!ORS_API_KEY) return null;
+  const controller = new AbortController();
+  const timeout = setTimeout(()=>controller.abort(), 5000);
+  try{
+    const toLonLat = c => c[1]+','+c[0]; // ORS attend lon,lat
+    const url = 'https://api.openrouteservice.org/v2/directions/foot-walking?api_key='
+      + encodeURIComponent(ORS_API_KEY)
+      + '&start=' + toLonLat(fromCoords) + '&end=' + toLonLat(toCoords);
+    const res = await fetch(url, { signal: controller.signal });
+    if(!res.ok) return null;
+    const data = await res.json();
+    const coords = data && data.features && data.features[0] && data.features[0].geometry && data.features[0].geometry.coordinates;
+    if(!coords || !coords.length) return null;
+    return coords.map(c => [c[1], c[0]]); // [lon,lat] -> [lat,lon] pour Leaflet
+  }catch(err){
+    return null; // réseau, timeout, quota dépassé, JSON invalide... on retombe sur la ligne droite
+  }finally{
+    clearTimeout(timeout);
+  }
+}
+
 function showTransition(nextIdx, callback) {
   const msg = TRANSITION_MSGS[currentLang][nextIdx - 1] || '';
   const loc = ENIGMAS[nextIdx][currentLang];
@@ -2914,6 +2987,7 @@ function showTransition(nextIdx, callback) {
     <!-- Map -->
     <div id="navMapContainer" style="flex:1;position:relative;min-height:0;">
       <div id="navMap" style="width:100%;height:100%;background:#1a1a2e;"></div>
+      <div id="navRouteLoading" style="position:absolute;bottom:10px;right:10px;background:rgba(18,10,1,0.85);border:1px solid rgba(201,168,76,0.4);border-radius:6px;padding:0.3rem 0.6rem;font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.1em;color:rgba(201,168,76,0.7);z-index:1000;display:none">${L_.loading}</div>
       <!-- Distance badge -->
       <div style="position:absolute;top:10px;right:10px;background:rgba(18,10,1,0.92);border:1px solid rgba(201,168,76,0.5);border-radius:6px;padding:0.4rem 0.7rem;z-index:1000">
         <div style="font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.2em;color:rgba(201,168,76,0.55)">${L_.dist}</div>
@@ -2984,7 +3058,7 @@ function showTransition(nextIdx, callback) {
       .addTo(_navMap)
       .openPopup();
 
-    // Animated dashed path
+    // Animated dashed path (ligne droite affichée immédiatement, remplacée si un vrai itinéraire arrive)
     const path = L.polyline([fromCoords, toCoords], {
       color: '#c9a84c',
       weight: 3,
@@ -2999,6 +3073,17 @@ function showTransition(nextIdx, callback) {
       path.setStyle({ opacity: Math.min(op, 0.85) });
       if (op >= 0.85) clearInterval(fadeIn);
     }, 30);
+
+    // Remplace la ligne droite par le vrai itinéraire à pied si disponible (silencieux en cas d'échec)
+    const loadingEl = document.getElementById('navRouteLoading');
+    if(ORS_API_KEY && loadingEl) loadingEl.style.display='block';
+    fetchWalkingRoute(fromCoords, toCoords).then(routeCoords => {
+      if(loadingEl) loadingEl.style.display='none';
+      if (!routeCoords || !_navMap) return; // API indisponible : on garde la ligne droite
+      path.setLatLngs(routeCoords);
+      const routeBounds = L.latLngBounds(routeCoords);
+      _navMap.fitBounds(routeBounds.pad(0.15));
+    });
 
     // GPS user position if available
     if (_userPos) {
@@ -3247,6 +3332,29 @@ function startGPS(){
   );
 }
 function updateAllUserMarkers(){if(!_userPos)return;Object.keys(_maps).forEach(idx=>updateMapUserPos(parseInt(idx)));}
+const _routeCache={}, _routeFetchInFlight={}, _routeLastFetchTime={};
+function haversineM(a,b){
+  const R=6371000, toRad=d=>d*Math.PI/180;
+  const dLat=toRad(b[0]-a[0]), dLon=toRad(b[1]-a[1]);
+  const x=Math.sin(dLat/2)**2+Math.cos(toRad(a[0]))*Math.cos(toRad(b[0]))*Math.sin(dLon/2)**2;
+  return 2*R*Math.asin(Math.sqrt(x));
+}
+// Ne relance un appel API que si on a bougé de >40m ou si aucun itinéraire n'est encore en cache,
+// et jamais plus d'une fois toutes les 15s par énigme : protège le quota gratuit ORS.
+function maybeFetchLiveRoute(idx, fromCoords, toCoords){
+  if(!ORS_API_KEY) return;
+  const now = Date.now();
+  const cache = _routeCache[idx];
+  const movedFar = !cache || haversineM(cache.from, fromCoords) > 40;
+  const longEnoughSince = now - (_routeLastFetchTime[idx]||0) > 15000;
+  if(_routeFetchInFlight[idx] || !movedFar || !longEnoughSince) return;
+  _routeFetchInFlight[idx]=true;
+  _routeLastFetchTime[idx]=now;
+  fetchWalkingRoute(fromCoords, toCoords).then(routeCoords=>{
+    _routeFetchInFlight[idx]=false;
+    if(routeCoords) _routeCache[idx]={from:fromCoords, coords:routeCoords};
+  });
+}
 function updateMapUserPos(idx){
   if(!_maps[idx]||!_userPos)return;
   const latlng=L.latLng(_userPos[0],_userPos[1]);
@@ -3254,8 +3362,11 @@ function updateMapUserPos(idx){
   else{const icon=L.divIcon({className:'',html:'<div class="user-marker"></div>',iconSize:[14,14],iconAnchor:[7,7]});_userMarkers[idx]=L.marker(latlng,{icon}).addTo(_maps[idx]);}
   const target=L.latLng(ENIGMA_COORDS[idx][0],ENIGMA_COORDS[idx][1]);
   if(_polylines[idx]){_maps[idx].removeLayer(_polylines[idx]);}
-  _polylines[idx]=L.polyline([latlng,target],{color:'#e74c3c',weight:2,opacity:0.7,dashArray:'6, 4'}).addTo(_maps[idx]);
+  const cached = _routeCache[idx];
+  const lineCoords = cached ? cached.coords : [latlng, target];
+  _polylines[idx]=L.polyline(lineCoords,{color:'#e74c3c',weight:2,opacity:0.7,dashArray:'6, 4'}).addTo(_maps[idx]);
   try{_maps[idx].fitBounds(L.latLngBounds([latlng,target]).pad(0.3));}catch(e){}
+  maybeFetchLiveRoute(idx, _userPos, ENIGMA_COORDS[idx]);
 }
 
 /* ══════ MAP ══════ */
@@ -3354,13 +3465,19 @@ function patchMultiSteps(){
   ENIGMAS[6].type='multi';
   ENIGMAS[6].multiSteps=[
     { stepType:'text', answers:['PILAE'],
-      fr:{q:"Juste devant toi se dressent de petites colonnes basses, des briques ou disques de terre cuite empilés les uns sur les autres, assez nombreux pour ressembler à une forêt de bornes. Quel est leur nom latin (au pluriel) ? Entre-le en majuscules."},
-      en:{q:"Right in front of you stand small, low stacks, terracotta bricks or discs piled on top of each other, numerous enough to look like a forest of posts. What is their Latin name (plural)? Enter it in capital letters."},
-      de:{q:"Direkt vor euch stehen kleine, niedrige Stapel, aus Ziegeln oder Terrakotta-Scheiben übereinander geschichtet, so zahlreich, dass sie wie ein Wald aus Pfosten wirken. Wie heißen sie auf Latein (Mehrzahl)? Gebt den Namen in Großbuchstaben ein."} },
+      fr:{q:"Juste devant toi se dressent de petites colonnes basses, des briques ou disques de terre cuite empilés les uns sur les autres, assez nombreux pour ressembler à une forêt de bornes. Quel est leur nom latin (au pluriel) ? Entre-le en majuscules.",
+          hints:[{text:"Regarde la forme de ces petites colonnes : des briques ou disques empilés, assez bas pour les enjamber. Leur nom latin désigne littéralement un « pieu ».",cost:20},{text:"Le mot est au pluriel latin, il se termine par -AE. Au singulier : pila.",cost:40},{text:"La réponse est PILAE.",cost:0}]},
+      en:{q:"Right in front of you stand small, low stacks, terracotta bricks or discs piled on top of each other, numerous enough to look like a forest of posts. What is their Latin name (plural)? Enter it in capital letters.",
+          hints:[{text:"Look at the shape of these small stacks: bricks or discs piled up, low enough to step over. Their Latin name literally means a 'stake'.",cost:20},{text:"The word is Latin plural, ending in -AE. Singular: pila.",cost:40},{text:"The answer is PILAE.",cost:0}]},
+      de:{q:"Direkt vor euch stehen kleine, niedrige Stapel, aus Ziegeln oder Terrakotta-Scheiben übereinander geschichtet, so zahlreich, dass sie wie ein Wald aus Pfosten wirken. Wie heißen sie auf Latein (Mehrzahl)? Gebt den Namen in Großbuchstaben ein.",
+          hints:[{text:"Betrachtet die Form dieser kleinen Stapel: Ziegel oder Scheiben übereinander, niedrig genug zum Übersteigen. Ihr lateinischer Name bedeutet wörtlich „Pfahl“.",cost:20},{text:"Das Wort steht im lateinischen Plural und endet auf -AE. Einzahl: pila.",cost:40},{text:"Die Antwort ist PILAE.",cost:0}]} },
     { stepType:'text', answers:['HYPOCAUSTE','HYPOCAUST','HYPOKAUST'],
-      fr:{q:"Ces piliers soutiennent un plancher surélevé. Un foyer (praefurnium) y faisait circuler de l'air chaud. Quel est le nom de ce système de chauffage romain par le sol ? En majuscules."},
-      en:{q:"These pillars support a raised floor. A furnace (praefurnium) circulated hot air through this space. What is the name of this Roman underfloor heating system? In capital letters."},
-      de:{q:"Diese Pfeiler stützen einen erhöhten Boden. Ein Ofen (Praefurnium) ließ heiße Luft darunter zirkulieren. Wie heißt dieses römische Fußbodenheizungssystem? In Großbuchstaben."} }
+      fr:{q:"Ces piliers soutiennent un plancher surélevé. Un foyer (praefurnium) y faisait circuler de l'air chaud. Quel est le nom de ce système de chauffage romain par le sol ? En majuscules.",
+          hints:[{text:"Ces piliers soutenaient un plancher sous lequel circulait de l'air chaud produit par un foyer (praefurnium). Cherche le mot qui désigne ce système entier.",cost:20},{text:"Le mot vient du grec hypo (« sous ») et kaustos (« brûlé, chauffé ») : littéralement « chauffé par-dessous ».",cost:40},{text:"La réponse est HYPOCAUSTE.",cost:0}]},
+      en:{q:"These pillars support a raised floor. A furnace (praefurnium) circulated hot air through this space. What is the name of this Roman underfloor heating system? In capital letters.",
+          hints:[{text:"These pillars supported a raised floor under which hot air from a furnace (praefurnium) circulated. Find the word for this whole system.",cost:20},{text:"The word comes from Greek hypo ('under') and kaustos ('burned, heated'): literally 'heated from below'.",cost:40},{text:"The answer is HYPOCAUST.",cost:0}]},
+      de:{q:"Diese Pfeiler stützen einen erhöhten Boden. Ein Ofen (Praefurnium) ließ heiße Luft darunter zirkulieren. Wie heißt dieses römische Fußbodenheizungssystem? In Großbuchstaben.",
+          hints:[{text:"Diese Pfeiler stützten einen erhöhten Boden, unter dem heiße Luft aus einem Ofen (Praefurnium) zirkulierte. Findet das Wort für dieses gesamte System.",cost:20},{text:"Das Wort kommt aus dem Griechischen: hypo („unter“) und kaustos („verbrannt, erhitzt“): wörtlich „von unten beheizt“.",cost:40},{text:"Die Antwort ist HYPOKAUST.",cost:0}]} }
   ];
 
   // S8 PORTE DE L'EST: step1=QCM Helvètes, step2="4"
@@ -3368,16 +3485,21 @@ function patchMultiSteps(){
   ENIGMAS[7].multiSteps=[
     { stepType:'qcm', correct:'B',
       fr:{q:"Quel peuple avait Aventicum pour capitale à l'époque romaine ?",
-          options:[{l:'A',t:'Les Gaulois'},{l:'B',t:'Les Helvètes'},{l:'C',t:'Les Romains'},{l:'D',t:'Les Burgondes'}]},
+          options:[{l:'A',t:'Les Gaulois'},{l:'B',t:'Les Helvètes'},{l:'C',t:'Les Romains'},{l:'D',t:'Les Burgondes'}],
+          hints:[{text:"Cherche le panneau officiel d'information sur ou à côté de la Porte de l'Est : le nom du peuple y est indiqué.",cost:20},{text:"Ce peuple vivait en Suisse avant l'arrivée des Romains et fut vaincu par César en 58 av. J.-C. Son nom commence par H.",cost:40},{text:"La bonne réponse est B : Les Helvètes.",cost:0}]},
       en:{q:"Which people had Aventicum as their capital in Roman times?",
-          options:[{l:'A',t:'The Gauls'},{l:'B',t:'The Helvetii'},{l:'C',t:'The Romans'},{l:'D',t:'The Burgundians'}]},
+          options:[{l:'A',t:'The Gauls'},{l:'B',t:'The Helvetii'},{l:'C',t:'The Romans'},{l:'D',t:'The Burgundians'}],
+          hints:[{text:"Look for the official information panel on or next to the East Gate: the people's name is written there.",cost:20},{text:"This people lived in Switzerland before the Romans arrived and was defeated by Caesar in 58 BC. Its name starts with H.",cost:40},{text:"The correct answer is B: The Helvetii.",cost:0}]},
       de:{q:"Welches Volk hatte Aventicum in der Römerzeit als Hauptstadt?",
-          options:[{l:'A',t:'Die Gallier'},{l:'B',t:'Die Helvetier'},{l:'C',t:'Die Römer'},{l:'D',t:'Die Burgunder'}]} },
+          options:[{l:'A',t:'Die Gallier'},{l:'B',t:'Die Helvetier'},{l:'C',t:'Die Römer'},{l:'D',t:'Die Burgunder'}],
+          hints:[{text:"Sucht nach der offiziellen Informationstafel am oder neben dem Osttor: der Name des Volkes steht dort.",cost:20},{text:"Dieses Volk lebte in der Schweiz vor der Ankunft der Römer und wurde von Caesar 58 v. Chr. besiegt. Sein Name beginnt mit H.",cost:40},{text:"Die richtige Antwort ist B: Die Helvetier.",cost:0}]} },
     { stepType:'text', answers:['4'],
-      hints:[{text:"Soustrais 72 de 476 pour obtenir le nombre d'années. Le résultat est entre 400 et 410 ans.",cost:20},{text:"476 moins 72 = 404 ans. Un siècle = 100 ans. Divise 404 par 100, puis arrondis au siècle le plus proche.",cost:40},{text:"La réponse est 4.",cost:0}],
-      fr:{q:"Tu sais déjà que cette porte fut construite vers l'an 72 après J.-C., sous l'empereur Vespasien. C'est à cette époque que ce peuple administrait Aventicum comme capitale. La domination romaine en Occident s'effondre en 476 après J.-C. En arrondissant au siècle le plus proche, combien de siècles séparent l'an 72 de l'an 476 ? Entre uniquement le chiffre."},
-      en:{q:"You already know this gate was built around 72 AD, under Emperor Vespasian, the very era when this people governed Aventicum as their capital. Roman rule in the West collapsed in 476 AD. Rounding to the nearest century, how many centuries separate 72 AD from 476 AD? Enter only the number."},
-      de:{q:"Ihr wisst bereits, dass dieses Tor um das Jahr 72 n. Chr. unter Kaiser Vespasian erbaut wurde. Genau in jener Zeit regierte dieses Volk Aventicum als Hauptstadt. Die römische Herrschaft im Westen endete im Jahr 476 n. Chr. Auf das nächste Jahrhundert gerundet: Wie viele Jahrhunderte liegen zwischen 72 und 476 n. Chr.? Gebt nur die Zahl ein."} }
+      fr:{q:"Tu sais déjà que cette porte fut construite vers l'an 72 après J.-C., sous l'empereur Vespasien. C'est à cette époque que ce peuple administrait Aventicum comme capitale. La domination romaine en Occident s'effondre en 476 après J.-C. En arrondissant au siècle le plus proche, combien de siècles séparent l'an 72 de l'an 476 ? Entre uniquement le chiffre.",
+          hints:[{text:"Soustrais 72 de 476 pour obtenir le nombre d'années. Le résultat est entre 400 et 410 ans.",cost:20},{text:"476 moins 72 = 404 ans. Un siècle = 100 ans. Divise 404 par 100, puis arrondis au siècle le plus proche.",cost:40},{text:"La réponse est 4.",cost:0}]},
+      en:{q:"You already know this gate was built around 72 AD, under Emperor Vespasian, the very era when this people governed Aventicum as their capital. Roman rule in the West collapsed in 476 AD. Rounding to the nearest century, how many centuries separate 72 AD from 476 AD? Enter only the number.",
+          hints:[{text:"Subtract 72 from 476 to get the number of years. The result is between 400 and 410 years.",cost:20},{text:"476 minus 72 = 404 years. A century = 100 years. Divide 404 by 100, then round to the nearest century.",cost:40},{text:"The answer is 4.",cost:0}]},
+      de:{q:"Ihr wisst bereits, dass dieses Tor um das Jahr 72 n. Chr. unter Kaiser Vespasian erbaut wurde. Genau in jener Zeit regierte dieses Volk Aventicum als Hauptstadt. Die römische Herrschaft im Westen endete im Jahr 476 n. Chr. Auf das nächste Jahrhundert gerundet: Wie viele Jahrhunderte liegen zwischen 72 und 476 n. Chr.? Gebt nur die Zahl ein.",
+          hints:[{text:"Zieht 72 von 476 ab, um die Anzahl Jahre zu erhalten. Das Ergebnis liegt zwischen 400 und 410 Jahren.",cost:20},{text:"476 minus 72 = 404 Jahre. Ein Jahrhundert = 100 Jahre. Teilt 404 durch 100 und rundet auf das nächste Jahrhundert.",cost:40},{text:"Die Antwort ist 4.",cost:0}]} }
   ];
 }
 
@@ -3406,11 +3528,11 @@ function _buildMultiStepHTML(e, idx){
       </div>
       <button class="btn-main" id="mqcmBtn-${idx}-${si}"
         onclick="checkMultiStep(${idx},${si})"
-        style="display:none;margin-top:10px;height:38px;font-size:10px">CONFIRMER</button>`;
+        style="display:none;margin-top:10px;height:38px;font-size:10px">${t('confirmBtn')}</button>`;
     }
     return `<div id="msc-${idx}-${si}" style="${si>0?'display:none':''}">
       <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;color:rgba(201,168,76,.55);margin-bottom:8px">
-        🔐 ÉTAPE ${si+1} / ${steps.length}
+        ${t('stepOfLabel', si+1, steps.length)}
       </div>
       <div style="font-family:var(--font-body);font-size:14px;color:rgba(250,247,240,.85);line-height:1.5;margin-bottom:4px">${loc.q}</div>
       ${inputHTML}
@@ -3478,9 +3600,13 @@ function checkMultiStep(idx, si){
       if(nxt) nxt.style.display='block';
       const ni=document.getElementById(`msi-${idx}-${si+1}`);
       if(ni) ni.focus();
+      // Reset hint level for the new step so costs/levels don't carry over
+      G.hintLevel[idx]=0;
+      const hintContainer=document.getElementById('hintItems-'+idx);
+      if(hintContainer) hintContainer.innerHTML='';
     },700);
   } else {
-    if(fb){fb.style.display='block';fb.textContent='✔ Mission accomplie !';fb.style.color='#4a7c59';}
+    if(fb){fb.style.display='block';fb.textContent='✔ '+t('missionAccomplished');fb.style.color='#4a7c59';}
     setTimeout(()=>triggerCorrect(idx,true),600);
   }
 }
@@ -3504,7 +3630,7 @@ function buildEnigmaHTML(e,idx){
   } else if(enigmaType === 'qcm'){
     answerHTML = `
       <div id="answerArea-${idx}" class="answer-area">
-        <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;color:rgba(201,168,76,.45);text-align:center;margin-bottom:4px">SÉLECTIONNE 2 ÉLÉMENTS</div>
+        <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;color:rgba(201,168,76,.45);text-align:center;margin-bottom:4px">${t('selectTwoLabel')}</div>
         <button id="qcmConfirm-${idx}" class="btn-main" onclick="checkQCM(${idx})" style="display:none;height:38px;font-size:10px"></button>
         <div id="feedback-${idx}" class="feedback" style="display:none"></div>
       </div>`;
@@ -3554,29 +3680,38 @@ function buildEnigmaHTML(e,idx){
       ${e.groupMission ? `<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:10px 14px;background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.25);border-radius:10px">
         <span style="font-size:20px">👥</span>
         <div>
-          <div style="font-family:var(--font-mono);font-size:8px;letter-spacing:.2em;color:rgba(201,168,76,.7);margin-bottom:3px">MISSION DE GROUPE</div>
+          <div style="font-family:var(--font-mono);font-size:8px;letter-spacing:.2em;color:rgba(201,168,76,.7);margin-bottom:3px">${t('groupMissionLabel')}</div>
           <div style="font-family:var(--font-body);font-size:13px;color:rgba(250,247,240,.75)">${loc.groupMission||e.groupMission[currentLang]||''}</div>
         </div>
       </div>` : ''}
 
+      <!-- Site access warning (opening hours, capacity, etc.) -->
+      ${e.warning ? `<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:10px 14px;background:rgba(201,80,60,.08);border:1px solid rgba(201,80,60,.3);border-radius:10px">
+        <span style="font-size:20px">⚠️</span>
+        <div style="font-family:var(--font-body);font-size:13px;color:rgba(250,247,240,.85)">${e.warning[currentLang]||''}</div>
+      </div>` : ''}
+
       <!-- Question card -->
       <div class="q-card" id="qcard-${idx}">
-        <div class="q-title">ÉNIGME ${idx+1}</div>
-        <div class="q-text">${loc.question}</div>
+        <div class="q-title">${t('enigmaLabel', idx+1)}</div>
+        ${enigmaType !== 'multi' ? `<div class="q-text">${loc.question}</div>` : ''}
         ${enigmaType === 'qcm' ? buildQCMGrid(e, idx) : ''}
       </div>
 
       ${answerHTML}
 
       <!-- Fragment collecté -->
-      <div id="fragmentCollected-${idx}" class="fragment-collected">✦ FRAGMENT COLLECTÉ : <span id="fragmentValue-${idx}"></span></div>
+      <div id="fragmentCollected-${idx}" class="fragment-collected">✦ ${t('fragmentCollectedLabel')} : <span id="fragmentValue-${idx}"></span></div>
+
+      <!-- Hint display -->
+      <div id="hintItems-${idx}" class="hint-panel"></div>
 
       <!-- Clue box -->
       <div id="clueBox-${idx}" class="clue-box"></div>
 
       <!-- Navigation info -->
       <div style="margin-top:14px;padding:10px 12px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:10px">
-        <div style="font-family:var(--font-mono);font-size:8px;letter-spacing:.18em;color:rgba(201,168,76,.4);margin-bottom:6px">PROCHAINE ÉTAPE</div>
+        <div style="font-family:var(--font-mono);font-size:8px;letter-spacing:.18em;color:rgba(201,168,76,.4);margin-bottom:6px">${t('nextStepLabel')}</div>
         <div style="font-size:13px;color:rgba(250,247,240,.7);margin-bottom:4px">${loc.nav.address}</div>
         <div style="font-size:12px;color:rgba(250,247,240,.35);margin-bottom:8px">${loc.nav.distance}</div>
         <a href="${loc.nav.mapsUrl}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;color:rgba(201,168,76,.55);text-decoration:none;background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.2);border-radius:6px;padding:5px 10px">
@@ -3618,18 +3753,27 @@ function closeLightbox(){
   document.body.style.overflow='';
 }
 
+function qcmImgFallback(imgEl, emoji){
+  const div=document.createElement('div');
+  div.style.fontSize='32px';div.style.padding='10px';div.textContent=emoji||'❓';
+  imgEl.replaceWith(div);
+}
 function buildQCMGrid(e, idx){
   const cells = ['A','B','C','D'].map((letter,i)=>{
     const imgs = e.qcmImages || [];
     const img = imgs[i];
-    let inner = '';
+    const emoji = (e.qcmEmojis && e.qcmEmojis[i]) || '❓';
+    const rawLabel = (e.qcmLabels && e.qcmLabels[i]) || '';
+    const caption = rawLabel.replace(/^[A-D]\.\s*/,'');
+    let visual = '';
     if(img && img !== '#'){
-      inner = '<img src="'+img+'" alt="'+letter+'" onclick="openLightbox(\''+img+'\')" style="cursor:zoom-in" onerror="this.style.display=\'none\'">';
-    } else if(e.qcmEmojis && e.qcmEmojis[i]){
-      inner = '<div style="font-size:32px;padding:10px">'+e.qcmEmojis[i]+'</div>';
+      visual = '<img src="'+img+'" alt="'+letter+'" onclick="openLightbox(\''+img+'\')" style="cursor:zoom-in" onerror="qcmImgFallback(this,\''+emoji+'\')">';
+    } else {
+      visual = '<div style="font-size:32px;padding:10px">'+emoji+'</div>';
     }
     return '<div class="qcm-cell" id="qcm'+idx+'-'+letter+'" onclick="toggleQCM('+idx+',\''+letter+'\',this)">'
-      + inner
+      + visual
+      + (caption ? '<div class="qcm-caption">'+caption+'</div>' : '')
       + '<div class="qcm-label">'+letter+'</div></div>';
   }).join('');
   return '<div class="qcm-grid">'+cells+'</div>';
@@ -3702,7 +3846,7 @@ function toggleQCM(idx, choice, el){
     if(sel.length === 2){
       confirmBtn.style.display = 'block';
       const label = sel.slice().sort().join(' + ');
-      confirmBtn.textContent = '✔ CONFIRMER : ' + label;
+      confirmBtn.textContent = t('confirmBtn') + ' : ' + label;
     } else if(sel.length > 2) {
       // Remove oldest selection
       const oldest = sel.shift();
@@ -3710,7 +3854,7 @@ function toggleQCM(idx, choice, el){
       if(oldEl){oldEl.style.borderColor='rgba(201,168,76,0.25)';oldEl.style.background='rgba(201,168,76,0.08)';oldEl.style.boxShadow='';}
       const label = sel.slice().sort().join(' + ');
       confirmBtn.style.display = 'block';
-      confirmBtn.textContent = '✔ CONFIRMER : ' + label;
+      confirmBtn.textContent = t('confirmBtn') + ' : ' + label;
     } else {
       confirmBtn.style.display = 'none';
     }
@@ -3720,13 +3864,31 @@ function toggleQCM(idx, choice, el){
 function checkQCM(idx){
   const sel = (G.qcmSelected[idx]||[]).sort().join('+');
   const correct = (ENIGMAS[idx].answers||['A+B'])[0];
+  const fb = document.getElementById('feedback-'+idx);
   if(sel === correct){
     triggerCorrect(idx, !G.stepFailed[idx]);
-  } else {
+  } else if(!G.stepFailed[idx]){
+    // Premier essai raté : on laisse retenter, comme pour les énigmes texte
     G.stepFailed[idx] = true;
-    const fb = document.getElementById('feedback-'+idx);
+    fb.className = 'feedback error'; fb.style.display = 'block';
+    fb.textContent=(currentLang==='fr'?'❌ Réponse incorrecte. Réessaie ! (1 essai restant)':currentLang==='en'?'❌ Incorrect. Try again! (1 attempt left)':'❌ Falsch. Nochmal versuchen! (1 Versuch übrig)');
+    playTone('wrong');
+    shakeElement(document.getElementById('screen-enigma-'+idx));
+    // Réinitialiser la sélection pour permettre un nouvel essai
+    (G.qcmSelected[idx]||[]).forEach(letter=>{
+      const cell=document.getElementById('qcm'+idx+'-'+letter);
+      if(cell){cell.style.borderColor='rgba(201,168,76,0.25)';cell.style.background='rgba(201,168,76,0.08)';cell.style.boxShadow='';}
+    });
+    G.qcmSelected[idx]=[];
+    const confirmBtn = document.getElementById('qcmConfirm-'+idx) || document.getElementById('qcmConfirmInline-'+idx);
+    if(confirmBtn) confirmBtn.style.display='none';
+    if(G.hintLevel[idx]===0){useHint(idx,0);}
+    saveGame();
+  } else {
+    // Deuxième essai raté : on passe
     fb.className = 'feedback error'; fb.style.display = 'block';
     fb.textContent = t('wrong');
+    playTone('wrong');
     shakeElement(document.getElementById('screen-enigma-'+idx));
     saveGame();
     if(idx < N_ENIGMAS-1){setTimeout(()=>showTransition(idx+1, ()=>showEnigma(idx+1)),2000);}
@@ -3885,13 +4047,33 @@ function checkAnswer(idx){
 
 /* ══════ HINTS ══════ */
 function toggleHintPanel(idx){const panel=document.getElementById('hintPanel-'+idx);panel.style.display=panel.style.display==='none'?'block':'none';}
+function _getActiveMultiStepIndex(idx){
+  const steps=(ENIGMAS[idx].multiSteps)||[];
+  for(let i=0;i<steps.length;i++){
+    const el=document.getElementById(`msc-${idx}-${i}`);
+    if(el && el.style.display!=='none') return i;
+  }
+  return 0;
+}
 function useHint(idx,hintIdx){
-  const e=ENIGMAS[idx][currentLang];
+  const enigma=ENIGMAS[idx];
+  let hints;
+  if(enigma.type==='multi'){
+    const si=_getActiveMultiStepIndex(idx);
+    const step=enigma.multiSteps[si];
+    const loc=step[currentLang]||step.fr;
+    hints=loc.hints||[];
+  } else {
+    hints=enigma[currentLang].hints||[];
+  }
+  if(!hints.length)return;
   if(G.hintLevel[idx]>hintIdx)return;
-  let cost=0;for(let i=G.hintLevel[idx];i<=hintIdx;i++)cost+=e.hints[i].cost;
+  let cost=0;for(let i=G.hintLevel[idx];i<=Math.min(hintIdx,hints.length-1);i++)cost+=hints[i].cost;
   addScore(-cost);G.hintLevel[idx]=hintIdx+1;
-  const container=document.getElementById('hintItems-'+idx);container.innerHTML='';
-  for(let i=0;i<=hintIdx;i++){const d=document.createElement('div');d.className='hint-item';d.textContent=e.hints[i].text;container.appendChild(d);}
+  const container=document.getElementById('hintItems-'+idx);
+  if(!container)return;
+  container.innerHTML='';
+  for(let i=0;i<=Math.min(hintIdx,hints.length-1);i++){const d=document.createElement('div');d.className='hint-item';d.textContent=hints[i].text;container.appendChild(d);}
 }
 
 /* ══════ META ══════ */
