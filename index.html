@@ -2344,6 +2344,7 @@ const translations = {
     selectTwoLabel: "SÉLECTIONNE 2 ÉLÉMENTS",
     stepOfLabel: (si,total) => `🔐 ÉTAPE ${si} / ${total}`,
     codeError: "Le Sénat rejette ce code, soldat. Vérifiez votre email.",
+    codeChecking: "VÉRIFICATION...",
     launchBtn: "🔱 LANCER LA MISSION",
     correctFirst: () => `Bien joué, soldat ! Indice révélé. +100 pts`,
     correctRetry: () => `Correct. Indice révélé.`,
@@ -2409,6 +2410,7 @@ const translations = {
     selectTwoLabel: "SELECT 2 ELEMENTS",
     stepOfLabel: (si,total) => `🔐 STEP ${si} / ${total}`,
     codeError: "The Senate rejects this code, soldier. Check your email.",
+    codeChecking: "CHECKING...",
     launchBtn: "🔱 LAUNCH THE MISSION",
     correctFirst: () => `Well done, soldier! Clue revealed. +100 pts`,
     correctRetry: () => `Correct. Clue revealed.`,
@@ -2474,6 +2476,7 @@ const translations = {
     selectTwoLabel: "WÄHLE 2 ELEMENTE",
     stepOfLabel: (si,total) => `🔐 SCHRITT ${si} / ${total}`,
     codeError: "Der Senat lehnt diesen Code ab, Soldat. Prüfe deine E-Mail.",
+    codeChecking: "PRÜFUNG LÄUFT...",
     launchBtn: "🔱 MISSION STARTEN",
     correctFirst: () => `Gut gemacht, Soldat! Hinweis enthüllt. +100 Pkt`,
     correctRetry: () => `Richtig. Hinweis enthüllt.`,
@@ -2913,7 +2916,12 @@ function runSplash(){
 }
 
 /* ══════ CODE ══════ */
-function submitCode(){
+// Endpoint de validation serveur des codes AQUILA (workflow n8n
+// "Aventicum Quest — Validation Code"). Vérifie que le code correspond
+// bien à un paiement réel enregistré, en plus du format local.
+const CODE_VALIDATION_ENDPOINT = 'https://n8n-production-9874d.up.railway.app/webhook/aventicum-validate-code';
+
+async function submitCode(){
   const code=document.getElementById('codeInput').value.trim().toUpperCase();
   const team=document.getElementById('teamInput').value.trim();
   const errEl=document.getElementById('codeError');
@@ -2922,7 +2930,7 @@ function submitCode(){
   if(!code){shakeElement(document.getElementById('codeInput'));return;}
   if(!team){shakeElement(document.getElementById('teamInput'));document.getElementById('teamInput').focus();return;}
 
-  // ── Validation 100% locale aucun appel réseau ──────────────────────
+  // ── Étape 1 : format local, aucun appel réseau ──────────────────────
   // Aucun code gratuit en dur. Seuls les codes personnels générés après
   // paiement Stripe sont acceptés, au format AQUILA-XXXXXXXX (8 caractères
   // parmi ABCDEFGHJKLMNPQRSTUVWXYZ23456789, sans I/O/0/1 pour éviter les
@@ -2930,20 +2938,55 @@ function submitCode(){
   // "Aventicum Quest — Paiement Stripe" pour la génération.
   const PURCHASED_CODE_PATTERN = /^AQUILA-[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{8}$/;
 
-  if(PURCHASED_CODE_PATTERN.test(code)){
-    errEl.style.display='none';
-    G.teamName=team; G.code=code; G.savedCode=code;
-    btn.textContent='✅ CODE ACCEPTÉ. AVE, SOLDAT';
-    btn.style.background='linear-gradient(135deg,rgba(201,168,76,0.5),rgba(212,160,23,0.35))';
-    btn.style.boxShadow='0 0 30px rgba(201,168,76,0.8)';
-    btn.classList.add('seal-anim');
-    triggerFlash();
-    setTimeout(()=>showBriefing(),900);
-  } else {
+  if(!PURCHASED_CODE_PATTERN.test(code)){
     errEl.textContent = t('codeError');
     errEl.style.display='block';
     shakeElement(document.getElementById('codeInput'));
+    return;
   }
+
+  // ── Étape 2 : vérification serveur que le code correspond à un vrai
+  // paiement. Si le serveur est injoignable (mauvaise réception sur le
+  // terrain), on ne bloque pas le joueur et on retombe sur la validation
+  // locale du format ci-dessus.
+  errEl.style.display='none';
+  const originalBtnText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = '⏳ ' + t('codeChecking');
+
+  let serverValid = null; // null = serveur injoignable, true/false = réponse reçue
+  try {
+    const resp = await fetch(CODE_VALIDATION_ENDPOINT, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({code})
+    });
+    if(resp.ok){
+      const data = await resp.json();
+      serverValid = !!data.valid;
+    }
+  } catch(e) {
+    serverValid = null;
+  }
+
+  btn.disabled = false;
+
+  if(serverValid === false){
+    btn.textContent = originalBtnText;
+    errEl.textContent = t('codeError');
+    errEl.style.display='block';
+    shakeElement(document.getElementById('codeInput'));
+    return;
+  }
+
+  errEl.style.display='none';
+  G.teamName=team; G.code=code; G.savedCode=code;
+  btn.textContent='✅ CODE ACCEPTÉ. AVE, SOLDAT';
+  btn.style.background='linear-gradient(135deg,rgba(201,168,76,0.5),rgba(212,160,23,0.35))';
+  btn.style.boxShadow='0 0 30px rgba(201,168,76,0.8)';
+  btn.classList.add('seal-anim');
+  triggerFlash();
+  setTimeout(()=>showBriefing(),900);
 }
 
 /* ══════ TRANSITION NARRATIVE ══════ */
