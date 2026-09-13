@@ -2576,6 +2576,57 @@ function clearToken(){ try{ sessionStorage.removeItem(TOKEN_KEY); }catch(e){} }
 // 0: Hôtel de Ville  1: Tour de Benneville  2: Rue des Alpes
 // 3: Arènes  4: Cigognier  5: Théâtre Selley
 // 6: Thermes  7: Porte de l'Est
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ZONE D'INTÉGRATION TERRAIN — À REMPLIR SAMEDI 12 SEPTEMBRE
+   5 points encore ouverts. Cherche chaque marqueur ci-dessous (Ctrl+F)
+   directement dans ce fichier pour aller droit au bon endroit.
+
+   1) ARCADES HÔTEL DE VILLE (station 1)
+      Marqueur : answers:['5','CINQ','FIVE','FUNF']
+      Si le compte sur place n'est PAS 5 : remplacer le chiffre ET le mot
+      dans les 3 langues (answers[]), PUIS remplacer "La réponse est 5"
+      (fr) / "The answer is 5" (en) / "Die Antwort ist 5" (de) dans le
+      3e indice (cost:80) de la même énigme. 4 endroits à synchroniser.
+
+   2) PHOTOS QCM RUE DES ALPES (station 3)
+      Marqueur : qcmImages:['img/qcm-loup.jpg', ...
+      Aucun changement de code requis : juste déposer les 4 photos
+      (loup + nain = tes vraies photos, casque + ancre = leurres) dans
+      img/ du repo aventicum-quest-jeu, avec exactement ces noms de
+      fichier.
+
+   3) ÉCUSSON THÉÂTRE DU SELLEY (station 6)
+      Marqueur : answers:['1903','1902']
+      Déjà robuste : le jeu accepte les deux valeurs. Si le terrain
+      confirme une seule année lisible, tu peux réduire à une seule
+      valeur mais ce n'est pas obligatoire pour lancer.
+
+   4) ACCÈS PORTE DE L'EST / TORNALLAZ + RÉSEAU (station 8)
+      Pas de code à toucher : vérification terrain pure (accessibilité
+      du site, présence de réseau mobile). Si le réseau est mauvais
+      là-bas, pas de souci : la validation de code retombe automatiquement
+      en local (voir submitCode(), fallback déjà en place).
+
+   5) DISTANCES DES 7 SEGMENTS DE MARCHE
+      Deux endroits à mettre à jour ENSEMBLE pour chaque segment, ou
+      le site affichera un chiffre et le texte en dira un autre :
+        a) Champ court "distance:'~XXX m ...'" dans nav{} de chaque
+           station (stations 2 à 8, × 3 langues = 21 lignes, cherche
+           "distance:'~" pour toutes les trouver d'un coup).
+        b) Texte narratif détaillé dans TRANSITION_MSGS un peu plus
+           bas dans ce fichier, un paragraphe par segment × 3 langues,
+           chacun déjà commenté par segment ("// 0→1", "// 1→2", etc.)
+           avec la distance actuelle utilisée entre parenthèses.
+      Remplace les mètres ET les noms de rue si le vrai trajet piéton
+      diffère de ce qui est écrit (Rue de Berne, Chemin du Selley,
+      Avenue Jomini, Route d'Avenches sont les hypothèses actuelles).
+      Rappel : ENIGMA_COORDS (juste en dessous) sert au routing réel
+      via OpenRouteService, donc si les coordonnées GPS sont bonnes,
+      la carte affichera le bon trajet même sans toucher au texte —
+      mais le texte doit rester cohérent avec ce que l'équipe voit
+      marcher pour de vrai.
+   ═══════════════════════════════════════════════════════════════════════ */
 const ENIGMA_COORDS = [
   [46.87991, 7.04049],  // 0 Hôtel de Ville (Rue Centrale)
   [46.87943, 7.04118],  // 1 Tour de Benneville (Passage de Benneville)
@@ -2608,19 +2659,19 @@ Möge Jupiter eure Schritte leiten, [TEAM]. Aventicum zählt auf euch.`
 // type: 'text' (default) | 'vision' (photo upload + Claude AI) | 'speech' (TTS+STT) | 'oath' (photo + vocal oath)
 const ENIGMAS = [
   // ─── ÉNIGME 1 HÔTEL DE VILLE (Tête de Maure) ───────────────────────────
-  { id:1, step:'I', fragment:'H', clue:'MAURE', answers:['5','CINQ','FIVE','FUNF'], /* TODO BJORN: vérifier sur place le nombre exact d'arcades et ne garder que la bonne valeur + ses variantes écrites */
-    fr:{ nav:{title:'Hôtel de Ville',desc:"La façade de l'Hôtel de Ville donne sur la Grand-Rue.",address:'Grand-Rue, 1580 Avenches',distance:'Point de départ',mapsUrl:'https://maps.google.com/?q=Hotel+de+Ville+Avenches'},
-      narrative:"Le traître a commencé ici, au cœur de la cité, sous les yeux de tous. Depuis cinq siècles, l'emblème d'Avenches, une tête de Maure forgée dans le métal sombre, monte la garde sur la façade de l'Hôtel de Ville, entourée de trois visages de pierre. C'est à elle que le traître a confié la première trace de son passage. Approche-toi. Observe ce que des générations ont regardé sans jamais le voir.",
-      question:"Place-toi face à l'Hôtel de Ville, sous le regard de la tête de Maure. Au rez-de-chaussée, la façade est percée d'arcades, ces passages voûtés sous lesquels les marchands circulent depuis des siècles. Compte-les. Ce nombre est la première clé du traître. Entre-le en chiffres.",
-      hints:[{text:"Recule de quelques pas pour voir toute la façade d'un coup. Les arcades sont les grandes ouvertures voûtées du rez-de-chaussée, celles sous lesquelles on peut passer, pas les fenêtres des étages.",cost:20},{text:"Compte uniquement les arcades de la façade principale, celle qui porte l'inscription HOTEL DE VILLE. Ne compte ni les portes latérales ni les fenêtres.",cost:40},{text:"La réponse est 5.",cost:80}]},
-    en:{ nav:{title:'Town Hall',desc:"The Town Hall façade faces the Grand-Rue.",address:'Grand-Rue, 1580 Avenches',distance:'Starting point',mapsUrl:'https://maps.google.com/?q=Hotel+de+Ville+Avenches'},
-      narrative:"The traitor began here, at the heart of the city, in plain sight. For five centuries, the emblem of Avenches, a Moor's head forged in dark metal, has stood guard on the Town Hall façade, surrounded by three stone faces. It is to this guardian that the traitor entrusted the first trace of his passage. Come closer. Observe what generations have looked at without ever truly seeing.",
-      question:"Stand facing the Town Hall, under the gaze of the Moor's head. At ground level, the façade is pierced by arcades, the vaulted passages merchants have walked through for centuries. Count them. That number is the traitor's first key. Enter it in digits.",
-      hints:[{text:"Step back a few paces to see the whole façade at once. The arcades are the large vaulted openings at ground level, the ones you can walk under, not the windows of the upper floors.",cost:20},{text:"Count only the arcades of the main façade, the one bearing the inscription HOTEL DE VILLE. Do not count side doors or windows.",cost:40},{text:"The answer is 5.",cost:80}]},
-    de:{ nav:{title:'Rathaus',desc:"Die Fassade des Rathauses zeigt zur Grand-Rue.",address:'Grand-Rue, 1580 Avenches',distance:'Startpunkt',mapsUrl:'https://maps.google.com/?q=Hotel+de+Ville+Avenches'},
-      narrative:"Der Verräter begann hier, im Herzen der Stadt, für alle sichtbar. Seit fünf Jahrhunderten hält das Wahrzeichen von Avenches, ein Mohrenkopf aus dunklem Metall, Wache an der Rathausfassade, umgeben von drei Steingesichtern. Ihm vertraute der Verräter die erste Spur seines Weges an. Tretet näher. Beobachtet, was Generationen angesehen haben, ohne es je wirklich zu sehen.",
-      question:"Stellt euch vor das Rathaus, unter den Blick des Mohrenkopfs. Im Erdgeschoss ist die Fassade von Arkaden durchbrochen, jenen gewölbten Durchgängen, unter denen die Händler seit Jahrhunderten gehen. Zählt sie. Diese Zahl ist der erste Schlüssel des Verräters. Gebt sie in Ziffern ein.",
-      hints:[{text:"Geht ein paar Schritte zurück, um die ganze Fassade auf einen Blick zu sehen. Die Arkaden sind die großen gewölbten Öffnungen im Erdgeschoss, unter denen man hindurchgehen kann, nicht die Fenster der oberen Stockwerke.",cost:20},{text:"Zählt nur die Arkaden der Hauptfassade, jener mit der Inschrift HOTEL DE VILLE. Zählt weder Seitentüren noch Fenster.",cost:40},{text:"Die Antwort ist 5.",cost:80}]}
+  { id:1, step:'I', fragment:'H', clue:'MARS', type:'qcm', qcmRequired:1, answers:['A'], qcmImages:['#','#','#'], qcmEmojis:['⚔️','🏺','⛪'], qcmLabels:["A. Parce que l'année romaine commençait en mars, mois de Mars, dieu de la guerre","B. Parce que les Romains ont supprimé deux mois pendant les guerres puniques","C. Parce que le pape Grégoire a décalé le calendrier en 1582"],
+    fr:{ nav:{title:'Hôtel de Ville',desc:"Juste en face de l'Hôtel de Ville, l'église Sainte-Madeleine porte un cadran solaire du XVIIIe siècle.",address:'Grand-Rue, 1580 Avenches',distance:'Point de départ',mapsUrl:'https://maps.google.com/?q=Hotel+de+Ville+Avenches'},
+      narrative:"Le traître a commencé ici, au cœur de la cité, sous les yeux de tous. Juste en face de l'Hôtel de Ville, la façade de l'église Sainte-Madeleine porte un cadran solaire du XVIIIe siècle, où l'on venait autrefois régler sa montre sur le soleil. C'est en l'observant de près que le traître a repéré une anomalie qui remonte bien plus loin que le XVIIIe siècle. Approche-toi. Observe ce que des générations ont regardé sans jamais le voir.",
+      question:"Cherche le cadran solaire sur la façade de l'église, juste en face de l'Hôtel de Ville. À côté d'un des mois de l'année est gravée une abréviation étrange : « 7bre ». Ce n'est pas une erreur de gravure. Pourquoi les Romains désignaient-ils ce mois comme le « septième », alors qu'il est aujourd'hui le neuvième mois de l'année ? Sélectionne la bonne explication.",
+      hints:[{text:"Le cadran solaire est gravé sur le mur de l'église Sainte-Madeleine, juste en face de l'Hôtel de Ville. Cherche les noms des mois : l'un d'eux est abrégé par un chiffre suivi de « bre ».",cost:20},{text:"« 7bre » désigne septembre. En latin, septem veut dire sept. Réfléchis à quel mois devait ouvrir l'année chez les Romains pour que septembre soit vraiment leur septième mois.",cost:40},{text:"La réponse est A : l'année romaine commençait en mars, le mois du dieu Mars.",cost:80}]},
+    en:{ nav:{title:'Town Hall',desc:"Right across from the Town Hall, the Sainte-Madeleine church bears an 18th-century sundial.",address:'Grand-Rue, 1580 Avenches',distance:'Starting point',mapsUrl:'https://maps.google.com/?q=Hotel+de+Ville+Avenches'},
+      narrative:"The traitor began here, at the heart of the city, in plain sight. Right across from the Town Hall, the façade of the Sainte-Madeleine church bears an 18th-century sundial, once used to set watches by the sun. Looking closely at it, the traitor spotted an anomaly reaching back much further than the 18th century. Come closer. Observe what generations have looked at without ever truly seeing.",
+      question:"Find the sundial on the church façade, right across from the Town Hall. Next to one of the months, a strange abbreviation is carved: \"7bre\". It is not an engraving mistake. Why did the Romans call this month the \"seventh\", when it is today the ninth month of the year? Select the correct explanation.",
+      hints:[{text:"The sundial is carved on the wall of the Sainte-Madeleine church, right across from the Town Hall. Look for the month names: one of them is abbreviated with a digit followed by \"bre\".",cost:20},{text:"\"7bre\" stands for September. In Latin, septem means seven. Think about which month had to open the Roman year for September to truly be their seventh month.",cost:40},{text:"The answer is A: the Roman year began in March, the month of the god Mars.",cost:80}]},
+    de:{ nav:{title:'Rathaus',desc:"Direkt gegenüber dem Rathaus trägt die Kirche Sainte-Madeleine eine Sonnenuhr aus dem 18. Jahrhundert.",address:'Grand-Rue, 1580 Avenches',distance:'Startpunkt',mapsUrl:'https://maps.google.com/?q=Hotel+de+Ville+Avenches'},
+      narrative:"Der Verräter begann hier, im Herzen der Stadt, für alle sichtbar. Direkt gegenüber dem Rathaus trägt die Fassade der Kirche Sainte-Madeleine eine Sonnenuhr aus dem 18. Jahrhundert, an der man einst seine Uhr nach der Sonne stellte. Bei genauer Betrachtung entdeckte der Verräter eine Anomalie, die viel weiter zurückreicht als das 18. Jahrhundert. Tretet näher. Beobachtet, was Generationen angesehen haben, ohne es je wirklich zu sehen.",
+      question:"Sucht die Sonnenuhr an der Kirchenfassade, direkt gegenüber dem Rathaus. Neben einem der Monate ist eine seltsame Abkürzung eingraviert: „7bre“. Das ist kein Gravurfehler. Warum nannten die Römer diesen Monat den „siebten“, obwohl er heute der neunte Monat des Jahres ist? Wählt die richtige Erklärung.",
+      hints:[{text:"Die Sonnenuhr ist an der Wand der Kirche Sainte-Madeleine eingraviert, direkt gegenüber dem Rathaus. Sucht nach den Monatsnamen: einer davon ist mit einer Ziffer gefolgt von „bre“ abgekürzt.",cost:20},{text:"„7bre“ steht für September. Auf Lateinisch bedeutet septem sieben. Überlegt, welcher Monat das römische Jahr eröffnen musste, damit September wirklich ihr siebter Monat war.",cost:40},{text:"Die Antwort ist A: Das römische Jahr begann im März, dem Monat des Gottes Mars.",cost:80}]}
   },
   // ─── ÉNIGME 2 TOUR DE BENNEVILLE ───────────────────────────────────────
   { id:2, step:'II', fragment:'E', clue:'CIGOGNIER', answers:['CIGOGNIER','LE CIGOGNIER','CIGOGNER'], warning:{fr:'Tour ouverte de 9h à 21h (1er mai – 30 sept.) et de 9h à 17h le reste de l\'année. Max. 20 personnes en même temps dans la tour.',en:'Tower open 9am-9pm (May 1 – Sept 30) and 9am-5pm the rest of the year. Max. 20 people inside the tower at once.',de:'Turm geöffnet 9-21 Uhr (1. Mai – 30. Sept.) und 9-17 Uhr den Rest des Jahres. Max. 20 Personen gleichzeitig im Turm.'}, groupMission:{fr:'Montez ensemble au sommet, puis répartissez-vous : chacun regarde par une fenêtre différente. Qui repère la colonne solitaire dans les champs ?',en:'Climb to the top together, then split up: each person looks through a different window. Who spots the lone column in the fields?',de:'Steigt gemeinsam zum Gipfel, dann verteilt euch: jeder schaut durch ein anderes Fenster. Wer entdeckt die einsame Säule in den Feldern?'},
@@ -2638,19 +2689,19 @@ const ENIGMAS = [
       hints:[{text:"Sucht am Turmgipfel ein Fenster mit Blick auf die Ebene, über die Dächer hinweg. Dort, allein in den Feldern, erhebt sich ein römisches Element wie eine vergessene Wache. Es ist kein Gebäude, nur eine Säule.",cost:20},{text:"Nehmt das französische Wort cigogne und hängt die Endung -IER an, so wie aus pomme (Apfel) ein pommier (Apfelbaum) wird: der Ort der Störche.",cost:40},{text:"Die Antwort ist CIGOGNIER.",cost:80}]}
   },
   // ─── ÉNIGME 3 RUE DES ALPES (QCM visuel) ──────────────────────────────
-  { id:3, step:'III', fragment:'L', clue:'LOUVE', type:'qcm', answers:['A+B'], qcmImages:['img/qcm-loup.jpg','img/qcm-nain.jpg','img/qcm-casque.jpg','img/qcm-ancre.jpg'], /* TODO BJORN: ajouter ces 4 photos dans le dossier img/ du repo. A et B = TES photos des vrais ornements de la rue (loup, nain). C et D = photos leurres (casque, ancre) qui ne sont PAS dans la rue. */ qcmEmojis:['🐺','🧙','⛑️','⚓'], qcmLabels:['A. Louve romaine','B. Nain de jardin','C. Casque légionnaire','D. Ancre marine'],
+  { id:3, step:'III', fragment:'L', clue:'LOUVE', type:'qcm', qcmRequired:2, answers:['A+B'], qcmImages:['img/qcm-louve.jpg','img/qcm-rosace.jpg','img/qcm-lion.jpg','img/qcm-porte-fer.jpg'], /* TODO BJORN: ajoute ces 4 photos dans le dossier img/ du repo, avec exactement ces noms de fichier. A = ta photo de la Louve romaine. B = ta photo de la rosace tressée sur la porte en bois. C = photo leurre d'un lion/aigle sculpté (à trouver en ligne, libre de droits). D = ta photo de la porte en fer forgé neutre. */ qcmEmojis:['🐺','🌸','🦁','🚪'], qcmLabels:['A. Louve romaine','B. Rosace tressée sur porte en bois','C. Lion sculpté','D. Porte en fer forgé'],
     fr:{ nav:{title:'Rue des Alpes',desc:"Observez les façades des immeubles le long de la Rue des Alpes.",address:'Rue des Alpes, 1580 Avenches',distance:'~150 m de la Tour de Benneville',mapsUrl:'https://maps.google.com/?q=Rue+des+Alpes+Avenches'},
-      narrative:"La Rue des Alpes relie l'Hôtel de Ville au reste de la cité. En apparence, une rue ordinaire. Mais le traître l'a longée les yeux ouverts, et il y a vu ce que personne d'autre ne voit. Sur une façade veille une louve de pierre, allaitant deux jumeaux, la légende même de la fondation de Rome, gravée là depuis des générations. Deux éléments en pleine vue, invisibles à qui ne cherche pas.",
-      question:`En remontant toute la Rue des Alpes, observe attentivement les façades des bâtiments eux-mêmes, la pierre et le crépi, pas les vitrines ni les enseignes commerciales. Parmi ces quatre ornements ci-dessous (A, B, C, D), deux sont RÉELLEMENT fixés ou sculptés sur ces façades. Sélectionne les deux bons éléments, puis confirme.`,
-      hints:[{text:"Parcours toute la longueur de la rue en levant les yeux du trottoir vers les murs, du rez-de-chaussée jusqu'au premier étage. Les deux ornements ne sont pas cachés : on les manque seulement si on ne regarde pas les façades elles-mêmes.",cost:20},{text:"L'un des deux est un animal sculpté lié à la légende de la fondation de Rome ; l'autre est une petite figure de jardin, totalement inattendue sur une façade de ville.",cost:40},{text:"Les deux éléments présents sont le loup romain et le nain de jardin. Sélectionnez A et B, puis appuyez sur CONFIRMER.",cost:80}]},
+      narrative:"La Rue des Alpes relie l'Hôtel de Ville au reste de la cité. En apparence, une rue ordinaire. Mais le traître l'a longée les yeux ouverts, et il y a vu ce que personne d'autre ne voit. Sur une façade veille une louve de pierre, allaitant deux jumeaux, la légende même de la fondation de Rome, gravée là depuis des générations. Un peu plus loin, une porte en bois porte une rosace tressée, un détail d'artisanat local que personne ne remarque en passant. Deux éléments en pleine vue, invisibles à qui ne cherche pas.",
+      question:`En remontant toute la Rue des Alpes, observe attentivement les façades des bâtiments eux-mêmes, la pierre et le bois, pas les vitrines ni les enseignes commerciales. Parmi ces quatre ornements ci-dessous (A, B, C, D), deux sont RÉELLEMENT présents sur ces façades. Sélectionne les deux bons éléments, puis confirme.`,
+      hints:[{text:"Parcours toute la longueur de la rue en levant les yeux du trottoir vers les murs et les portes, du rez-de-chaussée jusqu'au premier étage. Les deux éléments ne sont pas cachés : on les manque seulement si on ne regarde pas les façades elles-mêmes.",cost:20},{text:"L'un des deux est un animal sculpté lié à la légende de la fondation de Rome ; l'autre est un motif circulaire tressé, en bois, au centre d'une porte.",cost:40},{text:"Les deux éléments présents sont la louve romaine et la rosace tressée sur la porte en bois. Sélectionnez A et B, puis appuyez sur CONFIRMER.",cost:80}]},
     en:{ nav:{title:'Rue des Alpes',desc:"Observe the building facades along Rue des Alpes.",address:'Rue des Alpes, 1580 Avenches',distance:'~150 m from Benneville Tower',mapsUrl:'https://maps.google.com/?q=Rue+des+Alpes+Avenches'},
-      narrative:"Rue des Alpes connects the Town Hall to the rest of the city. It looks like an ordinary street. But the traitor walked it with open eyes, and saw what others never notice. On one façade watches a stone she-wolf, nursing two twins, the very legend of Rome's founding, carved there for generations. Two elements in plain sight, invisible to those not looking.",
-      question:`Walking the full length of Rue des Alpes, look closely at the buildings' façades themselves, the stone and plaster, not shop windows or signs. Of these four ornaments (A, B, C, D), TWO are REALLY fixed or carved onto these façades. Select the two correct elements, then confirm.`,
-      hints:[{text:"Walk the whole length of the street, lifting your eyes from the pavement to the walls, from ground floor up to first-floor height. The two ornaments aren't hidden: you'll only miss them by not looking at the façades themselves.",cost:20},{text:"One is a carved animal linked to the legend of Rome's founding; the other is a small garden figure, completely unexpected on a city façade.",cost:40},{text:"The two elements present are the Roman wolf and the garden gnome. Select A and B, then press CONFIRM.",cost:80}]},
+      narrative:"Rue des Alpes connects the Town Hall to the rest of the city. It looks like an ordinary street. But the traitor walked it with open eyes, and saw what others never notice. On one façade watches a stone she-wolf, nursing two twins, the very legend of Rome's founding, carved there for generations. A little further on, a wooden door bears a woven rosette, a piece of local craftsmanship nobody notices walking by. Two elements in plain sight, invisible to those not looking.",
+      question:`Walking the full length of Rue des Alpes, look closely at the buildings' façades themselves, the stone and wood, not shop windows or signs. Of these four ornaments (A, B, C, D), TWO are REALLY present on these façades. Select the two correct elements, then confirm.`,
+      hints:[{text:"Walk the whole length of the street, lifting your eyes from the pavement to the walls and doors, from ground floor up to first-floor height. The two elements aren't hidden: you'll only miss them by not looking at the façades themselves.",cost:20},{text:"One is a carved animal linked to the legend of Rome's founding; the other is a round woven wooden pattern, at the centre of a door.",cost:40},{text:"The two elements present are the Roman she-wolf and the woven rosette on the wooden door. Select A and B, then press CONFIRM.",cost:80}]},
     de:{ nav:{title:'Rue des Alpes',desc:"Beobachtet die Gebäudefassaden entlang der Rue des Alpes.",address:'Rue des Alpes, 1580 Avenches',distance:'~150 m vom Benneville-Turm',mapsUrl:'https://maps.google.com/?q=Rue+des+Alpes+Avenches'},
-      narrative:"Die Rue des Alpes verbindet das Rathaus mit dem Rest der Stadt. Sie sieht wie eine gewöhnliche Straße aus. Doch der Verräter ging sie mit offenen Augen entlang und sah, was andere nie bemerken. Auf einer Fassade wacht eine steinerne Wölfin, die zwei Zwillinge säugt, die Gründungslegende Roms selbst, seit Generationen dort eingemeißelt. Zwei Elemente in aller Öffentlichkeit, unsichtbar für jene, die nicht suchen.",
-      question:`Geht die ganze Rue des Alpes entlang und betrachtet genau die Fassaden der Gebäude selbst, Stein und Verputz, nicht Schaufenster oder Schilder. Von diesen vier Ornamenten (A, B, C, D) befinden sich ZWEI WIRKLICH an diesen Fassaden. Wähle die zwei richtigen Elemente und bestätige.`,
-      hints:[{text:"Geht die ganze Straße entlang und hebt den Blick vom Gehsteig zu den Wänden, vom Erdgeschoss bis zur Höhe des ersten Stockwerks. Die zwei Ornamente sind nicht versteckt: man übersieht sie nur, wenn man nicht auf die Fassaden selbst schaut.",cost:20},{text:"Eines ist ein geschnitztes Tier, verbunden mit der Gründungslegende Roms; das andere ist eine kleine Gartenfigur, völlig unerwartet an einer Stadtfassade.",cost:40},{text:"Die zwei vorhandenen Elemente sind der römische Wolf und der Gartenzwerg. Wähle A und B, dann drücke BESTÄTIGEN.",cost:80}]}
+      narrative:"Die Rue des Alpes verbindet das Rathaus mit dem Rest der Stadt. Sie sieht wie eine gewöhnliche Straße aus. Doch der Verräter ging sie mit offenen Augen entlang und sah, was andere nie bemerken. Auf einer Fassade wacht eine steinerne Wölfin, die zwei Zwillinge säugt, die Gründungslegende Roms selbst, seit Generationen dort eingemeißelt. Etwas weiter trägt eine Holztür eine geflochtene Rosette, ein Detail lokaler Handwerkskunst, das niemand im Vorbeigehen bemerkt. Zwei Elemente in aller Öffentlichkeit, unsichtbar für jene, die nicht suchen.",
+      question:`Geht die ganze Rue des Alpes entlang und betrachtet genau die Fassaden der Gebäude selbst, Stein und Holz, nicht Schaufenster oder Schilder. Von diesen vier Ornamenten (A, B, C, D) befinden sich ZWEI WIRKLICH an diesen Fassaden. Wähle die zwei richtigen Elemente und bestätige.`,
+      hints:[{text:"Geht die ganze Straße entlang und hebt den Blick vom Gehsteig zu den Wänden und Türen, vom Erdgeschoss bis zur Höhe des ersten Stockwerks. Die zwei Elemente sind nicht versteckt: man übersieht sie nur, wenn man nicht auf die Fassaden selbst schaut.",cost:20},{text:"Eines ist ein geschnitztes Tier, verbunden mit der Gründungslegende Roms; das andere ist ein rundes, geflochtenes Holzmuster in der Mitte einer Tür.",cost:40},{text:"Die zwei vorhandenen Elemente sind die römische Wölfin und die geflochtene Rosette auf der Holztür. Wähle A und B, dann drücke BESTÄTIGEN.",cost:80}]}
   },
   // ─── ÉNIGME 4 ARÈNES (Amphithéâtre) ───────────────────────────────────
   { id:4, step:'IV', fragment:'V', clue:'ARÈNE', answers:['6'], groupMission:{fr:'Cherchez ensemble le panneau du plan de restauration sur la terrasse couverte du musée, qui représente l\'amphithéâtre vu du dessus, divisé en zones numérotées.',en:'Search together for the restoration plan panel on the museum\'s covered terrace, showing the amphitheatre from above, divided into numbered zones.',de:'Sucht gemeinsam das Schild mit dem Restaurierungsplan auf der überdachten Museumsterrasse, das das Amphitheater von oben zeigt, in nummerierte Zonen unterteilt.'},
@@ -3889,7 +3940,8 @@ function qcmImgFallback(imgEl, emoji){
   imgEl.replaceWith(div);
 }
 function buildQCMGrid(e, idx){
-  const cells = ['A','B','C','D'].map((letter,i)=>{
+  const nOptions = (e.qcmLabels && e.qcmLabels.length) || (e.qcmImages && e.qcmImages.length) || 4;
+  const cells = ['A','B','C','D','E','F'].slice(0,nOptions).map((letter,i)=>{
     const imgs = e.qcmImages || [];
     const img = imgs[i];
     const emoji = (e.qcmEmojis && e.qcmEmojis[i]) || '❓';
@@ -3954,8 +4006,9 @@ function updateProgress(idx){
   if(scoreEl) scoreEl.textContent = G.score+' pts';
 }
 
-/* ══════ QCM MULTI-SELECT ══════ */
+/* ══════ QCM SELECT (1 ou plusieurs réponses selon qcmRequired) ══════ */
 function toggleQCM(idx, choice, el){
+  const need = ENIGMAS[idx].qcmRequired || 2;
   if(!G.qcmSelected[idx]) G.qcmSelected[idx] = [];
   const sel = G.qcmSelected[idx];
   const pos = sel.indexOf(choice);
@@ -3973,11 +4026,11 @@ function toggleQCM(idx, choice, el){
   // Show confirm button search in both possible locations
   const confirmBtn = document.getElementById('qcmConfirm-'+idx) || document.getElementById('qcmConfirmInline-'+idx);
   if(confirmBtn){
-    if(sel.length === 2){
+    if(sel.length === need){
       confirmBtn.style.display = 'block';
       const label = sel.slice().sort().join(' + ');
       confirmBtn.textContent = t('confirmBtn') + ' : ' + label;
-    } else if(sel.length > 2) {
+    } else if(sel.length > need) {
       // Remove oldest selection
       const oldest = sel.shift();
       const oldEl = document.getElementById('qcm'+idx+'-'+oldest);
