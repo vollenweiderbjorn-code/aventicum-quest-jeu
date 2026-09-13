@@ -2342,6 +2342,7 @@ const translations = {
     nextStepLabel: "PROCHAINE ÉTAPE",
     groupMissionLabel: "MISSION DE GROUPE",
     selectTwoLabel: "SÉLECTIONNE 2 ÉLÉMENTS",
+    selectOneLabel: "SÉLECTIONNE LA BONNE RÉPONSE",
     stepOfLabel: (si,total) => `🔐 ÉTAPE ${si} / ${total}`,
     codeError: "Le Sénat rejette ce code, soldat. Vérifiez votre email.",
     codeChecking: "VÉRIFICATION...",
@@ -2408,6 +2409,7 @@ const translations = {
     nextStepLabel: "NEXT STOP",
     groupMissionLabel: "GROUP MISSION",
     selectTwoLabel: "SELECT 2 ELEMENTS",
+    selectOneLabel: "SELECT THE CORRECT ANSWER",
     stepOfLabel: (si,total) => `🔐 STEP ${si} / ${total}`,
     codeError: "The Senate rejects this code, soldier. Check your email.",
     codeChecking: "CHECKING...",
@@ -2474,6 +2476,7 @@ const translations = {
     nextStepLabel: "NÄCHSTE STATION",
     groupMissionLabel: "GRUPPENAUFTRAG",
     selectTwoLabel: "WÄHLE 2 ELEMENTE",
+    selectOneLabel: "WÄHLE DIE RICHTIGE ANTWORT",
     stepOfLabel: (si,total) => `🔐 SCHRITT ${si} / ${total}`,
     codeError: "Der Senat lehnt diesen Code ab, Soldat. Prüfe deine E-Mail.",
     codeChecking: "PRÜFUNG LÄUFT...",
@@ -2578,54 +2581,24 @@ function clearToken(){ try{ sessionStorage.removeItem(TOKEN_KEY); }catch(e){} }
 // 6: Thermes  7: Porte de l'Est
 
 /* ═══════════════════════════════════════════════════════════════════════
-   ZONE D'INTÉGRATION TERRAIN — À REMPLIR SAMEDI 12 SEPTEMBRE
-   5 points encore ouverts. Cherche chaque marqueur ci-dessous (Ctrl+F)
-   directement dans ce fichier pour aller droit au bon endroit.
+   STATUT PRÉ-LANCEMENT — mis à jour après vérification terrain du 13.09
+   Les 4 premiers points de la checklist initiale sont réglés :
+   1) Arcades Hôtel de Ville → énigme remplacée par le cadran solaire (7bre)
+   2) Photos QCM Rue des Alpes → louve + rosace confirmées, lion + porte en fer forgé en leurres
+   3) Écusson Théâtre du Selley → verrouillé sur 1902
+   4) Accès Porte de l'Est / réseau → confirmé bon (4G ok, travaux non bloquants)
 
-   1) ARCADES HÔTEL DE VILLE (station 1)
-      Marqueur : answers:['5','CINQ','FIVE','FUNF']
-      Si le compte sur place n'est PAS 5 : remplacer le chiffre ET le mot
-      dans les 3 langues (answers[]), PUIS remplacer "La réponse est 5"
-      (fr) / "The answer is 5" (en) / "Die Antwort ist 5" (de) dans le
-      3e indice (cost:80) de la même énigme. 4 endroits à synchroniser.
-
-   2) PHOTOS QCM RUE DES ALPES (station 3)
-      Marqueur : qcmImages:['img/qcm-loup.jpg', ...
-      Aucun changement de code requis : juste déposer les 4 photos
-      (loup + nain = tes vraies photos, casque + ancre = leurres) dans
-      img/ du repo aventicum-quest-jeu, avec exactement ces noms de
-      fichier.
-
-   3) ÉCUSSON THÉÂTRE DU SELLEY (station 6)
-      Marqueur : answers:['1903','1902']
-      Déjà robuste : le jeu accepte les deux valeurs. Si le terrain
-      confirme une seule année lisible, tu peux réduire à une seule
-      valeur mais ce n'est pas obligatoire pour lancer.
-
-   4) ACCÈS PORTE DE L'EST / TORNALLAZ + RÉSEAU (station 8)
-      Pas de code à toucher : vérification terrain pure (accessibilité
-      du site, présence de réseau mobile). Si le réseau est mauvais
-      là-bas, pas de souci : la validation de code retombe automatiquement
-      en local (voir submitCode(), fallback déjà en place).
-
-   5) DISTANCES DES 7 SEGMENTS DE MARCHE
-      Deux endroits à mettre à jour ENSEMBLE pour chaque segment, ou
-      le site affichera un chiffre et le texte en dira un autre :
-        a) Champ court "distance:'~XXX m ...'" dans nav{} de chaque
-           station (stations 2 à 8, × 3 langues = 21 lignes, cherche
-           "distance:'~" pour toutes les trouver d'un coup).
-        b) Texte narratif détaillé dans TRANSITION_MSGS un peu plus
-           bas dans ce fichier, un paragraphe par segment × 3 langues,
-           chacun déjà commenté par segment ("// 0→1", "// 1→2", etc.)
-           avec la distance actuelle utilisée entre parenthèses.
-      Remplace les mètres ET les noms de rue si le vrai trajet piéton
-      diffère de ce qui est écrit (Rue de Berne, Chemin du Selley,
-      Avenue Jomini, Route d'Avenches sont les hypothèses actuelles).
-      Rappel : ENIGMA_COORDS (juste en dessous) sert au routing réel
-      via OpenRouteService, donc si les coordonnées GPS sont bonnes,
-      la carte affichera le bon trajet même sans toucher au texte —
-      mais le texte doit rester cohérent avec ce que l'équipe voit
-      marcher pour de vrai.
+   DERNIER POINT OUVERT : les distances et noms de rue ci-dessous
+   (TRANSITION_MSGS, juste en dessous) et dans nav.distance de chaque
+   station sont encore des hypothèses jamais vérifiées sur le terrain :
+   Rue de Berne, Chemin du Selley, Avenue Jomini, Route d'Avenches.
+   Si le trajet réel parcouru ce matin diffère (noms de rue ou distances
+   en mètres), il faut corriger aux deux endroits à la fois pour rester
+   cohérent (nav.distance dans chaque énigme ET le paragraphe correspondant
+   dans TRANSITION_MSGS). Les coordonnées GPS d'ENIGMA_COORDS pilotent la
+   carte réelle indépendamment de ce texte, donc la navigation fonctionne
+   même si ce texte n'est pas corrigé, mais un texte faux à côté d'une
+   carte juste ferait mauvaise impression.
    ═══════════════════════════════════════════════════════════════════════ */
 const ENIGMA_COORDS = [
   [46.87991, 7.04049],  // 0 Hôtel de Ville (Rue Centrale)
@@ -2734,19 +2707,19 @@ const ENIGMAS = [
       hints:[{text:"Dieser Kaiser war auch stoischer Philosoph, selten für einen römischen Kriegsherrn. Seine Selbstbetrachtungen sind ein privates Tagebuch, geschrieben während seiner Feldzüge. Sein Buch wird noch heute gedruckt.",cost:20},{text:"Sein Vorname ist Marcus. Sein lateinischer Beiname kommt von aureus, \"golden\". Zwei Wörter. Das zweite bedeutet wörtlich \"der Goldene\" oder \"der wie Gold Glänzende\".",cost:40},{text:"Die Antwort ist MARK AUREL.",cost:80}]}
   },
   // ─── ÉNIGME 6 THÉÂTRE DU SELLEY (Claude Vision API) ───────────────────
-  { id:6, step:'VI', fragment:'T', clue:'CARTOUCHE-1903', type:'text', answers:['1903','1902'], groupMission:{fr:'Cherchez ensemble le cartouche gravé dans la pierre. Il faut deux paires d\'yeux pour le repérer.',en:'Search together for the cartouche carved in the stone. It takes two pairs of eyes to spot it.',de:'Sucht gemeinsam das in den Stein gemeißelte Kartuschenfeld. Vier Augen sehen mehr als zwei.'},
+  { id:6, step:'VI', fragment:'T', clue:'CARTOUCHE-1902', type:'text', answers:['1902'], groupMission:{fr:'Cherchez ensemble le cartouche gravé dans la pierre. Il faut deux paires d\'yeux pour le repérer.',en:'Search together for the cartouche carved in the stone. It takes two pairs of eyes to spot it.',de:'Sucht gemeinsam das in den Stein gemeißelte Kartuschenfeld. Vier Augen sehen mehr als zwei.'},
     fr:{ nav:{title:'Théâtre du Selley',desc:"Le théâtre romain du Selley est visible depuis la route cantonale.",address:'Chemin du Selley, 1580 Avenches',distance:'~300 m du Cigognier',mapsUrl:'https://maps.google.com/?q=Theatre+Selley+Avenches'},
       narrative:"Le plus grand théâtre romain de Suisse : onze mille spectateurs. Deux mille ans plus tard, des restaurateurs sont venus sauver ce qui restait et ont signé leur travail dans la pierre. Parmi des centaines de blocs, ils ont gravé un cartouche octogonal : une initiale, une date. C'est l'indice le plus discret du parcours.",
       question:"Un cartouche octogonal a été sculpté dans la maçonnerie basse de la cavea. Il porte une initiale et une date à 4 chiffres. Cherche-le dans les gradins, à hauteur de genou ou de taille, petit, discret, en pierre calcaire. L'année gravée est ton code. Entre les 4 chiffres.",
-      hints:[{text:"Cherche un bloc de calcaire avec un encadrement sculpté à 8 côtés (un octogone) encastré dans la maçonnerie basse des gradins. Il n'est pas en hauteur : il est à portée de main.",cost:20},{text:"Une seule lettre, initiale du mot Restauration, précède quatre chiffres. Ces chiffres désignent une année du tout début du XXe siècle.",cost:40},{text:"Le code est 1903 (ou 1902 selon l'état exact du cartouche).",cost:0}]},
+      hints:[{text:"Cherche un bloc de calcaire avec un encadrement sculpté à 8 côtés (un octogone) encastré dans la maçonnerie basse des gradins. Il n'est pas en hauteur : il est à portée de main.",cost:20},{text:"Une seule lettre, initiale du mot Restauration, précède quatre chiffres. Ces chiffres désignent une année du tout début du XXe siècle.",cost:40},{text:"Le code est 1902.",cost:0}]},
     en:{ nav:{title:'Selley Theatre',desc:"The Roman Selley theatre is visible from the cantonal road.",address:'Chemin du Selley, 1580 Avenches',distance:'~300 m from the Cigognier',mapsUrl:'https://maps.google.com/?q=Theatre+Selley+Avenches'},
       narrative:"The greatest Roman theatre in Switzerland: eleven thousand spectators. Two thousand years later, restorers came to save what remained and signed their work in stone. Among hundreds of blocks, they carved an octagonal cartouche: an initial, a date. It is the most discreet clue of the entire course.",
       question:"An octagonal cartouche was carved into the lower masonry of the cavea, bearing an initial and a 4-digit year. Find it in the seating tiers, small, discreet, at knee or waist height. The engraved year is your code. Enter the 4 digits.",
-      hints:[{text:"Look for a limestone block with an 8-sided carved frame (an octagon) set into the low masonry of the seating tiers. It is not high up: it is within arm's reach.",cost:20},{text:"A single letter, initial of the word Restauration, precedes four digits. These digits designate a year from the very beginning of the 20th century.",cost:40},{text:"The code is 1903 (or 1902 depending on the exact state of the cartouche).",cost:0}]},
+      hints:[{text:"Look for a limestone block with an 8-sided carved frame (an octagon) set into the low masonry of the seating tiers. It is not high up: it is within arm's reach.",cost:20},{text:"A single letter, initial of the word Restauration, precedes four digits. These digits designate a year from the very beginning of the 20th century.",cost:40},{text:"The code is 1902.",cost:0}]},
     de:{ nav:{title:'Selley-Theater',desc:"Das römische Selley-Theater ist von der Kantonsstraße aus sichtbar.",address:'Chemin du Selley, 1580 Avenches',distance:'~300 m vom Cigognier',mapsUrl:'https://maps.google.com/?q=Theatre+Selley+Avenches'},
       narrative:"Das größte römische Theater der Schweiz: elftausend Zuschauer. Zweitausend Jahre später kamen Restauratoren, um das Verbliebene zu retten, und signierten ihre Arbeit im Stein. Unter Hunderten von Blöcken meißelten sie ein achteckiges Cartouche: einen Anfangsbuchstaben, eine Jahreszahl. Es ist der diskreteste Hinweis des gesamten Kurses.",
       question:"Ein achteckiges Cartouche wurde in das untere Mauerwerk der Cavea gemeißelt, mit einem Anfangsbuchstaben und einer vierstelligen Jahreszahl. Findet es in den Sitzreihen, klein, diskret, auf Knie- oder Taillenhöhe. Die eingravierte Jahreszahl ist euer Code. Gebt die 4 Ziffern ein.",
-      hints:[{text:"Suche nach einem Kalksteinblock mit einem 8-seitigen gemeißelten Rahmen (ein Achteck) im niedrigen Mauerwerk der Sitzreihen. Es ist nicht hoch oben: es ist in Reichweite.",cost:20},{text:"Ein einziger Buchstabe, Anfang des Wortes Restauration, steht vor vier Ziffern. Diese Ziffern bezeichnen ein Jahr vom ganz Anfang des 20. Jahrhunderts.",cost:40},{text:"Der Code ist 1903 (oder 1902 je nach genauen Zustand des Cartouche).",cost:0}]}
+      hints:[{text:"Suche nach einem Kalksteinblock mit einem 8-seitigen gemeißelten Rahmen (ein Achteck) im niedrigen Mauerwerk der Sitzreihen. Es ist nicht hoch oben: es ist in Reichweite.",cost:20},{text:"Ein einziger Buchstabe, Anfang des Wortes Restauration, steht vor vier Ziffern. Diese Ziffern bezeichnen ein Jahr vom ganz Anfang des 20. Jahrhunderts.",cost:40},{text:"Der Code ist 1902.",cost:0}]}
   },
   // ─── ÉNIGME 7 THERMES DU FORUM (TTS + STT) ────────────────────────────
   { id:7, step:'VII', fragment:'I', clue:'HYPOCAUSTE', type:'text', answers:['HYPOCAUSTE','HYPOCAUST','HYPOKAUST','HYPOCAUSTUM','HYPOKAUSTE','IPOCAUSTE'],
@@ -3809,9 +3782,10 @@ function buildEnigmaHTML(e,idx){
         <div id="feedback-${idx}" class="feedback" style="display:none"></div>
       </div>`;
   } else if(enigmaType === 'qcm'){
+    const qcmLabelKey = (e.qcmRequired||2)===1 ? 'selectOneLabel' : 'selectTwoLabel';
     answerHTML = `
       <div id="answerArea-${idx}" class="answer-area">
-        <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;color:rgba(201,168,76,.45);text-align:center;margin-bottom:4px">${t('selectTwoLabel')}</div>
+        <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;color:rgba(201,168,76,.45);text-align:center;margin-bottom:4px">${t(qcmLabelKey)}</div>
         <button id="qcmConfirm-${idx}" class="btn-main" onclick="checkQCM(${idx})" style="display:none;height:38px;font-size:10px"></button>
         <div id="feedback-${idx}" class="feedback" style="display:none"></div>
       </div>`;
