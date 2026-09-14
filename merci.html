@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Merci — Aventicum Quest</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: var(--dark); }
+    .merci-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+    }
+    .merci-card {
+      max-width: 560px;
+      background: var(--dark-mid);
+      border: 1px solid var(--border);
+      padding: 4rem 3rem;
+      position: relative;
+    }
+    .merci-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light));
+    }
+    .merci-icon {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      display: block;
+    }
+    .merci-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      color: var(--gold);
+      margin-bottom: 1rem;
+      letter-spacing: 0.08em;
+    }
+    .merci-text {
+      color: rgba(250,247,240,0.7);
+      font-size: 1.05rem;
+      line-height: 1.7;
+      font-style: italic;
+      margin-bottom: 2rem;
+    }
+    .merci-note {
+      font-size: 0.85rem;
+      color: rgba(250,247,240,0.4);
+      padding: 1rem 1.25rem;
+      background: rgba(201,168,76,0.06);
+      border: 1px solid rgba(201,168,76,0.15);
+      margin-bottom: 2.5rem;
+    }
+    .merci-note strong { color: var(--gold); }
+    .btn-retour {
+      display: inline-block;
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.85rem 2rem;
+      border: 1px solid rgba(201,168,76,0.5);
+      color: var(--gold);
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    .btn-retour:hover {
+      background: rgba(201,168,76,0.1);
+    }
+  </style>
+</head>
+<body>
+  <section class="merci-section">
+    <div class="merci-card">
+      <span class="merci-icon">⚜️</span>
+      <h1 class="merci-title">Paiement confirmé</h1>
+      <p class="merci-text">
+        Votre mission commence. Le code AQUILA vous a été envoyé par e-mail — vérifiez votre boîte de réception dans les prochaines minutes.
+      </p>
+      <div class="merci-note">
+        <strong>Pas de code reçu ?</strong><br>
+        Vérifiez vos spams. Si rien sous 5 minutes, contactez-nous à <strong>contact@aventicum-quest.ch</strong>
+      </div>
+      <a href="index.html" class="btn-retour">← Retour à l'accueil</a>
+    </div>
+  </section>
+</body>
+</html>
