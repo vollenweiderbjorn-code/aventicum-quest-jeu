@@ -9,9 +9,18 @@
 <meta property="og:description" content="L'aigle de la Legio XXI a été volée. Résolvez 8 énigmes sur les monuments romains d'Avenches en 120 minutes.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://jeu.aventicumquest.ch">
-<meta property="og:image" content="https://aventicumquest.ch/images/og_image.png">
+<meta property="og:image" content="https://aventicumquest.ch/images/og_image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<!-- Privacy-friendly analytics by Plausible -->
+<script async src="https://plausible.io/js/pa-ELx2kKywInJ5MKZ1ST8au.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
 <!-- FIX11: Font preconnect + fallback -->
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3467,6 +3476,7 @@ function startMission(){
   G.hintLevel=Array(N_ENIGMAS).fill(0);G.qcmSelected={};
   G.stepScored=Array(N_ENIGMAS).fill(false);G.stepFailed=Array(N_ENIGMAS).fill(false);
   buildInventory();startGPS();saveGame();startTimer();showEnigma(0);
+  try{ window.plausible && window.plausible('Jeu: Mission démarrée', {props:{langue: currentLang||'fr'}}); }catch(e){}
 }
 function resumeMission(){
   G.gameActive=true;
@@ -4335,6 +4345,7 @@ function showVictory(){
   const elapsed=Math.floor((Date.now()-G.startTime)/1000);
   const mins=Math.floor(elapsed/60),secs=elapsed%60;
   G.gameActive=false;
+  try{ window.plausible && window.plausible('Jeu: Mission terminée', {props:{langue: currentLang||'fr', duree_min: mins, score: G.score}}); }catch(e){}
   // Final scene text inject into victory screen narrative if element exists
   const finalSceneEl=document.getElementById('victoryFinalScene');
   if(finalSceneEl){
@@ -4389,6 +4400,7 @@ function shareVictory(){
 
 /* ══════ MIDGAME SHARE (4/8 fragments) ══════ */
 function showMidShare(){
+  try{ window.plausible && window.plausible('Jeu: Mi-parcours', {props:{langue: currentLang||'fr'}}); }catch(e){}
   document.getElementById('midShareTitle').textContent = t('midShareTitle');
   document.getElementById('midShareMsg').textContent = t('midShareMsg');
   document.getElementById('midShareBtn').textContent = t('midShareBtn');
