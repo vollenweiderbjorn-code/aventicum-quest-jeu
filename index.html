@@ -2632,7 +2632,7 @@ Möge Jupiter eure Schritte leiten, [TEAM]. Aventicum zählt auf euch.`
 // type: 'text' (default) | 'vision' (photo upload + Claude AI) | 'speech' (TTS+STT) | 'oath' (photo + vocal oath)
 const ENIGMAS = [
   // ─── ÉNIGME 1 HÔTEL DE VILLE (Tête de Maure) ───────────────────────────
-  { id:1, step:'I', fragment:'H', clue:'MARS', type:'qcm', qcmRequired:1, answers:['A'], qcmImages:['#','#','#'], qcmEmojis:['⚔️','🏺','⛪'], qcmLabels:["A. Parce que l'année romaine commençait en mars, mois de Mars, dieu de la guerre","B. Parce que les Romains ont supprimé deux mois pendant les guerres puniques","C. Parce que le pape Grégoire a décalé le calendrier en 1582"],
+  { id:1, step:'I', fragment:'H', clue:'MARS', type:'qcm', qcmRequired:1, answers:['A'], qcmImages:['#','#','#'], qcmEmojis:['⚔️','🏺','⛪'], qcmLabels:{fr:["A. Parce que l'année romaine commençait en mars, mois de Mars, dieu de la guerre","B. Parce que les Romains ont supprimé deux mois pendant les guerres puniques","C. Parce que le pape Grégoire a décalé le calendrier en 1582"],en:["A. Because the Roman year began in March, the month of Mars, god of war","B. Because the Romans removed two months during the Punic Wars","C. Because Pope Gregory shifted the calendar in 1582"],de:["A. Weil das römische Jahr im März begann, dem Monat des Mars, des Kriegsgottes","B. Weil die Römer während der Punischen Kriege zwei Monate strichen","C. Weil Papst Gregor 1582 den Kalender verschob"]},
     fr:{ nav:{title:'Hôtel de Ville',desc:"Juste en face de l'Hôtel de Ville, l'église Sainte-Madeleine porte un cadran solaire du XVIIIe siècle.",address:'Grand-Rue, 1580 Avenches',distance:'Point de départ',mapsUrl:'https://maps.google.com/?q=Hotel+de+Ville+Avenches'},
       narrative:"Le traître a commencé ici, au cœur de la cité, sous les yeux de tous. Juste en face de l'Hôtel de Ville, la façade de l'église Sainte-Madeleine porte un cadran solaire du XVIIIe siècle, où l'on venait autrefois régler sa montre sur le soleil. C'est en l'observant de près que le traître a repéré une anomalie qui remonte bien plus loin que le XVIIIe siècle. Approche-toi. Observe ce que des générations ont regardé sans jamais le voir.",
       question:"Cherche le cadran solaire sur la façade de l'église, juste en face de l'Hôtel de Ville. À côté d'un des mois de l'année est gravée une abréviation étrange : « 7bre ». Ce n'est pas une erreur de gravure. Pourquoi les Romains désignaient-ils ce mois comme le « septième », alors qu'il est aujourd'hui le neuvième mois de l'année ? Sélectionne la bonne explication.",
@@ -2662,7 +2662,7 @@ const ENIGMAS = [
       hints:[{text:"Sucht am Turmgipfel ein Fenster mit Blick auf die Ebene, über die Dächer hinweg. Dort, allein in den Feldern, erhebt sich ein römisches Element wie eine vergessene Wache. Es ist kein Gebäude, nur eine Säule.",cost:20},{text:"Nehmt das französische Wort cigogne und hängt die Endung -IER an, so wie aus pomme (Apfel) ein pommier (Apfelbaum) wird: der Ort der Störche.",cost:40},{text:"Die Antwort ist CIGOGNIER.",cost:80}]}
   },
   // ─── ÉNIGME 3 RUE DES ALPES (QCM visuel) ──────────────────────────────
-  { id:3, step:'III', fragment:'L', clue:'LOUVE', type:'qcm', qcmRequired:2, answers:['A+B'], qcmImages:['qcm-louve.jpg','qcm-rosace.jpg','qcm-lion.jpg','qcm-porte-fer.jpg'], /* Images à la racine du repo, à côté d'index.html : qcm-louve.jpg (Louve), qcm-rosace.jpg (rosace tressée), qcm-lion.jpg (leurre), qcm-porte-fer.jpg (leurre). */ qcmEmojis:['🐺','🌸','🦁','🚪'], qcmLabels:['A. Louve romaine','B. Rosace tressée sur porte en bois','C. Lion sculpté','D. Porte en fer forgé'],
+  { id:3, step:'III', fragment:'L', clue:'LOUVE', type:'qcm', qcmRequired:2, answers:['A+B'], qcmImages:['qcm-louve.jpg','qcm-rosace.jpg','qcm-lion.jpg','qcm-porte-fer.jpg'], /* Images à la racine du repo, à côté d'index.html : qcm-louve.jpg (Louve), qcm-rosace.jpg (rosace tressée), qcm-lion.jpg (leurre), qcm-porte-fer.jpg (leurre). */ qcmEmojis:['🐺','🌸','🦁','🚪'], qcmLabels:{fr:['A. Louve romaine','B. Rosace tressée sur porte en bois','C. Lion sculpté','D. Porte en fer forgé'],en:['A. Roman she-wolf','B. Woven rosette on a wooden door','C. Carved lion','D. Wrought-iron gate'],de:['A. Römische Wölfin','B. Geflochtene Rosette an einer Holztür','C. Geschnitzter Löwe','D. Schmiedeeisernes Tor']},
     fr:{ nav:{title:'Rue des Alpes',desc:"Observez les façades des immeubles le long de la Rue des Alpes.",address:'Rue des Alpes, 1580 Avenches',distance:'~150 m de la Tour de Benneville',mapsUrl:'https://maps.google.com/?q=Rue+des+Alpes+Avenches'},
       narrative:"La Rue des Alpes relie l'Hôtel de Ville au reste de la cité. En apparence, une rue ordinaire. Mais le traître l'a longée les yeux ouverts, et il y a vu ce que personne d'autre ne voit. Sur une façade veille une louve de pierre, allaitant deux jumeaux, la légende même de la fondation de Rome, gravée là depuis des générations. Un peu plus loin, une porte en bois porte une rosace tressée, un détail d'artisanat local que personne ne remarque en passant. Deux éléments en pleine vue, invisibles à qui ne cherche pas.",
       question:`En remontant toute la Rue des Alpes, observe attentivement les façades des bâtiments eux-mêmes, la pierre et le bois, pas les vitrines ni les enseignes commerciales. Parmi ces quatre ornements ci-dessous (A, B, C, D), deux sont RÉELLEMENT présents sur ces façades. Sélectionne les deux bons éléments, puis confirme.`,
@@ -3914,12 +3914,16 @@ function qcmImgFallback(imgEl, emoji){
   imgEl.replaceWith(div);
 }
 function buildQCMGrid(e, idx){
-  const nOptions = (e.qcmLabels && e.qcmLabels.length) || (e.qcmImages && e.qcmImages.length) || 4;
+  // qcmLabels peut être un tableau (FR hérité) ou un objet {fr,en,de} par langue
+  const labels = Array.isArray(e.qcmLabels)
+    ? e.qcmLabels
+    : (e.qcmLabels ? (e.qcmLabels[currentLang] || e.qcmLabels.fr) : null);
+  const nOptions = (labels && labels.length) || (e.qcmImages && e.qcmImages.length) || 4;
   const cells = ['A','B','C','D','E','F'].slice(0,nOptions).map((letter,i)=>{
     const imgs = e.qcmImages || [];
     const img = imgs[i];
     const emoji = (e.qcmEmojis && e.qcmEmojis[i]) || '❓';
-    const rawLabel = (e.qcmLabels && e.qcmLabels[i]) || '';
+    const rawLabel = (labels && labels[i]) || '';
     const caption = rawLabel.replace(/^[A-D]\.\s*/,'');
     let visual = '';
     if(img && img !== '#'){
