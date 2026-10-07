@@ -432,7 +432,6 @@ html, body {
 .btn-main:active { opacity: 0.85; transform: scale(0.98); }
 .btn-main.urgent { background: var(--red); color: #fff; }
 .btn-icon {
-  width: 44px;
   height: 44px;
   border-radius: 4px;
   border: 1px solid var(--border);
@@ -440,7 +439,13 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: var(--ink-dim);
+  padding: 0 9px;
+  width: auto;
+  min-width: 44px;
   flex-shrink: 0;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -712,7 +717,7 @@ html, body {
   justify-content: center;
   gap: 16px;
 }
-.walk-feet { font-size: 40px; animation: walkBounce 0.6s ease-in-out infinite alternate; }
+.walk-feet { width: 14px; height: 14px; border-radius: 50%; background: var(--gold); animation: walkBounce 0.6s ease-in-out infinite alternate; }
 .walk-text {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -1043,10 +1048,22 @@ html, body {
 }
 
 .bc-icon-line {
-  font-size: 2.6rem;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   filter: drop-shadow(0 0 12px rgba(201,168,76,0.5));
   animation: iconPop 0.5s ease forwards;
   opacity: 0;
+}
+/* Ornement en losange (remplace l'ancienne icône) */
+.bc-icon-line::before {
+  content: '';
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--gold);
+  transform: rotate(45deg);
+  box-shadow: inset 0 0 0 5px rgba(201,168,76,0.18);
 }
 @keyframes iconPop {
   from { opacity:0; transform: scale(0.5); }
@@ -1126,7 +1143,17 @@ html, body {
   color: rgba(250,247,240,0.75);
   line-height: 1.4;
 }
-.bc-rule-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+.bc-rule-list { counter-reset: bcrule; }
+.bc-rule-icon {
+  flex-shrink: 0;
+  width: 22px; height: 22px;
+  margin-top: 0;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 11px; color: var(--gold);
+}
+.bc-rule-icon::before { counter-increment: bcrule; content: counter(bcrule); }
 
 /* footer avec bouton */
 .bc-footer {
@@ -1583,10 +1610,10 @@ html, body {
 }
 .carnet-close-btn:active { background: rgba(201,168,76,0.08); }
 .carnet-nav-btn {
-  width: 36px; height: 36px; border-radius: 8px;
+  min-width: 44px; height: 44px; padding: 0 9px; border-radius: 4px;
   border: 1px solid rgba(201,168,76,0.25);
   background: rgba(201,168,76,0.06);
-  font-size: 14px; cursor: pointer;
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.06em; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   color: var(--gold-dim); flex-shrink: 0;
   -webkit-tap-highlight-color: transparent;
@@ -1975,11 +2002,11 @@ html, body {
 <!-- ═══════ MIDGAME SHARE MODAL ═══════ -->
 <div id="midShareOverlay" class="midshare-overlay">
   <div class="midshare-card">
-    <div class="midshare-title" id="midShareTitle">🦅 MI-PARCOURS !</div>
-    <div class="midshare-msg" id="midShareMsg">La moitié du parcours est faite.</div>
+    <div class="midshare-title" id="midShareTitle" data-t="midShareTitle">MI-PARCOURS !</div>
+    <div class="midshare-msg" id="midShareMsg"></div>
     <div class="midshare-btn-row">
-      <button class="btn btn-primary" id="midShareBtn" onclick="shareMidProgress()">📤 Partager ma progression</button>
-      <button class="btn" id="midShareDismiss" onclick="closeMidShare()">Continuer la mission</button>
+      <button class="btn btn-primary" id="midShareBtn" onclick="shareMidProgress()" data-t="midShareBtn">Partager ma progression</button>
+      <button class="btn" id="midShareDismiss" onclick="closeMidShare()" data-t="midShareDismiss">Continuer la mission</button>
     </div>
   </div>
 </div>
@@ -1988,22 +2015,22 @@ html, body {
 <!-- ═══════ CARNET DE L'AGENT ═══════ -->
 <div id="carnetPanel">
   <div class="carnet-card">
-    <div class="carnet-title">📖 CARNET DE L'AGENT · FRAGMENTS</div>
+    <div class="carnet-title" data-t="carnetTitle">CARNET DE L'AGENT · FRAGMENTS</div>
     <div class="carnet-slots" id="carnetSlots">
       <!-- Slots injected by JS -->
     </div>
     <div class="carnet-station-row" id="carnetStationRow">
       <!-- Station labels injected by JS -->
     </div>
-    <div class="carnet-hint" id="carnetHint">Collecte les fragments station par station.</div>
-    <button class="carnet-close-btn" onclick="toggleCarnet()">✕ FERMER</button>
+    <div class="carnet-hint" id="carnetHint" data-t="carnetDefault">Collecte les fragments station par station.</div>
+    <button class="carnet-close-btn" onclick="toggleCarnet()"><span aria-hidden="true">✕</span> <span data-t="close">FERMER</span></button>
   </div>
 </div>
 
 <!-- ═══════ WALK LOADER ═══════ -->
 <div id="walkLoader">
-  <div class="walk-feet">👣</div>
-  <div class="walk-text" id="walkLoaderText">EN ROUTE VERS LE MONUMENT...</div>
+  <div class="walk-feet"></div>
+  <div class="walk-text" id="walkLoaderText" data-t="walkLoader">EN ROUTE VERS LE MONUMENT...</div>
 </div>
 
 <!-- ═══════ HUD ═══════ -->
@@ -2011,7 +2038,7 @@ html, body {
   <div class="hud-row">
     <div class="hud-logo">AQ <span>OPERATIO AQUILA</span></div>
     <div style="display:flex;align-items:center;gap:0.8rem">
-      <div id="hudTimer" style="font-family:var(--font-mono);font-size:0.8rem;color:rgba(201,168,76,0.7);letter-spacing:0.08em;display:none">⏱ <span id="timerDisplay">120:00</span></div>
+      <div id="hudTimer" style="font-family:var(--font-mono);font-size:0.8rem;color:rgba(201,168,76,0.7);letter-spacing:0.08em;display:none"><span id="timerDisplay">120:00</span></div>
       <div class="hud-score" id="hudScore">1000 pts<small id="scoreLabel">SCORE</small></div>
     </div>
   </div>
@@ -2085,9 +2112,9 @@ html, body {
       <div class="title-sub">OPERATIO AQUILA</div>
     </div>
     <div class="lang-selector" style="margin-bottom:20px">
-      <button class="lang-btn active" id="langBtn-fr" onclick="setLang('fr')"><span>🇫🇷</span><span class="lang-name">FR</span></button>
-      <button class="lang-btn" id="langBtn-en" onclick="setLang('en')"><span>🇬🇧</span><span class="lang-name">EN</span></button>
-      <button class="lang-btn" id="langBtn-de" onclick="setLang('de')"><span>🇩🇪</span><span class="lang-name">DE</span></button>
+      <button class="lang-btn active" id="langBtn-fr" onclick="setLang('fr')"><span class="lang-name">FR</span></button>
+      <button class="lang-btn" id="langBtn-en" onclick="setLang('en')"><span class="lang-name">EN</span></button>
+      <button class="lang-btn" id="langBtn-de" onclick="setLang('de')"><span class="lang-name">DE</span></button>
     </div>
     <div class="code-field-group">
       <div class="code-field-label" id="label-mission-code">CODE DE MISSION</div>
@@ -2098,10 +2125,10 @@ html, body {
       <input type="text" id="teamInput" class="input-field" placeholder="Nom de votre équipe" autocomplete="off">
     </div>
     <div id="codeError" class="feedback error" style="display:none">Le Sénat rejette ce code. Vérifiez votre email.</div>
-    <button class="btn btn-primary" id="btnLaunch" onclick="submitCode()">🔱 LANCER LA MISSION</button>
+    <button class="btn btn-primary" id="btnLaunch" onclick="submitCode()">LANCER LA MISSION</button>
     <div class="code-links">
-      <a href="https://aventicumquest.ch/cgv.html" class="code-link">CGV</a>
-      <a href="#" class="code-link" onclick="goToScreen('splash')">ACCUEIL</a>
+      <a href="https://aventicumquest.ch/cgv.html" class="code-link" data-t="linkTerms">CGV</a>
+      <a href="#" class="code-link" onclick="goToScreen('splash')" data-t="linkHome">ACCUEIL</a>
     </div>
   </div>
 </div>
@@ -2167,7 +2194,7 @@ html, body {
       </div>
       <div class="bc-content">
         <div class="bc-overline" data-i18n="bc_overline1">AUBE · LE TRÉSOR LÉGIONNAIRE</div>
-        <div class="bc-icon-line">🦅</div>
+        <div class="bc-icon-line" aria-hidden="true"></div>
         <div class="bc-body" id="bc1Text"></div>
       </div>
       <div class="bc-footer">
@@ -2182,7 +2209,7 @@ html, body {
       </div>
       <div class="bc-content">
         <div class="bc-overline" data-i18n="bc_overline2">ORDRE DE MISSION</div>
-        <div class="bc-icon-line">📜</div>
+        <div class="bc-icon-line" aria-hidden="true"></div>
         <div class="bc-mission-box">
           <div class="bc-body" id="bc2Text"></div>
         </div>
@@ -2209,7 +2236,7 @@ html, body {
       </div>
       <div class="bc-footer">
         <button class="bc-btn bc-btn-start" onclick="startMission()">
-          <span data-i18n="bc_start">⚔️ COMMENCER LA MISSION</span>
+          <span data-i18n="bc_start">COMMENCER LA MISSION</span>
         </button>
       </div>
     </div>
@@ -2231,7 +2258,7 @@ html, body {
     <p id="metaNarrative" class="narrative-text" style="text-align:center;margin:10px 0 4px">Assemble les huit fragments dans l'ordre de ton périple.</p>
     <div id="metaVexillum"><div id="metaSlots"></div></div>
     <div id="metaPool"></div>
-    <div id="metaMsg">Touche un fragment, puis son encoche.</div>
+    <div id="metaMsg" data-t="metaTapFragment">Touche un fragment, puis son encoche.</div>
   </div>
 
   <div id="metaRevealOverlay">
@@ -2261,12 +2288,12 @@ html, body {
 
 <!-- ═══════ TRAITOR REVEAL OVERLAY ═══════ -->
 <div id="traitorReveal">
-  <div id="trLabel" class="traitor-label">IDENTITÉ DU TRAÎTRE</div>
+  <div id="trLabel" class="traitor-label" data-t="traitorIdLabel">IDENTITÉ DU TRAÎTRE</div>
   <div id="trName" class="traitor-name">CAIUS VALERIUS RUFUS</div>
   <div id="trText" class="traitor-text"></div>
   <div class="traitor-divider"></div>
   <div id="trBridge" class="traitor-bridge"></div>
-  <button class="traitor-continue-btn" onclick="hideTraitorReveal()">⚔ CONTINUER</button>
+  <button class="traitor-continue-btn" onclick="hideTraitorReveal()" data-t="continueBtn">CONTINUER</button>
 </div>
 
 <!-- ═══════ SCREEN 16 VICTOIRE ═══════ -->
@@ -2311,8 +2338,8 @@ html, body {
     <p id="victoryMsg" class="narrative-text" style="text-align:center;margin:1rem 0"></p>
     <p id="victEmpire" class="narrative-text" style="text-align:center;font-size:0.85rem;opacity:0.6;margin-bottom:1rem"></p>
     <div style="display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap">
-      <a href="#" id="victReview" class="btn btn-primary" onclick="reviewLink()">⭐ LAISSER UN AVIS 5 ÉTOILES</a>
-      <button id="victShare" class="btn" onclick="shareVictory()">📤 PARTAGER MA VICTOIRE</button>
+      <a href="#" id="victReview" class="btn btn-primary" onclick="reviewLink()" style="display:none">LAISSER UN AVIS</a>
+      <button id="victShare" class="btn" onclick="shareVictory()">PARTAGER MA VICTOIRE</button>
     </div>
 
       <div id="certificate" style="margin-top:1.2rem">
@@ -2320,16 +2347,16 @@ html, body {
       <div class="cert-corner bl"></div><div class="cert-corner br"></div>
       <div class="cert-title">SENATUS POPULUSQUE ROMANUS · AVENTICUM · MMXXVI</div>
       <div class="sep-sm sep" style="margin:0.4rem auto 0.7rem"></div>
-      <div class="cert-body">L'Empire romain certifie que l'équipe</div>
+      <div class="cert-body" data-t="certBody1">L'Empire romain certifie que l'équipe</div>
       <div class="cert-team" id="certTeam"></div>
-      <div class="cert-body">a accompli la mission <em>Operatio Aquila</em> avec bravoure,<br>restituant l'aigle sacrée de la Legio XXI Rapax.</div>
+      <div class="cert-body" data-t-html="certBody2">a accompli la mission <em>Operatio Aquila</em> avec bravoure,<br>restituant l'aigle sacrée de la Legio XXI Rapax.</div>
       <div class="cert-stats">
-        <div class="cert-stat"><div class="val" id="certScore"></div><div class="lbl">POINTS</div></div>
-        <div class="cert-stat"><div class="val" id="certTime"></div><div class="lbl">DURÉE</div></div>
-        <div class="cert-stat"><div class="val" id="certDate"></div><div class="lbl">DATE</div></div>
+        <div class="cert-stat"><div class="val" id="certScore"></div><div class="lbl" data-t="certPoints">POINTS</div></div>
+        <div class="cert-stat"><div class="val" id="certTime"></div><div class="lbl" data-t="certDuration">DURÉE</div></div>
+        <div class="cert-stat"><div class="val" id="certDate"></div><div class="lbl" data-t="certDate">DATE</div></div>
       </div>
       <div class="sep-sm sep" style="margin:0.8rem auto 0.5rem"></div>
-      <div class="cert-seal">🦅 QUE JUPITER GUIDE VOS PAS · S·P·Q·R 🦅</div>
+      <div class="cert-seal" data-t="certSeal">QUE JUPITER GUIDE VOS PAS · S·P·Q·R</div>
     </div>
   </div>
 </div>
@@ -2349,7 +2376,7 @@ const translations = {
     teamName: "NOM DE L'ÉQUIPE",
     teamPlaceholder: "Nom de votre équipe",
     briefingLabel: "BRIEFING DE MISSION",
-    startBtn: "⚔️ JE SUIS PRÊT. QUE LA MISSION COMMENCE",
+    startBtn: "JE SUIS PRÊT. QUE LA MISSION COMMENCE",
     scoreLabel: "SCORE",
     invLabel: "FRAGMENTS COLLECTÉS",
     nextDest: "PROCHAINE DESTINATION",
@@ -2358,11 +2385,43 @@ const translations = {
     openMaps: "Ouvrir dans Google Maps",
     segStart: "début",
     segEnd: "fin",
+    stationWord: "ÉTAPE",
+    stationProgress: (n,total) => `ÉTAPE ${n} / ${total}`,
+    carnetShort: "Carnet",
+    carnetTitle: "CARNET DE L'AGENT · FRAGMENTS",
+    carnetDefault: "Collecte les fragments station par station.",
+    carnetEmpty: "Résous les énigmes pour collecter tes lettres.",
+    carnetFull: "8 lettres collectées. Réordonne-les selon leur numéro pour trouver le code final.",
+    carnetPartial: (n,letters) => `Lettres (${n}/8) : ${letters}`,
+    close: "FERMER",
+    walkLoader: "EN ROUTE VERS LE MONUMENT...",
+    codeAccepted: "CODE ACCEPTÉ. AVE, SOLDAT",
+    continueBtn: "CONTINUER",
+    touchContinue: "TOUCHER POUR CONTINUER",
+    traitorMsgLabel: "MESSAGE DU TRAÎTRE",
+    traitorIdLabel: "IDENTITÉ DU TRAÎTRE",
+    resumeTitle: "MISSION EN COURS",
+    resumeStep: (n,total,score) => `Étape ${n}/${total} · ${score} pts`,
+    resumeBtn: "REPRENDRE LA MISSION",
+    resumeNew: "Nouvelle partie",
+    linkTerms: "CGV",
+    linkHome: "ACCUEIL",
+    wrongRetry: "Réponse incorrecte. Réessaie ! (1 essai restant)",
+    stepCorrect: "Correct ! Étape suivante…",
+    stepWrong: "Réponse incorrecte. Essaie encore.",
+    certBody1: "L'Empire romain certifie que l'équipe",
+    certBody2: "a accompli la mission <em>Operatio Aquila</em> avec bravoure,<br>restituant l'aigle sacrée de la Legio XXI Rapax.",
+    certPoints: "POINTS",
+    certDuration: "DURÉE",
+    certDate: "DATE",
+    certSeal: "QUE JUPITER GUIDE VOS PAS · S·P·Q·R",
+    dateLocale: "fr-CH",
+    imageUnavailable: "Image indisponible",
     stepLabel: "ÉTAPE",
     answerPlaceholder: "Votre réponse...",
-    confirmBtn: "🔱 CONFIRMER",
-    hintBtn: "🪶 Demander un indice",
-    supportBtn: "📞 Appeler le support",
+    confirmBtn: "CONFIRMER",
+    hintBtn: "Demander un indice",
+    supportBtn: "Appeler le support",
     hint: "Indice",
     enigmaLabel: (n) => `ÉNIGME ${n}`,
     fragmentCollectedLabel: "FRAGMENT COLLECTÉ",
@@ -2370,21 +2429,17 @@ const translations = {
     groupMissionLabel: "MISSION DE GROUPE",
     selectTwoLabel: "SÉLECTIONNE 2 ÉLÉMENTS",
     selectOneLabel: "SÉLECTIONNE LA BONNE RÉPONSE",
-    stepOfLabel: (si,total) => `🔐 ÉTAPE ${si} / ${total}`,
+    stepOfLabel: (si,total) => `ÉTAPE ${si} / ${total}`,
     codeError: "Le Sénat rejette ce code, soldat. Vérifiez votre email.",
     codeChecking: "VÉRIFICATION...",
-    launchBtn: "🔱 LANCER LA MISSION",
+    launchBtn: "LANCER LA MISSION",
     correctFirst: () => `Bien joué, soldat ! Indice révélé. +100 pts`,
     correctRetry: () => `Correct. Indice révélé.`,
     wrong: "Rome ne pardonne pas l'erreur, soldat. Aucun point pour cette étape.",
-    metaBtn: "🔱 RÉVÉLER L'AQUILA",
+    metaBtn: "RÉVÉLER L'AQUILA",
     finalReveal: "RÉVÉLATION FINALE",
     aquilaReveals: "L'AQUILA SE RÉVÈLE",
-    metaNarrative: "Tous les 8 fragments sont réunis. Ordonne les lettres selon les numéros de ton carnet pour révéler le nom du peuple dont Aventicum était la capitale.",
-    metaQuestion: "Tu as collecté les 8 fragments. Chaque fragment porte une lettre et un numéro d'ordre. Assemble ces lettres selon leur numéro pour former le code secret, le nom latin du peuple dont Aventicum était la capitale. Entre ce code en majuscules.",
-    metaPlaceholder: "_ _ _ _ _ _ _ _",
-    metaBtn: "🔱 RÉVÉLER L'AQUILA",
-    metaWrong: "Ce n'est pas le bon code, soldat. Revois tes fragments et reconstitue le nom latin du peuple d'Aventicum.",
+    metaNarrative: (n) => `${n}/8 fragments collectés. Assemble-les dans l'ordre de ton périple sur le vexillum.`,
     metaTapFragment: "Touche un fragment, puis son encoche sur l'étendard.",
     metaTapSlot: "Fragment sélectionné, choisis son encoche.",
     metaMsg1: "La pierre s'en souvient…",
@@ -2396,20 +2451,20 @@ const translations = {
     duration: "Durée",
     victoryMsg: (t) => `L'opération Aquila est neutralisée. La cité romaine est sauve. Le Sénat d'Aventicum salue l'équipe ${t}, qui a percé les secrets de la légion.`,
     empireMsg: "L'Empire s'étend. Lausanne, Fribourg, Sion vous appellent. D'autres missions arrivent bientôt.",
-    reviewBtn: "⭐ LAISSER UN AVIS",
-    shareBtn: "📤 PARTAGER MA VICTOIRE",
-    shareText: (s,t) => `🦅 Mission accomplie ! J'ai terminé Aventicum Quest avec ${s} pts en équipe « ${t} » ! #AventicumQuest`,
-    midShareTitle: "🦅 MI-PARCOURS !",
+    reviewBtn: "LAISSER UN AVIS",
+    shareBtn: "PARTAGER MA VICTOIRE",
+    shareText: (s,t) => `Mission accomplie ! J'ai terminé Aventicum Quest avec ${s} pts en équipe « ${t} » ! #AventicumQuest`,
+    midShareTitle: "MI-PARCOURS !",
     midShareMsg: (n) => `Vous avez récupéré ${n} fragments sur 8. La moitié du parcours est faite, l'Aquila se rapproche !`,
-    midShareBtn: "📤 Partager ma progression",
-    midShareText: (t, n) => `⚔️ À mi-chemin sur Aventicum Quest ! Mon équipe « ${t} » a déjà récupéré ${n} fragments sur 8. #AventicumQuest`,
+    midShareBtn: "Partager ma progression",
+    midShareText: (t, n) => `À mi-chemin sur Aventicum Quest ! Mon équipe « ${t} » a déjà récupéré ${n} fragments sur 8. #AventicumQuest`,
     midShareDismiss: "Continuer la mission",
-    shareCopied: "✅ Copié ! Colle-le où tu veux.",
+    shareCopied: "Copié ! Colle-le où tu veux.",
     ranks: [
-      { min:900, label:"LÉGAT DE L'EMPIRE", icon:'🦅' },
-      { min:700, label:"CENTURION D'ÉLITE", icon:'⚔️' },
-      { min:500, label:'LÉGIONNAIRE HONORABLE', icon:'🛡️' },
-      { min:0,   label:'RECRUE PROMETTEUSE', icon:'📜' }
+      { min:900, label:"LÉGAT DE L'EMPIRE" },
+      { min:700, label:"CENTURION D'ÉLITE" },
+      { min:500, label:'LÉGIONNAIRE HONORABLE' },
+      { min:0,   label:'RECRUE PROMETTEUSE' }
     ]
   },
   en: {
@@ -2418,7 +2473,7 @@ const translations = {
     teamName: "TEAM NAME",
     teamPlaceholder: "Your team name",
     briefingLabel: "MISSION BRIEFING",
-    startBtn: "⚔️ I AM READY. LET THE MISSION BEGIN",
+    startBtn: "I AM READY. LET THE MISSION BEGIN",
     scoreLabel: "SCORE",
     invLabel: "COLLECTED FRAGMENTS",
     nextDest: "NEXT DESTINATION",
@@ -2427,11 +2482,43 @@ const translations = {
     openMaps: "Open in Google Maps",
     segStart: "start",
     segEnd: "end",
+    stationWord: "STEP",
+    stationProgress: (n,total) => `STEP ${n} / ${total}`,
+    carnetShort: "Notebook",
+    carnetTitle: "AGENT'S NOTEBOOK · FRAGMENTS",
+    carnetDefault: "Collect the fragments station by station.",
+    carnetEmpty: "Solve the riddles to collect your letters.",
+    carnetFull: "8 letters collected. Put them in order by number to find the final code.",
+    carnetPartial: (n,letters) => `Letters (${n}/8): ${letters}`,
+    close: "CLOSE",
+    walkLoader: "ON THE WAY TO THE MONUMENT...",
+    codeAccepted: "CODE ACCEPTED. AVE, SOLDIER",
+    continueBtn: "CONTINUE",
+    touchContinue: "TAP TO CONTINUE",
+    traitorMsgLabel: "THE TRAITOR'S MESSAGE",
+    traitorIdLabel: "THE TRAITOR'S IDENTITY",
+    resumeTitle: "MISSION IN PROGRESS",
+    resumeStep: (n,total,score) => `Step ${n}/${total} · ${score} pts`,
+    resumeBtn: "RESUME THE MISSION",
+    resumeNew: "New game",
+    linkTerms: "TERMS",
+    linkHome: "HOME",
+    wrongRetry: "Incorrect. Try again! (1 attempt left)",
+    stepCorrect: "Correct! Next step…",
+    stepWrong: "Incorrect. Try again.",
+    certBody1: "The Roman Empire certifies that team",
+    certBody2: "has completed the mission <em>Operatio Aquila</em> with courage,<br>returning the sacred eagle of the Legio XXI Rapax.",
+    certPoints: "POINTS",
+    certDuration: "DURATION",
+    certDate: "DATE",
+    certSeal: "MAY JUPITER GUIDE YOUR STEPS · S·P·Q·R",
+    dateLocale: "en-GB",
+    imageUnavailable: "Image unavailable",
     stepLabel: "STEP",
     answerPlaceholder: "Your answer...",
-    confirmBtn: "🔱 CONFIRM",
-    hintBtn: "🪶 Request a hint",
-    supportBtn: "📞 Call support",
+    confirmBtn: "CONFIRM",
+    hintBtn: "Request a hint",
+    supportBtn: "Call support",
     hint: "Hint",
     enigmaLabel: (n) => `RIDDLE ${n}`,
     fragmentCollectedLabel: "FRAGMENT COLLECTED",
@@ -2439,21 +2526,17 @@ const translations = {
     groupMissionLabel: "GROUP MISSION",
     selectTwoLabel: "SELECT 2 ELEMENTS",
     selectOneLabel: "SELECT THE CORRECT ANSWER",
-    stepOfLabel: (si,total) => `🔐 STEP ${si} / ${total}`,
+    stepOfLabel: (si,total) => `STEP ${si} / ${total}`,
     codeError: "The Senate rejects this code, soldier. Check your email.",
     codeChecking: "CHECKING...",
-    launchBtn: "🔱 LAUNCH THE MISSION",
+    launchBtn: "LAUNCH THE MISSION",
     correctFirst: () => `Well done, soldier! Clue revealed. +100 pts`,
     correctRetry: () => `Correct. Clue revealed.`,
     wrong: "Rome does not forgive mistakes, soldier. No points for this step.",
-    metaBtn: "🔱 REVEAL THE AQUILA",
+    metaBtn: "REVEAL THE AQUILA",
     finalReveal: "FINAL REVELATION",
     aquilaReveals: "THE AQUILA IS REVEALED",
-    metaNarrative: "All 8 fragments are gathered. Arrange the letters in notebook order to reveal the name of the people whose capital was Aventicum.",
-    metaQuestion: "You have collected all 8 fragments. Each fragment carries a letter and an order number. Arrange these letters according to their numbers to form the secret code, the Latin name of the people whose capital was Aventicum. Enter this code in capital letters.",
-    metaPlaceholder: "_ _ _ _ _ _ _ _",
-    metaBtn: "🔱 REVEAL THE AQUILA",
-    metaWrong: "That is not the right code, soldier. Review your fragments and reconstruct the Latin name of Aventicum's people.",
+    metaNarrative: (n) => `${n}/8 fragments collected. Assemble them on the vexillum, in the order of your journey.`,
     metaTapFragment: "Tap a fragment, then its slot on the standard.",
     metaTapSlot: "Fragment selected, choose its slot.",
     metaMsg1: "The stone remembers…",
@@ -2465,20 +2548,20 @@ const translations = {
     duration: "Time",
     victoryMsg: (t) => `Operation Aquila is neutralized. The Roman city is saved. The Senate of Aventicum salutes team ${t}, who uncovered the secrets of the legion.`,
     empireMsg: "The Empire stretches beyond Avenches. Lausanne, Fribourg, Sion await you. Other missions are coming soon.",
-    reviewBtn: "⭐ LEAVE A REVIEW",
-    shareBtn: "📤 SHARE MY VICTORY",
-    shareText: (s,t) => `🦅 Mission accomplished! I completed Aventicum Quest with ${s} pts as team « ${t} »! #AventicumQuest`,
-    midShareTitle: "🦅 HALFWAY THERE!",
+    reviewBtn: "LEAVE A REVIEW",
+    shareBtn: "SHARE MY VICTORY",
+    shareText: (s,t) => `Mission accomplished! I completed Aventicum Quest with ${s} pts as team « ${t} »! #AventicumQuest`,
+    midShareTitle: "HALFWAY THERE!",
     midShareMsg: (n) => `You have recovered ${n} of 8 fragments. Half of the route is done, the Aquila is getting closer!`,
-    midShareBtn: "📤 Share my progress",
-    midShareText: (t, n) => `⚔️ Halfway through Aventicum Quest! My team « ${t} » has already recovered ${n} of 8 fragments. #AventicumQuest`,
+    midShareBtn: "Share my progress",
+    midShareText: (t, n) => `Halfway through Aventicum Quest! My team « ${t} » has already recovered ${n} of 8 fragments. #AventicumQuest`,
     midShareDismiss: "Continue the mission",
-    shareCopied: "✅ Copied! Paste it anywhere.",
+    shareCopied: "Copied! Paste it anywhere.",
     ranks: [
-      { min:900, label:"IMPERIAL LEGATE", icon:'🦅' },
-      { min:700, label:"ELITE CENTURION", icon:'⚔️' },
-      { min:500, label:'HONOURABLE LEGIONNAIRE', icon:'🛡️' },
-      { min:0,   label:'PROMISING RECRUIT', icon:'📜' }
+      { min:900, label:"IMPERIAL LEGATE" },
+      { min:700, label:"ELITE CENTURION" },
+      { min:500, label:'HONOURABLE LEGIONNAIRE' },
+      { min:0,   label:'PROMISING RECRUIT' }
     ]
   },
   de: {
@@ -2487,66 +2570,95 @@ const translations = {
     teamName: "TEAMNAME",
     teamPlaceholder: "Euer Teamname",
     briefingLabel: "MISSIONS-BRIEFING",
-    startBtn: "⚔️ ICH BIN BEREIT. DIE MISSION BEGINNT",
+    startBtn: "ICH BIN BEREIT. DIE MISSION BEGINNT",
     scoreLabel: "PUNKTE",
     invLabel: "GESAMMELTE FRAGMENTE",
     nextDest: "NÄCHSTES ZIEL",
     realTimePos: "ECHTZEIT-POSITION",
-    gpsOff: "Aktiviere die Ortung, um deine Position zu sehen",
+    gpsOff: "Aktiviert die Ortung, um eure Position zu sehen",
     openMaps: "In Google Maps öffnen",
     segStart: "Anfang",
     segEnd: "Ende",
+    stationWord: "STATION",
+    stationProgress: (n,total) => `STATION ${n} / ${total}`,
+    carnetShort: "Notizbuch",
+    carnetTitle: "NOTIZBUCH DES AGENTEN · FRAGMENTE",
+    carnetDefault: "Sammelt die Fragmente Station für Station.",
+    carnetEmpty: "Löst die Rätsel, um eure Buchstaben zu sammeln.",
+    carnetFull: "8 Buchstaben gesammelt. Ordnet sie nach ihrer Nummer, um den Schlusscode zu finden.",
+    carnetPartial: (n,letters) => `Buchstaben (${n}/8): ${letters}`,
+    close: "SCHLIESSEN",
+    walkLoader: "AUF DEM WEG ZUM DENKMAL...",
+    codeAccepted: "CODE AKZEPTIERT. AVE, SOLDAT",
+    continueBtn: "WEITER",
+    touchContinue: "ANTIPPEN ZUM WEITERMACHEN",
+    traitorMsgLabel: "NACHRICHT DES VERRÄTERS",
+    traitorIdLabel: "IDENTITÄT DES VERRÄTERS",
+    resumeTitle: "MISSION LÄUFT",
+    resumeStep: (n,total,score) => `Station ${n}/${total} · ${score} pts`,
+    resumeBtn: "MISSION FORTSETZEN",
+    resumeNew: "Neues Spiel",
+    linkTerms: "AGB",
+    linkHome: "START",
+    wrongRetry: "Falsch. Versucht es noch einmal! (1 Versuch übrig)",
+    stepCorrect: "Richtig! Nächster Schritt…",
+    stepWrong: "Falsch. Versucht es noch einmal.",
+    certBody1: "Das Römische Reich bescheinigt, dass das Team",
+    certBody2: "die Mission <em>Operatio Aquila</em> mit Tapferkeit erfüllt<br>und den heiligen Adler der Legio XXI Rapax zurückgebracht hat.",
+    certPoints: "PUNKTE",
+    certDuration: "ZEIT",
+    certDate: "DATUM",
+    certSeal: "MÖGE JUPITER EURE SCHRITTE LEITEN · S·P·Q·R",
+    dateLocale: "de-CH",
+    imageUnavailable: "Bild nicht verfügbar",
     stepLabel: "SCHRITT",
-    answerPlaceholder: "Deine Antwort...",
-    confirmBtn: "🔱 BESTÄTIGEN",
-    hintBtn: "🪶 Hinweis anfordern",
-    supportBtn: "📞 Support anrufen",
+    answerPlaceholder: "Eure Antwort...",
+    confirmBtn: "BESTÄTIGEN",
+    hintBtn: "Hinweis anfordern",
+    supportBtn: "Support anrufen",
     hint: "Hinweis",
     enigmaLabel: (n) => `RÄTSEL ${n}`,
     fragmentCollectedLabel: "FRAGMENT GESAMMELT",
     nextStepLabel: "NÄCHSTE STATION",
     groupMissionLabel: "GRUPPENAUFTRAG",
-    selectTwoLabel: "WÄHLE 2 ELEMENTE",
-    selectOneLabel: "WÄHLE DIE RICHTIGE ANTWORT",
-    stepOfLabel: (si,total) => `🔐 SCHRITT ${si} / ${total}`,
-    codeError: "Der Senat lehnt diesen Code ab, Soldat. Prüfe deine E-Mail.",
+    selectTwoLabel: "WÄHLT 2 ELEMENTE",
+    selectOneLabel: "WÄHLT DIE RICHTIGE ANTWORT",
+    stepOfLabel: (si,total) => `SCHRITT ${si} / ${total}`,
+    codeError: "Der Senat lehnt diesen Code ab, Soldat. Prüft eure E-Mail.",
     codeChecking: "PRÜFUNG LÄUFT...",
-    launchBtn: "🔱 MISSION STARTEN",
+    launchBtn: "MISSION STARTEN",
     correctFirst: () => `Gut gemacht, Soldat! Hinweis enthüllt. +100 Pkt`,
     correctRetry: () => `Richtig. Hinweis enthüllt.`,
     wrong: "Rom verzeiht keine Fehler, Soldat. Keine Punkte für diesen Schritt.",
     finalReveal: "ABSCHLUSSENTHÜLLUNG",
     aquilaReveals: "DIE AQUILA ENTHÜLLT SICH",
-    metaNarrative: "Alle 8 Fragmente sind vereint. Ordnet die Buchstaben in der Heftreihenfolge an, um den Namen des Volkes zu enthüllen, dessen Hauptstadt Aventicum war.",
-    metaQuestion: "Ihr habt alle 8 Fragmente gesammelt. Jedes Fragment trägt einen Buchstaben und eine Ordnungszahl. Ordnet die Buchstaben nach ihren Nummern, um den Geheimcode zu bilden, den lateinischen Namen des Volkes, dessen Hauptstadt Aventicum war. Gebt diesen Code in Grossbuchstaben ein.",
-    metaPlaceholder: "_ _ _ _ _ _ _ _",
-    metaBtn: "🔱 DIE AQUILA ENTHÜLLEN",
-    metaWrong: "Das ist nicht die richtige Zusammensetzung, Soldat. Beobachte deine Fragmente.",
-    metaTapFragment: "Tippe auf ein Fragment, dann auf seine Vertiefung am Feldzeichen.",
-    metaTapSlot: "Fragment ausgewählt, wähle seine Vertiefung.",
+    metaNarrative: (n) => `${n} von 8 Fragmenten gesammelt. Setzt sie in der Reihenfolge eurer Reise auf das Feldzeichen.`,
+    metaBtn: "DIE AQUILA ENTHÜLLEN",
+    metaTapFragment: "Tippt auf ein Fragment, dann auf seine Vertiefung am Feldzeichen.",
+    metaTapSlot: "Fragment ausgewählt, wählt seine Vertiefung.",
     metaMsg1: "Der Stein erinnert sich…",
     metaMsg2: "Der Name nimmt Gestalt an…",
     metaMsg3: "Der Adler regt sich…",
-    metaWrongSlot: "Der Stein verweigert dieses Fragment hier. Versuche eine andere Vertiefung.",
+    metaWrongSlot: "Der Stein verweigert dieses Fragment hier. Versucht eine andere Vertiefung.",
     missionAccomplished: "MISSION ERFÜLLT",
     cityAvenched: "AVENTICUM IST GERETTET",
     duration: "Zeit",
     victoryMsg: (t) => `Operation Aquila ist neutralisiert. Die römische Stadt ist gerettet. Der Senat von Aventicum grüsst das Team ${t}, das die Geheimnisse der Legion enthüllt hat.`,
     empireMsg: "Das Imperium erstreckt sich über Avenches hinaus. Lausanne, Freiburg, Sitten rufen euch. Weitere Missionen kommen bald.",
-    reviewBtn: "⭐ BEWERTUNG HINTERLASSEN",
-    shareBtn: "📤 SIEG TEILEN",
-    shareText: (s,t) => `🦅 Mission erfüllt! Ich habe Aventicum Quest mit ${s} Pkt als Team « ${t} » abgeschlossen! #AventicumQuest`,
-    midShareTitle: "🦅 AUF HALBEM WEG!",
+    reviewBtn: "BEWERTUNG HINTERLASSEN",
+    shareBtn: "SIEG TEILEN",
+    shareText: (s,t) => `Mission erfüllt! Ich habe Aventicum Quest mit ${s} Pkt als Team „${t}“ abgeschlossen! #AventicumQuest`,
+    midShareTitle: "AUF HALBEM WEG!",
     midShareMsg: (n) => `Ihr habt ${n} von 8 Fragmenten gefunden. Die Hälfte des Weges ist geschafft, die Aquila rückt näher!`,
-    midShareBtn: "📤 Fortschritt teilen",
-    midShareText: (t, n) => `⚔️ Auf halbem Weg bei Aventicum Quest! Unser Team « ${t} » hat bereits ${n} von 8 Fragmenten gefunden. #AventicumQuest`,
+    midShareBtn: "Fortschritt teilen",
+    midShareText: (t, n) => `Auf halbem Weg bei Aventicum Quest! Unser Team „${t}“ hat bereits ${n} von 8 Fragmenten gefunden. #AventicumQuest`,
     midShareDismiss: "Mission fortsetzen",
-    shareCopied: "✅ Kopiert! Füge es überall ein.",
+    shareCopied: "Kopiert! Fügt es überall ein.",
     ranks: [
-      { min:900, label:"KAISERLICHER LEGAT", icon:'🦅' },
-      { min:700, label:"ELITE-ZENTURIO", icon:'⚔️' },
-      { min:500, label:'EHRENVOLLER LEGIONÄR', icon:'🛡️' },
-      { min:0,   label:'VIELVERSPRECHENDER REKRUT', icon:'📜' }
+      { min:900, label:"KAISERLICHER LEGAT" },
+      { min:700, label:"ELITE-ZENTURIO" },
+      { min:500, label:'EHRENVOLLER LEGIONÄR' },
+      { min:0,   label:'VIELVERSPRECHENDER REKRUT' }
     ]
   }
 };
@@ -2582,29 +2694,32 @@ function applyTranslations() {
   set('invLabel', t('invLabel'));
   set('metaRevealLabel', t('finalReveal'));
   set('metaTitle', t('aquilaReveals'));
-  set('metaNarrative', t('metaNarrative'));
-  set('metaQuestion', t('metaQuestion'));
-  setPlaceholder('metaInput', t('metaPlaceholder'));
+  set('metaNarrative', t('metaNarrative', 8));
   set('metaBtn', t('metaBtn'));
   set('victMission', t('missionAccomplished'));
   set('victCity', t('cityAvenched'));
   set('victEmpire', t('empireMsg'));
   set('victReview', t('reviewBtn'));
+  updateReviewButton();
+  // Textes statiques du HTML : data-t = texte, data-t-html = HTML maison (jamais de saisie du joueur)
+  document.querySelectorAll('[data-t]').forEach(el=>{ const v=t(el.dataset.t); if(typeof v==='string') el.textContent=v; });
+  document.querySelectorAll('[data-t-html]').forEach(el=>{ const v=t(el.dataset.tHtml); if(typeof v==='string') el.innerHTML=v; });
+  document.querySelectorAll('[data-t-title]').forEach(el=>{ const v=t(el.dataset.tTitle); if(typeof v==='string') el.title=v; });
   set('victShare', t('shareBtn'));
   set('scoreLabel', t('scoreLabel'));
 }
 
 /* ══════ CONFIG SÉCURITÉ ══════ */
-// Aucun webhook, aucun appel réseau : la validation du code d'équipe est 100% locale
-// (voir LOCAL_CODES dans submitCode()). Le jeu fonctionne entièrement hors-ligne,
-// y compris en mode avion, après le chargement initial de la page.
+// Le code d'accès est contrôlé à l'entrée (format local, puis vérification serveur tolérante :
+// si le serveur est injoignable, un code au bon format est accepté, voir submitCode()).
+// Ensuite chaque station se valide localement ; seuls les fonds de carte demandent le réseau.
 const TOKEN_KEY = 'aq_token_v1';
 
 /* ══════ TOKEN HELPERS (legacy conservé pour nettoyer d'anciennes sessions) ══════ */
 function clearToken(){ try{ sessionStorage.removeItem(TOKEN_KEY); }catch(e){} }
 
 /* ══════ DATA ══════ */
-// Les codes valides ne sont plus dans le frontend validation serveur uniquement
+// Aucun code valide n'est stocké dans le jeu : seul le format est vérifié ici (voir submitCode()).
 
 // Nouvelle route : 8 étapes
 // 0: Hôtel de Ville  1: Tour de Benneville  2: Rue des Alpes
@@ -2665,7 +2780,7 @@ Möge Jupiter eure Schritte leiten, [TEAM]. Aventicum zählt auf euch.`
 // type: 'text' (default) | 'vision' (photo upload + Claude AI) | 'speech' (TTS+STT) | 'oath' (photo + vocal oath)
 const ENIGMAS = [
   // ─── ÉNIGME 1 HÔTEL DE VILLE (Tête de Maure) ───────────────────────────
-  { id:1, step:'I', fragment:'H', clue:'MARS', type:'qcm', qcmRequired:1, answers:['A'], qcmImages:['#','#','#'], qcmEmojis:['⚔️','🏺','⛪'], qcmLabels:{fr:["A. Parce que l'année romaine commençait en mars, mois de Mars, dieu de la guerre","B. Parce que les Romains ont supprimé deux mois pendant les guerres puniques","C. Parce que le pape Grégoire a décalé le calendrier en 1582"],en:["A. Because the Roman year began in March, the month of Mars, god of war","B. Because the Romans removed two months during the Punic Wars","C. Because Pope Gregory shifted the calendar in 1582"],de:["A. Weil das römische Jahr im März begann, dem Monat des Mars, des Kriegsgottes","B. Weil die Römer während der Punischen Kriege zwei Monate strichen","C. Weil Papst Gregor 1582 den Kalender verschob"]},
+  { id:1, step:'I', fragment:'H', clue:'MARS', type:'qcm', qcmRequired:1, answers:['A'], qcmImages:['#','#','#'], qcmLabels:{fr:["A. Parce que l'année romaine commençait en mars, mois de Mars, dieu de la guerre","B. Parce que les Romains ont supprimé deux mois pendant les guerres puniques","C. Parce que le pape Grégoire a décalé le calendrier en 1582"],en:["A. Because the Roman year began in March, the month of Mars, god of war","B. Because the Romans removed two months during the Punic Wars","C. Because Pope Gregory shifted the calendar in 1582"],de:["A. Weil das römische Jahr im März begann, dem Monat des Mars, des Kriegsgottes","B. Weil die Römer während der Punischen Kriege zwei Monate strichen","C. Weil Papst Gregor 1582 den Kalender verschob"]},
     fr:{ nav:{title:'Hôtel de Ville',desc:"Juste en face de l'Hôtel de Ville, l'église Sainte-Madeleine porte un cadran solaire du XVIIIe siècle.",address:"Place de l'Église, 1580 Avenches",distance:'Point de départ',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880126,7.040356'},
       narrative:"Le traître a commencé ici, au cœur de la cité, sous les yeux de tous. Juste en face de l'Hôtel de Ville, la façade de l'église Sainte-Madeleine porte un cadran solaire du XVIIIe siècle, où l'on venait autrefois régler sa montre sur le soleil. C'est en l'observant de près que le traître a repéré une anomalie qui remonte bien plus loin que le XVIIIe siècle. Approche-toi. Observe ce que des générations ont regardé sans jamais le voir.",
       question:"Cherche le cadran solaire sur la façade de l'église, juste en face de l'Hôtel de Ville. À côté d'un des mois de l'année est gravée une abréviation étrange : « 7bre ». Ce n'est pas une erreur de gravure. Pourquoi les Romains désignaient-ils ce mois comme le « septième », alors qu'il est aujourd'hui le neuvième mois de l'année ? Sélectionne la bonne explication.",
@@ -2680,7 +2795,7 @@ const ENIGMAS = [
       hints:[{text:"Die Sonnenuhr ist an der Wand der Kirche Sainte-Madeleine eingraviert, direkt gegenüber dem Rathaus. Sucht nach den Monatsnamen: einer davon ist mit einer Ziffer gefolgt von „bre“ abgekürzt.",cost:20},{text:"„7bre“ steht für September. Auf Lateinisch bedeutet septem sieben. Überlegt, welcher Monat das römische Jahr eröffnen musste, damit September wirklich ihr siebter Monat war.",cost:40},{text:"Die Antwort ist A: Das römische Jahr begann im März, dem Monat des Gottes Mars.",cost:80}]}
   },
   // ─── ÉNIGME 2 TOUR DE BENNEVILLE ───────────────────────────────────────
-  { id:2, step:'II', fragment:'E', clue:'CIGOGNIER', answers:['CIGOGNIER','LE CIGOGNIER','CIGOGNER'], warning:{fr:'Tour ouverte de 9h à 21h (1er mai – 30 sept.) et de 9h à 17h le reste de l\'année. Max. 20 personnes en même temps dans la tour.',en:'Tower open 9am-9pm (May 1 – Sept 30) and 9am-5pm the rest of the year. Max. 20 people inside the tower at once.',de:'Turm geöffnet 9-21 Uhr (1. Mai – 30. Sept.) und 9-17 Uhr den Rest des Jahres. Max. 20 Personen gleichzeitig im Turm.'}, groupMission:{fr:'Montez ensemble au sommet, puis répartissez-vous : chacun regarde par une fenêtre différente. Qui repère la colonne solitaire dans les champs ?',en:'Climb to the top together, then split up: each person looks through a different window. Who spots the lone column in the fields?',de:'Steigt gemeinsam zum Gipfel, dann verteilt euch: jeder schaut durch ein anderes Fenster. Wer entdeckt die einsame Säule in den Feldern?'},
+  { id:2, step:'II', fragment:'E', clue:'CIGOGNIER', answers:['CIGOGNIER','LE CIGOGNIER','CIGOGNER'], warning:{fr:'Tour ouverte de 9h à 21h (du 1er mai au 30 sept.) et de 9h à 17h le reste de l\'année. Max. 20 personnes en même temps dans la tour.',en:'Tower open 9am to 9pm (May 1 to Sept 30) and 9am to 5pm the rest of the year. Max. 20 people inside the tower at once.',de:'Turm geöffnet 9 bis 21 Uhr (1. Mai bis 30. Sept.) und 9 bis 17 Uhr den Rest des Jahres. Max. 20 Personen gleichzeitig im Turm.'}, groupMission:{fr:'Montez ensemble au sommet, puis répartissez-vous : chacun regarde par une fenêtre différente. Qui repère la colonne solitaire dans les champs ?',en:'Climb to the top together, then split up: each person looks through a different window. Who spots the lone column in the fields?',de:'Steigt gemeinsam zum Gipfel, dann verteilt euch: jeder schaut durch ein anderes Fenster. Wer entdeckt die einsame Säule in den Feldern?'},
     fr:{ nav:{title:'Tour de Benneville',desc:"La tour médiévale se dresse à quelques pas de l'Hôtel de Ville.",address:'Rue de Lausanne, 1580 Avenches',distance:'~100 m de l\'Hôtel de Ville',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879440,7.041184'},
       narrative:"La Tour de Benneville domine la plaine depuis le XIIIe siècle : cinq niveaux, des meurtrières, une vue imprenable. C'est d'ici que le traître a repéré sa cachette. Au loin, dans les champs, se dresse la dernière colonne du plus grand sanctuaire d'Aventicum. Pendant des siècles, des cigognes ont niché à son sommet, et les habitants ont fini par baptiser le monument du nom de cet oiseau. Monte, et trouve ce que le traître a vu.",
       question:"Monte jusqu'au sommet de la tour. Depuis la fenêtre donnant sur la plaine, repère la colonne romaine qui se dresse seule dans les champs. Son nom vient de l'oiseau qui nichait à son sommet, la cigogne. Quel est le nom de ce monument ? Entre-le en majuscules, sans espace.",
@@ -2695,7 +2810,7 @@ const ENIGMAS = [
       hints:[{text:"Sucht am Turmgipfel ein Fenster mit Blick auf die Ebene, über die Dächer hinweg. Dort, allein in den Feldern, erhebt sich ein römisches Element wie eine vergessene Wache. Es ist kein Gebäude, nur eine Säule.",cost:20},{text:"Nehmt das französische Wort cigogne und hängt die Endung -IER an, so wie aus pomme (Apfel) ein pommier (Apfelbaum) wird: der Ort der Störche.",cost:40},{text:"Die Antwort ist CIGOGNIER.",cost:80}]}
   },
   // ─── ÉNIGME 3 RUE DES ALPES (QCM visuel) ──────────────────────────────
-  { id:3, step:'III', fragment:'L', clue:'LOUVE', type:'qcm', qcmRequired:2, answers:['A+B'], qcmImages:['qcm-louve.jpg','qcm-rosace.jpg','qcm-lion.jpg','qcm-porte-fer.jpg'], /* Images à la racine du repo, à côté d'index.html : qcm-louve.jpg (Louve), qcm-rosace.jpg (rosace tressée), qcm-lion.jpg (leurre), qcm-porte-fer.jpg (leurre). */ qcmEmojis:['🐺','🌸','🦁','🚪'], qcmLabels:{fr:['A. Louve romaine','B. Rosace tressée sur porte en bois','C. Lion sculpté','D. Porte en fer forgé'],en:['A. Roman she-wolf','B. Woven rosette on a wooden door','C. Carved lion','D. Wrought-iron gate'],de:['A. Römische Wölfin','B. Geflochtene Rosette an einer Holztür','C. Geschnitzter Löwe','D. Schmiedeeisernes Tor']},
+  { id:3, step:'III', fragment:'L', clue:'LOUVE', type:'qcm', qcmRequired:2, answers:['A+B'], qcmImages:['qcm-louve.jpg','qcm-rosace.jpg','qcm-lion.jpg','qcm-porte-fer.jpg'], /* Images à la racine du repo, à côté d'index.html : qcm-louve.jpg (Louve), qcm-rosace.jpg (rosace tressée), qcm-lion.jpg (leurre), qcm-porte-fer.jpg (leurre). */ qcmLabels:{fr:['A. Louve romaine','B. Rosace tressée sur porte en bois','C. Lion sculpté','D. Porte en fer forgé'],en:['A. Roman she-wolf','B. Woven rosette on a wooden door','C. Carved lion','D. Wrought-iron gate'],de:['A. Römische Wölfin','B. Geflochtene Rosette an einer Holztür','C. Geschnitzter Löwe','D. Schmiedeeisernes Tor']},
     fr:{ nav:{title:'Rue des Alpes',desc:"Observez les façades des immeubles le long de la Rue des Alpes.",address:'Rue des Alpes, 1580 Avenches',distance:'~150 m de la Tour de Benneville',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879617,7.041082'},
       narrative:"La Rue des Alpes relie l'Hôtel de Ville au reste de la cité. En apparence, une rue ordinaire. Mais le traître l'a longée les yeux ouverts, et il y a vu ce que personne d'autre ne voit. Sur une façade veille une louve de pierre, allaitant deux jumeaux, la légende même de la fondation de Rome, gravée là depuis des générations. Un peu plus loin, une porte en bois porte une rosace tressée, un détail d'artisanat local que personne ne remarque en passant. Deux éléments en pleine vue, invisibles à qui ne cherche pas.",
       question:`En remontant toute la Rue des Alpes, observe attentivement les façades des bâtiments eux-mêmes, la pierre et le bois, pas les vitrines ni les enseignes commerciales. Parmi ces quatre ornements ci-dessous (A, B, C, D), deux sont RÉELLEMENT présents sur ces façades. Sélectionne les deux bons éléments, puis confirme.`,
@@ -2706,8 +2821,8 @@ const ENIGMAS = [
       hints:[{text:"Walk the whole length of the street, lifting your eyes from the pavement to the walls and doors, from ground floor up to first-floor height. The two elements aren't hidden: you'll only miss them by not looking at the façades themselves.",cost:20},{text:"One is a carved animal linked to the legend of Rome's founding; the other is a round woven wooden pattern, at the centre of a door.",cost:40},{text:"The two elements present are the Roman she-wolf and the woven rosette on the wooden door. Select A and B, then press CONFIRM.",cost:80}]},
     de:{ nav:{title:'Rue des Alpes',desc:"Beobachtet die Gebäudefassaden entlang der Rue des Alpes.",address:'Rue des Alpes, 1580 Avenches',distance:'~150 m vom Benneville-Turm',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879617,7.041082'},
       narrative:"Die Rue des Alpes verbindet das Rathaus mit dem Rest der Stadt. Sie sieht wie eine gewöhnliche Strasse aus. Doch der Verräter ging sie mit offenen Augen entlang und sah, was andere nie bemerken. Auf einer Fassade wacht eine steinerne Wölfin, die zwei Zwillinge säugt, die Gründungslegende Roms selbst, seit Generationen dort eingemeisselt. Etwas weiter trägt eine Holztür eine geflochtene Rosette, ein Detail lokaler Handwerkskunst, das niemand im Vorbeigehen bemerkt. Zwei Elemente in aller Öffentlichkeit, unsichtbar für jene, die nicht suchen.",
-      question:`Geht die ganze Rue des Alpes entlang und betrachtet genau die Fassaden der Gebäude selbst, Stein und Holz, nicht Schaufenster oder Schilder. Von diesen vier Ornamenten (A, B, C, D) befinden sich ZWEI WIRKLICH an diesen Fassaden. Wähle die zwei richtigen Elemente und bestätige.`,
-      hints:[{text:"Geht die ganze Strasse entlang und hebt den Blick vom Gehsteig zu den Wänden und Türen, vom Erdgeschoss bis zur Höhe des ersten Stockwerks. Die zwei Elemente sind nicht versteckt: man übersieht sie nur, wenn man nicht auf die Fassaden selbst schaut.",cost:20},{text:"Eines ist ein geschnitztes Tier, verbunden mit der Gründungslegende Roms; das andere ist ein rundes, geflochtenes Holzmuster in der Mitte einer Tür.",cost:40},{text:"Die zwei vorhandenen Elemente sind die römische Wölfin und die geflochtene Rosette auf der Holztür. Wähle A und B, dann drücke BESTÄTIGEN.",cost:80}]}
+      question:`Geht die ganze Rue des Alpes entlang und betrachtet genau die Fassaden der Gebäude selbst, Stein und Holz, nicht Schaufenster oder Schilder. Von diesen vier Ornamenten (A, B, C, D) befinden sich ZWEI WIRKLICH an diesen Fassaden. Wählt die zwei richtigen Elemente und bestätigt.`,
+      hints:[{text:"Geht die ganze Strasse entlang und hebt den Blick vom Gehsteig zu den Wänden und Türen, vom Erdgeschoss bis zur Höhe des ersten Stockwerks. Die zwei Elemente sind nicht versteckt: man übersieht sie nur, wenn man nicht auf die Fassaden selbst schaut.",cost:20},{text:"Eines ist ein geschnitztes Tier, verbunden mit der Gründungslegende Roms; das andere ist ein rundes, geflochtenes Holzmuster in der Mitte einer Tür.",cost:40},{text:"Die zwei vorhandenen Elemente sind die römische Wölfin und die geflochtene Rosette auf der Holztür. Wählt A und B, dann drückt BESTÄTIGEN.",cost:80}]}
   },
   // ─── ÉNIGME 4 ARÈNES (Amphithéâtre) ───────────────────────────────────
   { id:4, step:'IV', fragment:'V', clue:'ARÈNE', answers:['6'], groupMission:{fr:'Cherchez ensemble le panneau du plan de restauration sur la terrasse couverte du musée, qui représente l\'amphithéâtre vu du dessus, divisé en zones numérotées.',en:'Search together for the restoration plan panel on the museum\'s covered terrace, showing the amphitheatre from above, divided into numbered zones.',de:'Sucht gemeinsam das Schild mit dem Restaurierungsplan auf der überdachten Museumsterrasse, das das Amphitheater von oben zeigt, in nummerierte Zonen unterteilt.'},
@@ -2752,7 +2867,7 @@ const ENIGMAS = [
     de:{ nav:{title:'Selley-Theater',desc:"Das römische Selley-Theater ist von der Kantonsstrasse aus sichtbar.",address:'Chemin du Selley, 1580 Avenches',distance:'~300 m vom Cigognier',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880602,7.048768'},
       narrative:"Das grösste römische Theater der Schweiz: elftausend Zuschauer. Zweitausend Jahre später kamen Restauratoren, um das Verbliebene zu retten, und signierten ihre Arbeit im Stein. Unter Hunderten von Blöcken meisselten sie ein achteckiges Cartouche: einen Anfangsbuchstaben, eine Jahreszahl. Es ist der diskreteste Hinweis des gesamten Kurses.",
       question:"Ein achteckiges Cartouche wurde in das untere Mauerwerk der Cavea gemeisselt, mit einem Anfangsbuchstaben und einer vierstelligen Jahreszahl. Findet es in den Sitzreihen, klein, diskret, auf Knie- oder Taillenhöhe. Die eingravierte Jahreszahl ist euer Code. Gebt die 4 Ziffern ein.",
-      hints:[{text:"Suche nach einem Kalksteinblock mit einem 8-seitigen gemeisselten Rahmen (ein Achteck) im niedrigen Mauerwerk der Sitzreihen. Es ist nicht hoch oben: es ist in Reichweite.",cost:20},{text:"Ein einziger Buchstabe, Anfang des Wortes Restauration, steht vor vier Ziffern. Diese Ziffern bezeichnen ein Jahr vom ganz Anfang des 20. Jahrhunderts.",cost:40},{text:"Der Code ist 1902.",cost:0}]}
+      hints:[{text:"Sucht nach einem Kalksteinblock mit einem 8-seitigen gemeisselten Rahmen (ein Achteck) im niedrigen Mauerwerk der Sitzreihen. Es ist nicht hoch oben: es ist in Reichweite.",cost:20},{text:"Ein einziger Buchstabe, Anfang des Wortes Restauration, steht vor vier Ziffern. Diese Ziffern bezeichnen ein Jahr vom ganz Anfang des 20. Jahrhunderts.",cost:40},{text:"Der Code ist 1902.",cost:0}]}
   },
   // ─── ÉNIGME 7 THERMES DU FORUM (TTS + STT) ────────────────────────────
   { id:7, step:'VII', fragment:'I', clue:'HYPOCAUSTE', type:'text', answers:['HYPOCAUSTE','HYPOCAUST','HYPOKAUST','HYPOCAUSTUM','HYPOKAUSTE','IPOCAUSTE'],
@@ -2870,16 +2985,23 @@ function updateCarnetHint(){
   // FIX8: show scrambled order, never reveal HELVETII until meta
   const el=document.getElementById('carnetHint');if(!el)return;
   const collected=G.fragments.filter(f=>f!==null).length;
-  if(collected===0){el.textContent='R\u00e9sous les \u00e9nigmes pour collecter tes lettres.';return;}
-  if(collected===8){el.textContent='\u2746 8 lettres collect\u00e9es. R\u00e9ordonne-les selon leur num\u00e9ro pour trouver le code final. \u2746';return;}
+  if(collected===0){el.textContent=t('carnetEmpty');return;}
+  if(collected===8){el.textContent=t('carnetFull');return;}
   const display=CARNET_DISPLAY.map(si=>G.fragments[si]!==null?HELVETII_LETTERS[si]:'_').join(' ');
-  el.textContent=`Lettres (${collected}/8) : ${display}`;
+  el.textContent=t('carnetPartial',collected,display);
 }
 function toggleCarnet(){
   initCarnet();
   const panel=document.getElementById('carnetPanel');
   if(panel.classList.contains('open')){panel.classList.remove('open');panel.style.display='none';}
   else{panel.style.display='flex';void panel.offsetWidth;panel.classList.add('open');}
+}
+
+/* ══════ ÉCHAPPEMENT HTML ══════
+   À utiliser pour toute saisie ou donnée relue du stockage local qui est insérée dans un innerHTML
+   (nom d'équipe, score...). Les textes posés avec textContent n'en ont pas besoin. */
+function esc(v){
+  return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
 /* ══════ LOCALSTORAGE ══════ */
@@ -2902,8 +3024,8 @@ function loadGame(){
     const d=JSON.parse(raw);
     if(!d.code||!d.teamName)return false;
     Object.assign(G,{
-      teamName:d.teamName, code:d.code, savedCode:d.savedCode||d.code,
-      currentStep:d.currentStep||0, score:d.score||1000,
+      teamName:String(d.teamName), code:String(d.code), savedCode:String(d.savedCode||d.code),
+      currentStep:Math.max(0,Math.min(N_ENIGMAS,parseInt(d.currentStep,10)||0)), score:Number(d.score)||1000,
       startTime:d.startTime||Date.now(),
       fragments:d.fragments||Array(N_ENIGMAS).fill(null),
       clues:d.clues||Array(N_ENIGMAS).fill(null),
@@ -3091,7 +3213,7 @@ async function submitCode(){
   errEl.style.display='none';
   const originalBtnText = btn.textContent;
   btn.disabled = true;
-  btn.textContent = '⏳ ' + t('codeChecking');
+  btn.textContent = t('codeChecking');
 
   let serverValid = null; // null = serveur injoignable, true/false = réponse reçue
   try {
@@ -3120,7 +3242,7 @@ async function submitCode(){
 
   errEl.style.display='none';
   G.teamName=team; G.code=code; G.savedCode=code;
-  btn.textContent='✅ CODE ACCEPTÉ. AVE, SOLDAT';
+  btn.textContent=t('codeAccepted');
   btn.style.background='linear-gradient(135deg,rgba(201,168,76,0.5),rgba(212,160,23,0.35))';
   btn.style.boxShadow='0 0 30px rgba(201,168,76,0.8)';
   btn.classList.add('seal-anim');
@@ -3187,9 +3309,9 @@ function showTransition(nextIdx, callback) {
   const toCoords   = ENIGMA_COORDS[nextIdx];
 
   const labels = {
-    fr: { title:'PROCHAINE DESTINATION', dist:'DISTANCE', btn:'⚔️ EN AVANT. BONNE CHANCE', loading:'Calcul de l\'itinéraire...' },
-    en: { title:'NEXT DESTINATION',      dist:'DISTANCE', btn:'⚔️ FORWARD. GOOD LUCK',     loading:'Calculating route...' },
-    de: { title:'NÄCHSTES ZIEL',         dist:'DISTANZ',  btn:'⚔️ VORWÄRTS. VIEL ERFOLG',  loading:'Route berechnen...' }
+    fr: { title:'PROCHAINE DESTINATION', dist:'DISTANCE', btn:'EN AVANT. BONNE CHANCE', loading:'Calcul de l\'itinéraire...' },
+    en: { title:'NEXT DESTINATION',      dist:'DISTANCE', btn:'FORWARD. GOOD LUCK',     loading:'Calculating route...' },
+    de: { title:'NÄCHSTES ZIEL',         dist:'DISTANZ',  btn:'VORWÄRTS. VIEL ERFOLG',  loading:'Route berechnen...' }
   };
   const L_ = labels[currentLang];
 
@@ -3228,7 +3350,7 @@ function showTransition(nextIdx, callback) {
     <div style="background:rgba(18,10,1,0.98);border-bottom:1px solid rgba(201,168,76,0.4);padding:0.8rem 1rem;flex-shrink:0">
       <div style="font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.3em;color:rgba(201,168,76,0.55);margin-bottom:0.2rem">${L_.title}</div>
       <div style="font-family:var(--font-mono);font-size:clamp(1rem,3.5vw,1.4rem);font-weight:700;color:#c9a84c">${loc.nav.title}</div>
-      <div style="font-size:0.8rem;color:rgba(250,247,240,0.55);margin-top:0.15rem">📍 ${loc.nav.address}</div>
+      <div style="font-size:0.8rem;color:rgba(250,247,240,0.55);margin-top:0.15rem">${loc.nav.address}</div>
     </div>
 
     <!-- Map -->
@@ -3241,7 +3363,7 @@ function showTransition(nextIdx, callback) {
       </div>
       <!-- Step badge -->
       <div style="position:absolute;top:10px;left:10px;background:rgba(18,10,1,0.92);border:1px solid rgba(201,168,76,0.5);border-radius:6px;padding:0.4rem 0.7rem;z-index:1000">
-        <div style="font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.2em;color:rgba(201,168,76,0.55)">ÉTAPE</div>
+        <div style="font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.2em;color:rgba(201,168,76,0.55)">${t('stationWord')}</div>
         <div style="font-family:var(--font-mono);font-size:1rem;font-weight:700;color:#c9a84c">${nextIdx+1}/${N_ENIGMAS}</div>
       </div>
     </div>
@@ -3359,52 +3481,52 @@ const BC_TEXTS = {
     bc_overline0: "AVENTICUM · ANNO DOMINI 117",
     bc_sub0: "L'aigle est volée. Rome attend.",
     bc_overline1: "AUBE · LE TRÉSOR LÉGIONNAIRE",
-    body1: "À l'aube, le gardien du trésor légionnaire a poussé un cri qui a traversé tout Aventicum : l'alcôve de l'<em class=\"bc-em\">aquila</em> était vide, et la serrure intacte.\n\nCette nuit, un voleur a osé l'impensable , dérober l'aigle sacrée de la <em class=\"bc-em\">Legio XXI Rapax</em>, symbole de la puissance de Rome.",
+    body1: "À l'aube, le gardien du trésor légionnaire a poussé un cri qui a traversé tout Aventicum : l'alcôve de l'<em class=\"bc-em\">aquila</em> était vide, et la serrure intacte.\n\nCette nuit, un voleur a osé l'impensable : dérober l'aigle sacrée de la <em class=\"bc-em\">Legio XXI Rapax</em>, symbole de la puissance de Rome.",
     bc_overline2: "ORDRE DE MISSION",
     body2: "Dans <em class=\"bc-em\">120 minutes</em>, l'Empereur Hadrien foule le sol de notre cité.\n\nVotre mission, <em class=\"bc-em\">speculatores</em> : suivez la piste du voleur à travers la ville, résolvez les 8 énigmes qu'il a semées sur son chemin, et rapportez l'aigle avant l'arrivée impériale.",
     bc_overline3: "QUE JUPITER VOUS GUIDE",
     bc_teamlabel: "SPECULATORES",
     body3: "Que Jupiter guide vos pas. Aventicum compte sur vous.",
     bc_next: "CONTINUER",
-    bc_start: "⚔️ COMMENCER LA MISSION",
+    bc_start: "COMMENCER LA MISSION",
     rules: [
-      { icon:"📍", text:"Rendez-vous à chaque monument indiqué sur la carte." },
-      { icon:"🔍", text:"Observez, déduisez, entrez votre réponse." },
-      { icon:"⏱️", text:"Chaque indice utilisé coûte des points." },
-      { icon:"🏆", text:"Trouvez l'aquila et rapportez-la avant Hadrien !" }
+      { text:"Rendez-vous à chaque monument indiqué sur la carte." },
+      { text:"Observez, déduisez, entrez votre réponse." },
+      { text:"Chaque indice utilisé coûte des points." },
+      { text:"Trouvez l'aquila et rapportez-la avant Hadrien !" }
     ],
     roles_title: "DÉSIGNEZ VOS RÔLES",
     roles: [
-      { icon:"🗺️", name:"ÉCLAIREUR", desc:"Cherche les indices sur le terrain." },
-      { icon:"📜", name:"SCRIBE", desc:"Note les réponses et codes." },
-      { icon:"⏱️", name:"CHRONOMÉTREUR", desc:"Surveille le timer." },
-      { icon:"📣", name:"PORTE-PAROLE", desc:"Entre les réponses dans l'app." }
+      { name:"ÉCLAIREUR", desc:"Cherche les indices sur le terrain." },
+      { name:"SCRIBE", desc:"Note les réponses et codes." },
+      { name:"CHRONOMÉTREUR", desc:"Surveille le timer." },
+      { name:"PORTE-PAROLE", desc:"Entre les réponses dans l'app." }
     ]
   },
   en: {
     bc_overline0: "AVENTICUM · ANNO DOMINI 117",
     bc_sub0: "The eagle is stolen. Rome awaits.",
     bc_overline1: "DAWN · THE LEGIONARY TREASURY",
-    body1: "At dawn, the keeper of the legionary treasury let out a cry that echoed across all of Aventicum: the <em class=\"bc-em\">aquila</em>'s alcove was empty, the lock untouched.\n\nTonight, a thief dared the unthinkable , stealing the sacred eagle of the <em class=\"bc-em\">Legio XXI Rapax</em>, symbol of Rome's power.",
+    body1: "At dawn, the keeper of the legionary treasury let out a cry that echoed across all of Aventicum: the <em class=\"bc-em\">aquila</em>'s alcove was empty, the lock untouched.\n\nTonight, a thief dared the unthinkable: stealing the sacred eagle of the <em class=\"bc-em\">Legio XXI Rapax</em>, symbol of Rome's power.",
     bc_overline2: "MISSION ORDER",
     body2: "In <em class=\"bc-em\">120 minutes</em>, Emperor Hadrian will set foot in our city.\n\nYour mission, <em class=\"bc-em\">speculatores</em>: follow the thief's trail through the city, solve the 8 riddles left in his wake, and return the eagle before the imperial arrival.",
     bc_overline3: "MAY JUPITER GUIDE YOU",
     bc_teamlabel: "SPECULATORES",
     body3: "May Jupiter guide your steps. Aventicum is counting on you.",
     bc_next: "CONTINUE",
-    bc_start: "⚔️ START THE MISSION",
+    bc_start: "START THE MISSION",
     rules: [
-      { icon:"📍", text:"Go to each monument shown on the map." },
-      { icon:"🔍", text:"Observe, deduce, enter your answer." },
-      { icon:"⏱️", text:"Each hint used costs points." },
-      { icon:"🏆", text:"Find the aquila and return it before Hadrian!" }
+      { text:"Go to each monument shown on the map." },
+      { text:"Observe, deduce, enter your answer." },
+      { text:"Each hint used costs points." },
+      { text:"Find the aquila and return it before Hadrian!" }
     ],
     roles_title: "ASSIGN YOUR ROLES",
     roles: [
-      { icon:"🗺️", name:"SCOUT", desc:"Searches for clues in the field." },
-      { icon:"📜", name:"SCRIBE", desc:"Notes answers and codes." },
-      { icon:"⏱️", name:"TIMEKEEPER", desc:"Monitors the timer." },
-      { icon:"📣", name:"SPOKESPERSON", desc:"Enters answers in the app." }
+      { name:"SCOUT", desc:"Searches for clues in the field." },
+      { name:"SCRIBE", desc:"Notes answers and codes." },
+      { name:"TIMEKEEPER", desc:"Monitors the timer." },
+      { name:"SPOKESPERSON", desc:"Enters answers in the app." }
     ]
   },
   de: {
@@ -3418,19 +3540,19 @@ const BC_TEXTS = {
     bc_teamlabel: "SPECULATORES",
     body3: "Möge Jupiter eure Schritte leiten. Aventicum zählt auf euch.",
     bc_next: "WEITER",
-    bc_start: "⚔️ MISSION STARTEN",
+    bc_start: "MISSION STARTEN",
     rules: [
-      { icon:"📍", text:"Geht zu jedem angezeigten Monument auf der Karte." },
-      { icon:"🔍", text:"Beobachtet, folgert, gebt eure Antwort ein." },
-      { icon:"⏱️", text:"Jeder verwendete Hinweis kostet Punkte." },
-      { icon:"🏆", text:"Findet die Aquila und bringt sie vor Hadrian zurück!" }
+      { text:"Geht zu jedem angezeigten Monument auf der Karte." },
+      { text:"Beobachtet, folgert, gebt eure Antwort ein." },
+      { text:"Jeder verwendete Hinweis kostet Punkte." },
+      { text:"Findet die Aquila und bringt sie vor Hadrian zurück!" }
     ],
     roles_title: "EURE ROLLEN VERTEILEN",
     roles: [
-      { icon:"🗺️", name:"SPÄHER", desc:"Sucht Hinweise im Gelände." },
-      { icon:"📜", name:"SCHREIBER", desc:"Notiert Antworten und Codes." },
-      { icon:"⏱️", name:"ZEITWÄCHTER", desc:"Überwacht den Timer." },
-      { icon:"📣", name:"SPRECHER", desc:"Gibt Antworten in die App ein." }
+      { name:"SPÄHER", desc:"Sucht Hinweise im Gelände." },
+      { name:"SCHREIBER", desc:"Notiert Antworten und Codes." },
+      { name:"ZEITWÄCHTER", desc:"Überwacht den Timer." },
+      { name:"SPRECHER", desc:"Gibt Antworten in die App ein." }
     ]
   }
 };
@@ -3456,6 +3578,9 @@ function _bcPopulate(){
   if(over0) over0.textContent = t.bc_overline0;
   const sub0 = document.querySelector('#bc0 .bc-subtitle');
   if(sub0) sub0.textContent = t.bc_sub0;
+
+  // Boutons « continuer » de toutes les cartes (la carte 0 n'était pas traduite)
+  document.querySelectorAll('.bc-btn:not(.bc-btn-start) span[data-i18n="bc_next"]').forEach(el=>{ el.textContent = t.bc_next; });
 
   // Carte 1 texte narratif
   const over1 = document.querySelector('#bc1 .bc-overline');
@@ -3485,7 +3610,7 @@ function _bcPopulate(){
   const rulesCont = document.getElementById('bc3Rules');
   if(rulesCont){
     rulesCont.innerHTML = t.rules.map(r=>
-      `<div class="bc-rule"><span class="bc-rule-icon">${r.icon}</span><span>${r.text}</span></div>`
+      `<div class="bc-rule"><span class="bc-rule-icon" aria-hidden="true"></span><span>${r.text}</span></div>`
     ).join('');
   }
   const rolesCont = document.getElementById('bc3Roles');
@@ -3493,10 +3618,9 @@ function _bcPopulate(){
     const title = t.roles_title || 'Roles';
     rolesCont.innerHTML = `<div style="font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#c8a96e;margin-bottom:6px;">${title}</div>` +
       t.roles.map(r=>{
-        const icon = r.icon||'';
         const name = r.name||r;
         const desc = r.desc ? ` ${r.desc}` : '';
-        return `<div style="font-size:12px;padding:3px 0;border-bottom:1px solid rgba(200,169,110,0.15);color:#ffffff;">${icon} <strong>${name}</strong>${desc}</div>`;
+        return `<div style="font-size:12px;padding:3px 0;border-bottom:1px solid rgba(200,169,110,0.15);color:#ffffff;"><strong>${name}</strong>${desc}</div>`;
       }).join('');
   }
   const btnStart = document.querySelector('.bc-btn-start span');
@@ -3523,7 +3647,7 @@ function bcNext(){
 /* ══════ START ══════ */
 let _timerInterval = null;
 
-/* ═══ TIMER compte à rebours 90 minutes ═══ */
+/* ═══ TIMER compte à rebours (GAME_DURATION_S) ═══ */
 const GAME_DURATION_S = 120*60; // 120 minutes
 function startTimer(){
   document.getElementById('hudTimer').style.display='block';
@@ -3795,8 +3919,8 @@ function checkMultiStep(idx, si){
   const s=e.multiSteps[si];
   const fb=document.getElementById(`msf-${idx}-${si}`);
   const lang=currentLang;
-  const CORRECT_MSG={fr:'✔ Correct ! Étape suivante…',en:'✔ Correct! Next step…',de:'✔ Richtig! Nächster Schritt…'};
-  const WRONG_MSG={fr:'✗ Réponse incorrecte. Essaie encore.',en:'✗ Incorrect. Try again.',de:'✗ Falsch. Nochmal versuchen.'};
+  const CORRECT_MSG={[lang]:t('stepCorrect')};
+  const WRONG_MSG={[lang]:t('stepWrong')};
   let ok=false;
 
   if(s.stepType==='text'){
@@ -3838,7 +3962,7 @@ function checkMultiStep(idx, si){
       if(hintContainer) hintContainer.innerHTML='';
     },700);
   } else {
-    if(fb){fb.style.display='block';fb.textContent='✔ '+t('missionAccomplished');fb.style.color='#4a7c59';}
+    if(fb){fb.style.display='block';fb.textContent=t('missionAccomplished');fb.style.color='#4a7c59';}
     setTimeout(()=>triggerCorrect(idx,true),600);
   }
 }
@@ -3897,7 +4021,7 @@ function buildEnigmaHTML(e,idx){
         <div class="prog-steps" id="progSteps-${idx}">
           ${Array.from({length:N_ENIGMAS},(_,i)=>`<div class="prog-step${i<idx?' done':i===idx?' current':''}" id="progStep-${idx}-${i}"></div>`).join('')}
         </div>
-        <div class="prog-txt"><span>ÉTAPE ${idx+1} / ${N_ENIGMAS}</span><span id="progScore-${idx}" class="prog-txt-score">${G.score} pts</span></div>
+        <div class="prog-txt"><span>${t('stationProgress', idx+1, N_ENIGMAS)}</span><span id="progScore-${idx}" class="prog-txt-score">${G.score} pts</span></div>
       </div>
 
       <!-- Location chip -->
@@ -3911,7 +4035,6 @@ function buildEnigmaHTML(e,idx){
 
       <!-- FIX10: Group dynamic banner for S2/S4/S6 -->
       ${e.groupMission ? `<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:10px 14px;background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.25);border-radius:10px">
-        <span style="font-size:20px">👥</span>
         <div>
           <div style="font-family:var(--font-mono);font-size:8px;letter-spacing:.2em;color:rgba(201,168,76,.7);margin-bottom:3px">${t('groupMissionLabel')}</div>
           <div style="font-family:var(--font-body);font-size:13px;color:rgba(250,247,240,.75)">${loc.groupMission||e.groupMission[currentLang]||''}</div>
@@ -3920,7 +4043,7 @@ function buildEnigmaHTML(e,idx){
 
       <!-- Site access warning (opening hours, capacity, etc.) -->
       ${e.warning ? `<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:10px 14px;background:rgba(201,80,60,.08);border:1px solid rgba(201,80,60,.3);border-radius:10px">
-        <span style="font-size:20px">⚠️</span>
+        <span aria-hidden="true" style="flex-shrink:0;width:22px;height:22px;border:1.5px solid rgba(201,80,60,.6);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:rgba(201,80,60,.9)">!</span>
         <div style="font-family:var(--font-body);font-size:13px;color:rgba(250,247,240,.85)">${e.warning[currentLang]||''}</div>
       </div>` : ''}
 
@@ -3948,7 +4071,7 @@ function buildEnigmaHTML(e,idx){
         <div style="font-size:13px;color:rgba(250,247,240,.7);margin-bottom:4px">${loc.nav.address}</div>
         <div style="font-size:12px;color:rgba(250,247,240,.35);margin-bottom:8px">${loc.nav.distance}</div>
         <a href="${loc.nav.mapsUrl}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;color:rgba(201,168,76,.55);text-decoration:none;background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.2);border-radius:6px;padding:5px 10px">
-          🗺️ ${t('openMaps')}
+          ${t('openMaps')}
         </a>
         <a href="tel:+41772886252" style="margin-left:6px;display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;color:rgba(250,247,240,.25);text-decoration:none">
           ${t('supportBtn')}
@@ -3958,8 +4081,8 @@ function buildEnigmaHTML(e,idx){
 
     <!-- BOTTOM BAR -->
     <div class="bottom-bar">
-      <button class="btn-icon" onclick="useHint(${idx}, G.hintLevel[${idx}] || 0)" title="Indice">💡</button>
-      <button class="carnet-nav-btn" onclick="toggleCarnet()" title="Carnet">📖</button>
+      <button class="btn-icon" onclick="useHint(${idx}, G.hintLevel[${idx}] || 0)" title="${t('hint')}">${t('hint')}</button>
+      <button class="carnet-nav-btn" onclick="toggleCarnet()" title="${t('carnetShort')}">${t('carnetShort')}</button>
       ${enigmaType === 'text'
         ? `<button class="btn-main" id="mainBtn-${idx}" onclick="checkAnswer(${idx})">${t('confirmBtn')}</button>`
         : enigmaType === 'qcm'
@@ -3986,9 +4109,9 @@ function closeLightbox(){
   document.body.style.overflow='';
 }
 
-function qcmImgFallback(imgEl, emoji){
+function qcmImgFallback(imgEl){
   const div=document.createElement('div');
-  div.style.fontSize='32px';div.style.padding='10px';div.textContent=emoji||'❓';
+  div.className='qcm-caption';div.style.padding='28px 10px';div.textContent=t('imageUnavailable');
   imgEl.replaceWith(div);
 }
 function buildQCMGrid(e, idx){
@@ -4000,14 +4123,13 @@ function buildQCMGrid(e, idx){
   const cells = ['A','B','C','D','E','F'].slice(0,nOptions).map((letter,i)=>{
     const imgs = e.qcmImages || [];
     const img = imgs[i];
-    const emoji = (e.qcmEmojis && e.qcmEmojis[i]) || '❓';
     const rawLabel = (labels && labels[i]) || '';
     const caption = rawLabel.replace(/^[A-D]\.\s*/,'');
     let visual = '';
     if(img && img !== '#'){
-      visual = '<img src="'+img+'" alt="'+letter+'" onclick="openLightbox(\''+img+'\')" style="cursor:zoom-in" onerror="qcmImgFallback(this,\''+emoji+'\')">';
+      visual = '<img src="'+img+'" alt="'+letter+'" onclick="openLightbox(\''+img+'\')" style="cursor:zoom-in" onerror="qcmImgFallback(this)">';
     } else {
-      visual = '<div style="font-size:32px;padding:10px">'+emoji+'</div>';
+      visual = '<div style="height:18px"></div>'; // pas d'image : la légende et la lettre suffisent
     }
     return '<div class="qcm-cell" id="qcm'+idx+'-'+letter+'" onclick="toggleQCM('+idx+',\''+letter+'\',this)">'
       + visual
@@ -4110,7 +4232,7 @@ function checkQCM(idx){
     // Premier essai raté : on laisse retenter, comme pour les énigmes texte
     G.stepFailed[idx] = true;
     fb.className = 'feedback error'; fb.style.display = 'block';
-    fb.textContent=(currentLang==='fr'?'❌ Réponse incorrecte. Réessaie ! (1 essai restant)':currentLang==='en'?'❌ Incorrect. Try again! (1 attempt left)':'❌ Falsch. Nochmal versuchen! (1 Versuch übrig)');
+    fb.textContent=t('wrongRetry');
     playTone('wrong');
     shakeElement(document.getElementById('screen-enigma-'+idx));
     // Réinitialiser la sélection pour permettre un nouvel essai
@@ -4121,7 +4243,7 @@ function checkQCM(idx){
     G.qcmSelected[idx]=[];
     const confirmBtn = document.getElementById('qcmConfirm-'+idx) || document.getElementById('qcmConfirmInline-'+idx);
     if(confirmBtn) confirmBtn.style.display='none';
-    if(G.hintLevel[idx]===0){useHint(idx,0);}
+    if(G.hintLevel[idx]===0){useHint(idx,0,true);} // premier indice offert après une première erreur
     saveGame();
   } else {
     // Deuxième essai raté : on passe
@@ -4143,10 +4265,9 @@ function selectQCM(idx, choice, el){
 }
 
 /* ══════ IA / VOIX SUPPRIMÉES ══════ */
-/* Toute validation par IA (photo, vocal, serment) et tout appel réseau associé
+/* Toute validation par IA (photo, vocal) et tout appel réseau associé
    (api.anthropic.com, SpeechRecognition) ont été retirés. Chaque station se
-   valide uniquement en local (texte ou QCM) aucune fonctionnalité du jeu
-   ne dépend d'une connexion réseau après le chargement initial. */
+   valide uniquement en local (texte ou QCM), sans connexion réseau. */
 
 /* ══════ TRIGGER CORRECT (shared) ══════ */
 function triggerCorrect(idx, withPoints){
@@ -4261,15 +4382,15 @@ function checkAnswer(idx){
     triggerCorrect(idx, firstTime);
   }else{
     if(!G.stepFailed[idx]){
-      // Premier essai raté : avertissement, débloquer indice 1 gratuit
+      // Premier essai raté : avertissement, l'indice 1 est offert (gratuit)
       G.stepFailed[idx]=true;
       fb.className='feedback error';fb.style.display='block';
-      fb.textContent=(currentLang==='fr'?'❌ Réponse incorrecte. Réessaie ! (1 essai restant)':currentLang==='en'?'❌ Incorrect. Try again! (1 attempt left)':'❌ Falsch. Nochmal versuchen! (1 Versuch übrig)');
+      fb.textContent=t('wrongRetry');
       playTone('wrong');
       shakeElement(document.getElementById('screen-enigma-'+idx));
       input.disabled=false; input.value=''; input.focus();
       // Indice 1 gratuit
-      if(G.hintLevel[idx]===0){useHint(idx,0);}
+      if(G.hintLevel[idx]===0){useHint(idx,0,true);} // premier indice offert après une première erreur
       saveGame();
     }else{
       // Deuxième essai raté : on passe
@@ -4300,7 +4421,7 @@ function _getActiveMultiStepIndex(idx){
   }
   return 0;
 }
-function useHint(idx,hintIdx){
+function useHint(idx,hintIdx,free){ // free = true : indice offert (premier indice après une première erreur), sans coût
   const enigma=ENIGMAS[idx];
   let hints;
   if(enigma.type==='multi'){
@@ -4313,7 +4434,7 @@ function useHint(idx,hintIdx){
   }
   if(!hints.length)return;
   if(G.hintLevel[idx]>hintIdx)return;
-  let cost=0;for(let i=G.hintLevel[idx];i<=Math.min(hintIdx,hints.length-1);i++)cost+=hints[i].cost;
+  let cost=0;if(!free){for(let i=G.hintLevel[idx];i<=Math.min(hintIdx,hints.length-1);i++)cost+=hints[i].cost;}
   addScore(-cost);G.hintLevel[idx]=hintIdx+1;
   const container=document.getElementById('hintItems-'+idx);
   if(!container)return;
@@ -4372,15 +4493,7 @@ function showMeta(){
   });
 
   const narrative=document.getElementById('metaNarrative');
-  if(narrative){
-    const collectedCount=G.fragments.filter(f=>f!==null).length;
-    const msgs={
-      fr:`${collectedCount}/8 fragments collectés. Assemble-les dans l'ordre de ton périple sur le vexillum.`,
-      en:`${collectedCount}/8 fragments collected. Assemble them on the vexillum, in the order of your journey.`,
-      de:`${collectedCount}/8 Fragmente gesammelt. Setze sie in der Reihenfolge deiner Reise auf das Feldzeichen.`
-    };
-    narrative.textContent=msgs[currentLang]||msgs.fr;
-  }
+  if(narrative) narrative.textContent=t('metaNarrative',G.fragments.filter(f=>f!==null).length);
   const msg=document.getElementById('metaMsg'); if(msg) msg.textContent=t('metaTapFragment');
   updateProgress(N_ENIGMAS);goToScreen('meta');
 }
@@ -4424,9 +4537,9 @@ function showVictory(){
   const finalSceneEl=document.getElementById('victoryFinalScene');
   if(finalSceneEl){
     const scenes={
-      fr:`Le serment résonne encore dans la plaine quand la légion répond, un son de cor qui roule sur les collines de la Broye.<br><br>L'aquila est dans tes mains. L'aigle d'or de la Legio XXI Rapax, récupéré, protégé, sauvé de l'infamie. Au loin, sur la route du Rhin, la poussière du cortège impérial se lève. Hadrien arrive.<br><br>Le légat te fait face. Il ne dit rien. Il n'a pas besoin : son regard dit tout. Tu as lu dans les pierres, compté dans les ruines, nommé les morts et entendu les dieux. Tu as fait ce qu'aucun autre n'aurait accompli.<br><br><em>La Legio XXI Rapax t'accueille dans ses rangs.</em><br><br><strong>Aventicum est sauvée.</strong>`,
-      en:`The oath still echoes across the plain as the legion responds, a horn call rolling over the hills of the Broye.<br><br>The aquila is in your hands. The golden eagle of Legio XXI Rapax, recovered, protected, saved from disgrace. In the distance, on the road from the Rhine, the dust of the imperial cortege rises. Hadrian is coming.<br><br>The legate faces you. He says nothing. He doesn't need to: his gaze says everything. You read the stones, counted in the ruins, named the dead and heard the gods. You did what no other could have accomplished.<br><br><em>Legio XXI Rapax welcomes you into its ranks.</em><br><br><strong>Aventicum is saved.</strong>`,
-      de:`Der Eid hallt noch über die Ebene, als die Legion antwortet, ein Hornruf, der über die Hügel der Broye rollt.<br><br>Die Aquila ist in euren Händen. Der goldene Adler der Legio XXI Rapax, zurückgeholt, geschützt, vor der Schande bewahrt. In der Ferne, auf der Strasse vom Rhein, erhebt sich der Staub des kaiserlichen Zuges. Hadrian kommt.<br><br>Der Legat steht euch gegenüber. Er sagt nichts. Er muss nicht: sein Blick sagt alles. Ihr habt die Steine gelesen, in den Ruinen gezählt, die Toten benannt und die Götter gehört. Ihr habt getan, was kein anderer hätte vollbringen können.<br><br><em>Die Legio XXI Rapax heisst euch in ihren Reihen willkommen.</em><br><br><strong>Aventicum ist gerettet.</strong>`
+      fr:`Un son de cor roule sur les collines de la Broye quand la légion répond.<br><br>L'aquila est dans tes mains. L'aigle d'or de la Legio XXI Rapax, récupéré, protégé, sauvé de l'infamie. Au loin, sur la route du Rhin, la poussière du cortège impérial se lève. Hadrien arrive.<br><br>Le légat te fait face. Il ne dit rien. Il n'a pas besoin de parler : son regard dit tout. Tu as lu dans les pierres, compté dans les ruines, observé les façades. Tu as fait ce qu'aucun autre n'aurait accompli.<br><br><em>La Legio XXI Rapax t'accueille dans ses rangs.</em><br><br><strong>Aventicum est sauvée.</strong>`,
+      en:`A horn call rolls over the hills of the Broye as the legion answers.<br><br>The aquila is in your hands. The golden eagle of Legio XXI Rapax, recovered, protected, saved from disgrace. In the distance, on the road from the Rhine, the dust of the imperial cortege rises. Hadrian is coming.<br><br>The legate faces you. He says nothing. He does not need to speak: his gaze says everything. You read the stones, counted among the ruins, studied the facades. You did what no other could have accomplished.<br><br><em>Legio XXI Rapax welcomes you into its ranks.</em><br><br><strong>Aventicum is saved.</strong>`,
+      de:`Ein Hornruf rollt über die Hügel der Broye, als die Legion antwortet.<br><br>Die Aquila ist in euren Händen. Der goldene Adler der Legio XXI Rapax, zurückgeholt, geschützt, vor der Schande bewahrt. In der Ferne, auf der Strasse vom Rhein, erhebt sich der Staub des kaiserlichen Zuges. Hadrian kommt.<br><br>Der Legat steht euch gegenüber. Er sagt nichts. Er muss nicht sprechen: Sein Blick sagt alles. Ihr habt die Steine gelesen, in den Ruinen gezählt, die Fassaden studiert. Ihr habt getan, was kein anderer hätte vollbringen können.<br><br><em>Die Legio XXI Rapax heisst euch in ihren Reihen willkommen.</em><br><br><strong>Aventicum ist gerettet.</strong>`
     };
     finalSceneEl.innerHTML=scenes[currentLang]||scenes.fr;
     finalSceneEl.style.display='block';
@@ -4440,7 +4553,7 @@ function showVictory(){
   document.getElementById('victoryScore').textContent=G.score+' pts';
   const ranks=translations[currentLang].ranks;
   const r=ranks.find(rk=>G.score>=rk.min)||ranks[ranks.length-1];
-  document.getElementById('victoryRank').textContent=r.icon+' '+r.label;
+  document.getElementById('victoryRank').textContent=r.label;
   document.getElementById('victoryMsg').textContent=t('victoryMsg',G.teamName);
   // Populate certificate
   const cert=document.getElementById('certificate');
@@ -4450,7 +4563,7 @@ function showVictory(){
   document.getElementById('certScore').textContent=G.score;
   document.getElementById('certTime').textContent=String(mins).padStart(2,'0')+':'+String(secs).padStart(2,'0');
   const now=new Date();
-  document.getElementById('certDate').textContent=now.toLocaleDateString('fr-CH',{day:'2-digit',month:'2-digit',year:'numeric'});
+  document.getElementById('certDate').textContent=now.toLocaleDateString(t('dateLocale'),{day:'2-digit',month:'2-digit',year:'numeric'});
   submitScoreToLeaderboard(mins,secs);
 }
 
@@ -4465,7 +4578,14 @@ function launchConfetti(){
   for(let i=0;i<60;i++){setTimeout(()=>{const piece=document.createElement('div');piece.className='confetti-piece';piece.style.left=Math.random()*100+'vw';piece.style.background=colors[Math.floor(Math.random()*colors.length)];piece.style.animationDuration=(Math.random()*2+2)+'s';document.body.appendChild(piece);setTimeout(()=>piece.remove(),5000);},i*80);}
 }
 
-function reviewLink(){window.open('https://g.page/r/aventicum-quest/review','_blank');}
+/* Lien d'avis Google : le bouton reste masqué tant que le vrai lien n'est pas renseigné ici.
+   <-- LIGNE À REMPLIR : lien d'avis de la fiche Google d'Aventicum Quest (https://...) */
+const REVIEW_URL = '';
+function reviewLink(){ if(REVIEW_URL) window.open(REVIEW_URL,'_blank','noopener'); }
+function updateReviewButton(){
+  const rv=document.getElementById('victReview');
+  if(rv) rv.style.display = REVIEW_URL ? '' : 'none';
+}
 
 function shareVictory(){
   const text=t('shareText',G.score,G.teamName);
@@ -4638,10 +4758,10 @@ document.addEventListener('DOMContentLoaded',()=>{
       const resumeDiv=document.createElement('div');
       resumeDiv.id='resumeBanner';
       resumeDiv.style.cssText='background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.5);border-radius:6px;padding:0.8rem 1rem;margin-bottom:0.8rem;text-align:center;';
-      resumeDiv.innerHTML=`<div style="font-family:Cinzel,serif;font-size:0.75rem;letter-spacing:0.15em;color:var(--gold);margin-bottom:0.5rem">🔱 MISSION EN COURS · ${G.teamName}</div>
-      <div style="font-size:0.85rem;color:rgba(250,247,240,0.7);margin-bottom:0.7rem">Étape ${Math.min(G.currentStep+1,N_ENIGMAS)}/${N_ENIGMAS} · ${G.score} pts</div>
-      <button class="btn btn-primary" onclick="resumeMission()" style="width:100%;font-size:0.8rem;padding:0.6rem">⚔️ REPRENDRE LA MISSION</button>
-      <div style="margin-top:0.5rem"><a onclick="clearSave();document.getElementById('resumeBanner').remove()" style="font-size:0.7rem;color:rgba(201,168,76,0.4);cursor:pointer;text-decoration:underline">Nouvelle partie</a></div>`;
+      resumeDiv.innerHTML=`<div style="font-family:Cinzel,serif;font-size:0.75rem;letter-spacing:0.15em;color:var(--gold);margin-bottom:0.5rem">${esc(t('resumeTitle'))} · ${esc(G.teamName)}</div>
+      <div style="font-size:0.85rem;color:rgba(250,247,240,0.7);margin-bottom:0.7rem">${esc(t('resumeStep',Math.min(G.currentStep+1,N_ENIGMAS),N_ENIGMAS,Number(G.score)||0))}</div>
+      <button class="btn btn-primary" onclick="resumeMission()" style="width:100%;font-size:0.8rem;padding:0.6rem">${esc(t('resumeBtn'))}</button>
+      <div style="margin-top:0.5rem"><a onclick="clearSave();document.getElementById('resumeBanner').remove()" style="font-size:0.7rem;color:rgba(201,168,76,0.4);cursor:pointer;text-decoration:underline">${esc(t('resumeNew'))}</a></div>`;
       const card=document.querySelector('#screen-code .code-inner');
       if(card)card.prepend(resumeDiv);
       // pre-fill inputs
@@ -4665,9 +4785,9 @@ const TRAITOR_MESSAGES={
     6:"Rufus's final trace, on a broken tegula: \"Only one monument separates me from them. The East Gate. That is where it all ends.\""
   },
   de:{
-    1:"Rufus hat in den Stein gemeisselt: 'Sie werden vor der Saeule aufgeben. Sie geben immer auf.'",
-    4:"Eine auf Pergament gekritzte Notiz, in den Fundamenten gefunden: 'Marc Aurel wuerde verstehen, was ich getan habe. Auch er hat seine Legion gewaehlt.'",
-    6:"Letzte Spur von Rufus, auf einem zerbrochenen Tegula: 'Nur ein Monument trennt mich noch von ihnen. Das Osttor. Dort endet alles.'"
+    1:"Rufus hat in den Stein gemeisselt: „Sie werden vor der Säule aufgeben. Sie geben immer auf.“",
+    4:"Eine auf Pergament gekritzelte Notiz, in den Fundamenten gefunden: „Marc Aurel würde verstehen, was ich getan habe. Auch er hat seine Legion gewählt.“",
+    6:"Letzte Spur von Rufus, auf einer zerbrochenen Tegula: „Nur ein Monument trennt mich noch von ihnen. Das Osttor. Dort endet alles.“"
   }
 };
 let _traitorCb=null;
@@ -4679,8 +4799,7 @@ function showTraitorCard(idx,cb){
   const el=document.getElementById('traitorText');
   const ol=document.getElementById('traitorOverline');
   if(el)el.textContent=msg;
-  const lbs={fr:'MESSAGE DU TRAÎTRE',en:"THE TRAITOR'S MESSAGE",de:'NACHRICHT DES VERRÄTERS'};
-  if(ol)ol.textContent=lbs[currentLang]||lbs.fr;
+  if(ol)ol.textContent=t('traitorMsgLabel');
   const ov=document.getElementById('traitorOverlay');
   if(ov)ov.classList.add('visible');
 }
@@ -4700,9 +4819,9 @@ function closeTraitorCard(){
 
 <div id="traitorOverlay" onclick="closeTraitorCard()">
   <div class="traitor-card">
-    <div class="traitor-overline" id="traitorOverline">MESSAGE DU TRAÎTRE</div>
+    <div class="traitor-overline" id="traitorOverline" data-t="traitorMsgLabel">MESSAGE DU TRAÎTRE</div>
     <div class="traitor-text" id="traitorText"></div>
-    <div class="traitor-continue">▸ TOUCHER POUR CONTINUER</div>
+    <div class="traitor-continue"><span aria-hidden="true">▸</span> <span data-t="touchContinue">TOUCHER POUR CONTINUER</span></div>
   </div>
 </div>
 </body>
