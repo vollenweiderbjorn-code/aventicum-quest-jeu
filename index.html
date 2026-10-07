@@ -6,7 +6,7 @@
 <title>Aventicum Quest Operatio Aquila</title>
 <meta name="robots" content="noindex, nofollow">
 <meta property="og:title" content="Aventicum Quest Operatio Aquila">
-<meta property="og:description" content="L'aigle de la Legio XXI a été volée. Résolvez 8 énigmes à travers les lieux emblématiques d'Avenches en 120 minutes.">
+<meta property="og:description" content="L'aigle de la Legio XXI a été volée. Résolvez 8 énigmes à travers les lieux emblématiques d'Avenches en environ 1h30 à 2h.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://jeu.aventicumquest.ch">
 <meta property="og:image" content="https://aventicumquest.ch/images/og_image.jpg">
@@ -2417,6 +2417,8 @@ const translations = {
     certSeal: "QUE JUPITER GUIDE VOS PAS · S·P·Q·R",
     dateLocale: "fr-CH",
     imageUnavailable: "Image indisponible",
+    distAbout: (m) => `environ ${m} m`,
+    distFallback: "une courte distance",
     stepLabel: "ÉTAPE",
     answerPlaceholder: "Votre réponse...",
     confirmBtn: "CONFIRMER",
@@ -2514,6 +2516,8 @@ const translations = {
     certSeal: "MAY JUPITER GUIDE YOUR STEPS · S·P·Q·R",
     dateLocale: "en-GB",
     imageUnavailable: "Image unavailable",
+    distAbout: (m) => `about ${m} m`,
+    distFallback: "a short distance",
     stepLabel: "STEP",
     answerPlaceholder: "Your answer...",
     confirmBtn: "CONFIRM",
@@ -2611,6 +2615,8 @@ const translations = {
     certSeal: "MÖGE JUPITER EURE SCHRITTE LEITEN · S·P·Q·R",
     dateLocale: "de-CH",
     imageUnavailable: "Bild nicht verfügbar",
+    distAbout: (m) => `etwa ${m} m`,
+    distFallback: "ein kurzes Stück",
     stepLabel: "SCHRITT",
     answerPlaceholder: "Eure Antwort...",
     confirmBtn: "BESTÄTIGEN",
@@ -2734,17 +2740,10 @@ function clearToken(){ try{ sessionStorage.removeItem(TOKEN_KEY); }catch(e){} }
    3) Écusson Théâtre du Selley → verrouillé sur 1902
    4) Accès Porte de l'Est / réseau → confirmé bon (4G ok, travaux non bloquants)
 
-   DERNIER POINT OUVERT : les distances et noms de rue ci-dessous
-   (TRANSITION_MSGS, juste en dessous) et dans nav.distance de chaque
-   station sont encore des hypothèses jamais vérifiées sur le terrain :
-   Rue de Berne, Chemin du Selley, Avenue Jomini, Route d'Avenches.
-   Si le trajet réel parcouru ce matin diffère (noms de rue ou distances
-   en mètres), il faut corriger aux deux endroits à la fois pour rester
-   cohérent (nav.distance dans chaque énigme ET le paragraphe correspondant
-   dans TRANSITION_MSGS). Les coordonnées GPS d'ENIGMA_COORDS pilotent la
-   carte réelle indépendamment de ce texte, donc la navigation fonctionne
-   même si ce texte n'est pas corrigé, mais un texte faux à côté d'une
-   carte juste ferait mauvaise impression.
+   DISTANCES ET NOMS DE RUE (phase 3) : les distances des textes de trajet (TRANSITION_MSGS) et des fiches de
+   station (nav.distance) ne sont plus écrites à la main : elles sont calculées depuis PRECOMPUTED_ROUTES
+   (arrondies à 10 m). Les noms de rue ne sont que ceux qu'OpenStreetMap place le long des tracés. Les
+   coordonnées d'ENIGMA_COORDS pilotent la carte réelle.
    ═══════════════════════════════════════════════════════════════════════ */
 const ENIGMA_COORDS = [
   [46.880126, 7.040356],  // 0 Hôtel de Ville (Place de l'Église, cadran solaire)
@@ -2796,105 +2795,105 @@ const ENIGMAS = [
   },
   // ─── ÉNIGME 2 TOUR DE BENNEVILLE ───────────────────────────────────────
   { id:2, step:'II', fragment:'E', clue:'CIGOGNIER', answers:['CIGOGNIER','LE CIGOGNIER','CIGOGNER'], warning:{fr:'Tour ouverte de 9h à 21h (du 1er mai au 30 sept.) et de 9h à 17h le reste de l\'année. Max. 20 personnes en même temps dans la tour.',en:'Tower open 9am to 9pm (May 1 to Sept 30) and 9am to 5pm the rest of the year. Max. 20 people inside the tower at once.',de:'Turm geöffnet 9 bis 21 Uhr (1. Mai bis 30. Sept.) und 9 bis 17 Uhr den Rest des Jahres. Max. 20 Personen gleichzeitig im Turm.'}, groupMission:{fr:'Montez ensemble au sommet, puis répartissez-vous : chacun regarde par une fenêtre différente. Qui repère la colonne solitaire dans les champs ?',en:'Climb to the top together, then split up: each person looks through a different window. Who spots the lone column in the fields?',de:'Steigt gemeinsam zum Gipfel, dann verteilt euch: jeder schaut durch ein anderes Fenster. Wer entdeckt die einsame Säule in den Feldern?'},
-    fr:{ nav:{title:'Tour de Benneville',desc:"La tour médiévale se dresse à quelques pas de l'Hôtel de Ville.",address:'Rue de Lausanne, 1580 Avenches',distance:'~100 m de l\'Hôtel de Ville',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879440,7.041184'},
+    fr:{ nav:{title:'Tour de Benneville',desc:"La tour médiévale se dresse à quelques pas de l'Hôtel de Ville.",address:'Passage de Benneville, 1580 Avenches',distance:'~{m} m de l\'Hôtel de Ville',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879440,7.041184'},
       narrative:"La Tour de Benneville domine la plaine depuis le XIIIe siècle : cinq niveaux, des meurtrières, une vue imprenable. C'est d'ici que le traître a repéré sa cachette. Au loin, dans les champs, se dresse la dernière colonne du plus grand sanctuaire d'Aventicum. Pendant des siècles, des cigognes ont niché à son sommet, et les habitants ont fini par baptiser le monument du nom de cet oiseau. Monte, et trouve ce que le traître a vu.",
       question:"Monte jusqu'au sommet de la tour. Depuis la fenêtre donnant sur la plaine, repère la colonne romaine qui se dresse seule dans les champs. Son nom vient de l'oiseau qui nichait à son sommet, la cigogne. Quel est le nom de ce monument ? Entre-le en majuscules, sans espace.",
       hints:[{text:"Cherche une fenêtre donnant vers la plaine, au-delà des toits. Un élément romain se dresse seul dans les champs, comme une sentinelle oubliée. Ce n'est pas un bâtiment, juste une colonne.",cost:20},{text:"Le nom du monument se forme à partir du mot cigogne : c'est le lieu des cigognes, comme un pommier est l'arbre des pommes. Cigogne... ?",cost:40},{text:"La réponse est CIGOGNIER.",cost:80}]},
-    en:{ nav:{title:'Benneville Tower',desc:"The medieval tower stands a few steps from the Town Hall.",address:'Rue de Lausanne, 1580 Avenches',distance:'~100 m from Town Hall',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879440,7.041184'},
+    en:{ nav:{title:'Benneville Tower',desc:"The medieval tower stands a few steps from the Town Hall.",address:'Passage de Benneville, 1580 Avenches',distance:'~{m} m from Town Hall',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879440,7.041184'},
       narrative:"The Benneville Tower has dominated the plain since the 13th century: five levels, arrow slits, a breathtaking view. From this vantage point, the traitor scouted his hiding place. Far off in the fields stands the last column of Aventicum's greatest sanctuary. For centuries, storks nested at its top, and the locals ended up naming the monument after that bird: in French, a stork is a cigogne. Climb, and find what the traitor saw.",
       question:"Climb to the top of the tower. From the window facing the plain, spot the Roman column standing alone in the fields. Its French name is built from cigogne, the stork that nested at its top. What is the name of this monument? Enter it in capital letters, no spaces, exactly as the locals write it.",
       hints:[{text:"Look for a window facing the plain, beyond the rooftops. A Roman element stands alone in the fields, like a forgotten sentinel. It is not a building, just a column.",cost:20},{text:"Take the French word cigogne and add the ending -IER, the way French turns pomme (apple) into pommier (apple tree): the place of the storks.",cost:40},{text:"The answer is CIGOGNIER.",cost:80}]},
-    de:{ nav:{title:'Benneville-Turm',desc:"Der mittelalterliche Turm steht wenige Schritte vom Rathaus entfernt.",address:'Rue de Lausanne, 1580 Avenches',distance:'~100 m vom Rathaus',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879440,7.041184'},
+    de:{ nav:{title:'Benneville-Turm',desc:"Der mittelalterliche Turm steht wenige Schritte vom Rathaus entfernt.",address:'Passage de Benneville, 1580 Avenches',distance:'~{m} m vom Rathaus',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879440,7.041184'},
       narrative:"Der Benneville-Turm beherrscht die Ebene seit dem 13. Jahrhundert: fünf Stockwerke, Schiessscharten, ein atemberaubender Ausblick. Von hier aus kundschaftete der Verräter sein Versteck aus. Weit draussen in den Feldern steht die letzte Säule des grössten Heiligtums von Aventicum. Jahrhundertelang nisteten Störche auf ihrer Spitze, und die Einheimischen benannten das Monument schliesslich nach diesem Vogel: auf Französisch heisst der Storch cigogne. Steigt hinauf und findet, was der Verräter sah.",
       question:"Steigt bis zum Gipfel des Turms. Vom Fenster mit Blick auf die Ebene aus entdeckt ihr die römische Säule, die einsam in den Feldern steht. Ihr französischer Name leitet sich von cigogne ab, dem Storch, der einst auf ihrer Spitze nistete. Wie heisst dieses Monument? Gebt den Namen in Grossbuchstaben ein, ohne Leerzeichen, genau wie die Einheimischen ihn schreiben.",
       hints:[{text:"Sucht am Turmgipfel ein Fenster mit Blick auf die Ebene, über die Dächer hinweg. Dort, allein in den Feldern, erhebt sich ein römisches Element wie eine vergessene Wache. Es ist kein Gebäude, nur eine Säule.",cost:20},{text:"Nehmt das französische Wort cigogne und hängt die Endung -IER an, so wie aus pomme (Apfel) ein pommier (Apfelbaum) wird: der Ort der Störche.",cost:40},{text:"Die Antwort ist CIGOGNIER.",cost:80}]}
   },
   // ─── ÉNIGME 3 RUE DES ALPES (QCM visuel) ──────────────────────────────
   { id:3, step:'III', fragment:'L', clue:'LOUVE', type:'qcm', qcmRequired:2, answers:['A+B'], qcmImages:['qcm-louve.jpg','qcm-rosace.jpg','qcm-lion.jpg','qcm-porte-fer.jpg'], /* Images à la racine du repo, à côté d'index.html : qcm-louve.jpg (Louve), qcm-rosace.jpg (rosace tressée), qcm-lion.jpg (leurre), qcm-porte-fer.jpg (leurre). */ qcmLabels:{fr:['A. Louve romaine','B. Rosace tressée sur porte en bois','C. Lion sculpté','D. Porte en fer forgé'],en:['A. Roman she-wolf','B. Woven rosette on a wooden door','C. Carved lion','D. Wrought-iron gate'],de:['A. Römische Wölfin','B. Geflochtene Rosette an einer Holztür','C. Geschnitzter Löwe','D. Schmiedeeisernes Tor']},
-    fr:{ nav:{title:'Rue des Alpes',desc:"Observez les façades des immeubles le long de la Rue des Alpes.",address:'Rue des Alpes, 1580 Avenches',distance:'~150 m de la Tour de Benneville',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879617,7.041082'},
+    fr:{ nav:{title:'Rue des Alpes',desc:"Observez les façades des immeubles le long de la Rue des Alpes.",address:'Rue des Alpes, 1580 Avenches',distance:'~{m} m de la Tour de Benneville, tronçon de ~{s} m',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879617,7.041082'},
       narrative:"La Rue des Alpes relie l'Hôtel de Ville au reste de la cité. En apparence, une rue ordinaire. Mais le traître l'a longée les yeux ouverts, et il y a vu ce que personne d'autre ne voit. Sur une façade veille une louve de pierre, allaitant deux jumeaux, la légende même de la fondation de Rome, gravée là depuis des générations. Un peu plus loin, une porte en bois porte une rosace tressée, un détail d'artisanat local que personne ne remarque en passant. Deux éléments en pleine vue, invisibles à qui ne cherche pas.",
       question:`En remontant toute la Rue des Alpes, observe attentivement les façades des bâtiments eux-mêmes, la pierre et le bois, pas les vitrines ni les enseignes commerciales. Parmi ces quatre ornements ci-dessous (A, B, C, D), deux sont RÉELLEMENT présents sur ces façades. Sélectionne les deux bons éléments, puis confirme.`,
       hints:[{text:"Parcours toute la longueur de la rue en levant les yeux du trottoir vers les murs et les portes, du rez-de-chaussée jusqu'au premier étage. Les deux éléments ne sont pas cachés : on les manque seulement si on ne regarde pas les façades elles-mêmes.",cost:20},{text:"L'un des deux est un animal sculpté lié à la légende de la fondation de Rome ; l'autre est un motif circulaire tressé, en bois, au centre d'une porte.",cost:40},{text:"Les deux éléments présents sont la louve romaine et la rosace tressée sur la porte en bois. Sélectionnez A et B, puis appuyez sur CONFIRMER.",cost:80}]},
-    en:{ nav:{title:'Rue des Alpes',desc:"Observe the building facades along Rue des Alpes.",address:'Rue des Alpes, 1580 Avenches',distance:'~150 m from Benneville Tower',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879617,7.041082'},
+    en:{ nav:{title:'Rue des Alpes',desc:"Observe the building facades along Rue des Alpes.",address:'Rue des Alpes, 1580 Avenches',distance:'~{m} m from Benneville Tower, street section of ~{s} m',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879617,7.041082'},
       narrative:"Rue des Alpes connects the Town Hall to the rest of the city. It looks like an ordinary street. But the traitor walked it with open eyes, and saw what others never notice. On one façade watches a stone she-wolf, nursing two twins, the very legend of Rome's founding, carved there for generations. A little further on, a wooden door bears a woven rosette, a piece of local craftsmanship nobody notices walking by. Two elements in plain sight, invisible to those not looking.",
       question:`Walking the full length of Rue des Alpes, look closely at the buildings' façades themselves, the stone and wood, not shop windows or signs. Of these four ornaments (A, B, C, D), TWO are REALLY present on these façades. Select the two correct elements, then confirm.`,
       hints:[{text:"Walk the whole length of the street, lifting your eyes from the pavement to the walls and doors, from ground floor up to first-floor height. The two elements aren't hidden: you'll only miss them by not looking at the façades themselves.",cost:20},{text:"One is a carved animal linked to the legend of Rome's founding; the other is a round woven wooden pattern, at the centre of a door.",cost:40},{text:"The two elements present are the Roman she-wolf and the woven rosette on the wooden door. Select A and B, then press CONFIRM.",cost:80}]},
-    de:{ nav:{title:'Rue des Alpes',desc:"Beobachtet die Gebäudefassaden entlang der Rue des Alpes.",address:'Rue des Alpes, 1580 Avenches',distance:'~150 m vom Benneville-Turm',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879617,7.041082'},
+    de:{ nav:{title:'Rue des Alpes',desc:"Beobachtet die Gebäudefassaden entlang der Rue des Alpes.",address:'Rue des Alpes, 1580 Avenches',distance:'~{m} m vom Benneville-Turm, Strassenabschnitt von ~{s} m',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879617,7.041082'},
       narrative:"Die Rue des Alpes verbindet das Rathaus mit dem Rest der Stadt. Sie sieht wie eine gewöhnliche Strasse aus. Doch der Verräter ging sie mit offenen Augen entlang und sah, was andere nie bemerken. Auf einer Fassade wacht eine steinerne Wölfin, die zwei Zwillinge säugt, die Gründungslegende Roms selbst, seit Generationen dort eingemeisselt. Etwas weiter trägt eine Holztür eine geflochtene Rosette, ein Detail lokaler Handwerkskunst, das niemand im Vorbeigehen bemerkt. Zwei Elemente in aller Öffentlichkeit, unsichtbar für jene, die nicht suchen.",
       question:`Geht die ganze Rue des Alpes entlang und betrachtet genau die Fassaden der Gebäude selbst, Stein und Holz, nicht Schaufenster oder Schilder. Von diesen vier Ornamenten (A, B, C, D) befinden sich ZWEI WIRKLICH an diesen Fassaden. Wählt die zwei richtigen Elemente und bestätigt.`,
       hints:[{text:"Geht die ganze Strasse entlang und hebt den Blick vom Gehsteig zu den Wänden und Türen, vom Erdgeschoss bis zur Höhe des ersten Stockwerks. Die zwei Elemente sind nicht versteckt: man übersieht sie nur, wenn man nicht auf die Fassaden selbst schaut.",cost:20},{text:"Eines ist ein geschnitztes Tier, verbunden mit der Gründungslegende Roms; das andere ist ein rundes, geflochtenes Holzmuster in der Mitte einer Tür.",cost:40},{text:"Die zwei vorhandenen Elemente sind die römische Wölfin und die geflochtene Rosette auf der Holztür. Wählt A und B, dann drückt BESTÄTIGEN.",cost:80}]}
   },
   // ─── ÉNIGME 4 ARÈNES (Amphithéâtre) ───────────────────────────────────
   { id:4, step:'IV', fragment:'V', clue:'ARÈNE', answers:['6'], groupMission:{fr:'Cherchez ensemble le panneau du plan de restauration sur la terrasse couverte du musée, qui représente l\'amphithéâtre vu du dessus, divisé en zones numérotées.',en:'Search together for the restoration plan panel on the museum\'s covered terrace, showing the amphitheatre from above, divided into numbered zones.',de:'Sucht gemeinsam das Schild mit dem Restaurierungsplan auf der überdachten Museumsterrasse, das das Amphitheater von oben zeigt, in nummerierte Zonen unterteilt.'},
-    fr:{ nav:{title:'Amphithéâtre Romain',desc:"L'amphithéâtre romain se trouve à l'entrée est de la ville d'Avenches.",address:'Rue du Clos 6, 1580 Avenches',distance:'~400 m de la Rue des Alpes',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880776,7.042174'},
+    fr:{ nav:{title:'Amphithéâtre Romain',desc:"L'amphithéâtre romain se trouve à l'entrée est de la ville d'Avenches.",address:'Avenue Jomini, 1580 Avenches',distance:'~{m} m de la fin de la Rue des Alpes',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880776,7.042174'},
       narrative:"Quatorze mille spectateurs, des gladiateurs, du sang sur le sable. L'amphithéâtre d'Avenches, construit au IIe siècle puis agrandi jusqu'à cette capacité, est l'un des mieux conservés de Suisse. Le traître a caché son message dans les chiffres mêmes de ce monument. Entre dans l'arène et compte.",
       question:"Sur la terrasse couverte du musée romain, juste à côté de l'amphithéâtre, un panneau affiche le plan officiel de restauration du monument : un schéma vu du dessus, divisant l'amphithéâtre en plusieurs zones numérotées. Repère sur ce plan le numéro attribué à la terrasse couverte où tu te trouves. Entre ce numéro.",
       hints:[{text:"Cherche le panneau de restauration sur la terrasse couverte du musée romain, à côté de l'amphithéâtre, affiché à hauteur des yeux, près de l'entrée de la terrasse.",cost:20},{text:"Le plan divise l'amphithéâtre en 8 zones numérotées. Chaque zone couvre une section différente du monument. Repère celle qui correspond à l'endroit où tu lis le panneau.",cost:40},{text:"La terrasse couverte du musée correspond à la zone 6, c'est inscrit sur le panneau.",cost:80}]},
-    en:{ nav:{title:'Roman Amphitheatre',desc:"The Roman amphitheatre is at the eastern entrance of the city.",address:'Rue du Clos 6, 1580 Avenches',distance:'~400 m from Rue des Alpes',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880776,7.042174'},
+    en:{ nav:{title:'Roman Amphitheatre',desc:"The Roman amphitheatre is at the eastern entrance of the city.",address:'Avenue Jomini, 1580 Avenches',distance:'~{m} m from the end of Rue des Alpes',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880776,7.042174'},
       narrative:"Fourteen thousand spectators, gladiators, blood on the sand. Avenches' amphitheatre, built in the 2nd century and later enlarged to that capacity, is one of the best-preserved in Switzerland. The traitor hid his message in the very numbers of this monument. Enter the arena and count.",
       question:"On the covered terrace of the Roman museum, right next to the amphitheatre, a panel displays the monument's official restoration plan: a diagram seen from above, dividing the amphitheatre into several numbered zones. Find the number assigned to the covered terrace where you're standing. Enter that number.",
       hints:[{text:"Look for the restoration panel on the covered terrace of the Roman museum, next to the amphitheatre, posted at eye level, near the terrace entrance.",cost:20},{text:"The plan divides the amphitheatre into 8 numbered zones, each covering a different section of the monument. Find the one matching where you're reading the panel.",cost:40},{text:"The covered terrace corresponds to zone 6, as written on the panel.",cost:80}]},
-    de:{ nav:{title:'Römisches Amphitheater',desc:"Das römische Amphitheater befindet sich am östlichen Stadteingang.",address:'Rue du Clos 6, 1580 Avenches',distance:'~400 m von Rue des Alpes',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880776,7.042174'},
+    de:{ nav:{title:'Römisches Amphitheater',desc:"Das römische Amphitheater befindet sich am östlichen Stadteingang.",address:'Avenue Jomini, 1580 Avenches',distance:'~{m} m vom Ende der Rue des Alpes',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880776,7.042174'},
       narrative:"Vierzehntausend Zuschauer, Gladiatoren, Blut auf dem Sand. Das Amphitheater von Avenches, im 2. Jahrhundert erbaut und später auf diese Kapazität erweitert, ist eines der besterhaltenen der Schweiz. Der Verräter versteckte seine Nachricht in den Zahlen dieses Monuments. Betretet die Arena und zählt.",
       question:"Auf der überdachten Terrasse des Römermuseums, direkt neben dem Amphitheater, zeigt ein Schild den offiziellen Restaurierungsplan des Monuments: ein Schema von oben, das das Amphitheater in mehrere nummerierte Zonen unterteilt. Findet auf diesem Plan die Nummer der überdachten Terrasse, auf der ihr steht. Gebt diese Nummer ein.",
       hints:[{text:"Sucht das Restaurierungsschild auf der überdachten Terrasse des Römermuseums neben dem Amphitheater, auf Augenhöhe, nahe dem Terrasseneingang.",cost:20},{text:"Der Plan teilt das Amphitheater in 8 nummerierte Zonen ein, jede deckt einen anderen Abschnitt des Monuments. Findet jene, die zu eurem Standort auf der Terrasse passt.",cost:40},{text:"Die überdachte Terrasse entspricht Zone 6, wie auf dem Schild steht.",cost:80}]}
   },
   // ─── ÉNIGME 5 SANCTUAIRE DU CIGOGNIER ─────────────────────────────────
   { id:5, step:'V', fragment:'E', clue:'MARC-AURÈLE', answers:['MARC AURELE','MARC-AURELE','MARC AURÈLE','MARC-AURÈLE','MARCUS AURELIUS','MARCUS AURELIUS ANTONINUS','MARK AUREL','MARCUS AUREL'],
-    fr:{ nav:{title:'Sanctuaire du Cigognier',desc:"La colonne solitaire de 12 mètres est visible depuis la route.",address:'Chemin du Cigognier, 1580 Avenches',distance:'~600 m des arènes',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.881942,7.046134'},
+    fr:{ nav:{title:'Sanctuaire du Cigognier',desc:"La colonne solitaire de 12 mètres est visible depuis la route.",address:'Chemin des Conches, 1580 Avenches',distance:'~{m} m des arènes',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.881942,7.046134'},
       narrative:"Tu es au cœur du plus grand sanctuaire d'Aventicum. En 1939, dans un égout romain sous ces pierres, des ouvriers ont mis au jour le trésor le plus précieux de Suisse romaine : un buste en or d'Empereur. Le traître sait que l'aquila mérite d'être cachée près d'ici. Mais d'abord : qui est cet Empereur ?",
       question:"En 1939, un buste en or d'Empereur fut découvert dans les égouts de ce sanctuaire, le trésor le plus précieux de Suisse romaine. Cet Empereur régna de 161 à 180 apr. J.-C., guerrier et philosophe, auteur des Pensées encore lues aujourd'hui. Qui est-il ? Entre son nom en majuscules.",
       hints:[{text:"Cet Empereur était aussi philosophe stoïcien, rare pour un chef de guerre romain. Ses Pensées sont un journal intime écrit sur les campagnes militaires. Son livre est encore imprimé aujourd'hui.",cost:20},{text:"Son prénom est Marc. Son surnom latin vient de aureus, \"doré\". Deux mots. Le second mot signifie littéralement \"le doré\" ou \"celui qui brille comme l'or\".",cost:40},{text:"La réponse est MARC AURELE.",cost:80}]},
-    en:{ nav:{title:'Cigognier Sanctuary',desc:"The solitary 12-metre column is visible from the road.",address:'Chemin du Cigognier, 1580 Avenches',distance:'~600 m from the arena',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.881942,7.046134'},
+    en:{ nav:{title:'Cigognier Sanctuary',desc:"The solitary 12-metre column is visible from the road.",address:'Chemin des Conches, 1580 Avenches',distance:'~{m} m from the arena',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.881942,7.046134'},
       narrative:"You are at the heart of Aventicum's greatest sanctuary. In 1939, workers unearthed the most precious treasure of Roman Switzerland in a sewer beneath these stones: a golden Emperor's bust. The traitor knows the aquila deserves to be hidden near this place. But first: who is this Emperor?",
       question:"In 1939, a golden Emperor's bust was found in the sewers of this sanctuary, the greatest treasure of Roman Switzerland. He reigned from 161 to 180 AD, both warrior and philosopher, author of the Meditations. Who is he? Enter his name in capital letters.",
       hints:[{text:"This Emperor was also a Stoic philosopher, rare for a Roman warlord. His Meditations are a private journal written during military campaigns. His book is still printed today.",cost:20},{text:"His first name is Marcus. His Latin surname comes from aureus, \"golden.\" Two words. The second literally means \"the golden one,\" or \"he who shines like gold.\"",cost:40},{text:"The answer is MARCUS AURELIUS.",cost:80}]},
-    de:{ nav:{title:'Cigognier-Heiligtum',desc:"Die einsame 12-Meter-Säule ist von der Strasse aus sichtbar.",address:'Chemin du Cigognier, 1580 Avenches',distance:'~600 m vom Amphitheater',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.881942,7.046134'},
+    de:{ nav:{title:'Cigognier-Heiligtum',desc:"Die einsame 12-Meter-Säule ist von der Strasse aus sichtbar.",address:'Chemin des Conches, 1580 Avenches',distance:'~{m} m vom Amphitheater',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.881942,7.046134'},
       narrative:"Ihr seid im Herzen des grössten Heiligtums von Aventicum. 1939 entdeckten Arbeiter den kostbarsten Schatz der römischen Schweiz in einem Abwasserkanal unter diesen Steinen: eine goldene Kaiserbüste. Der Verräter weiss, dass die Aquila in der Nähe dieses Ortes versteckt werden sollte. Aber zuerst: wer ist dieser Kaiser?",
       question:"1939 wurde eine goldene Kaiserbüste in den Abwasserkanälen dieses Heiligtums entdeckt, der grösste Schatz der römischen Schweiz. Dieser Kaiser herrschte von 161 bis 180 n. Chr., Krieger und Philosoph zugleich, Autor der Selbstbetrachtungen. Wer ist er? Gebt seinen Namen in Grossbuchstaben ein.",
       hints:[{text:"Dieser Kaiser war auch stoischer Philosoph, selten für einen römischen Kriegsherrn. Seine Selbstbetrachtungen sind ein privates Tagebuch, geschrieben während seiner Feldzüge. Sein Buch wird noch heute gedruckt.",cost:20},{text:"Sein Vorname ist Marcus. Sein lateinischer Beiname kommt von aureus, \"golden\". Zwei Wörter. Das zweite bedeutet wörtlich \"der Goldene\" oder \"der wie Gold Glänzende\".",cost:40},{text:"Die Antwort ist MARK AUREL.",cost:80}]}
   },
   // ─── ÉNIGME 6 THÉÂTRE DU SELLEY (Claude Vision API) ───────────────────
   { id:6, step:'VI', fragment:'T', clue:'CARTOUCHE-1902', type:'text', answers:['1902'], groupMission:{fr:'Cherchez ensemble le cartouche gravé dans la pierre. Il faut deux paires d\'yeux pour le repérer.',en:'Search together for the cartouche carved in the stone. It takes two pairs of eyes to spot it.',de:'Sucht gemeinsam das in den Stein gemeisselte Kartuschenfeld. Vier Augen sehen mehr als zwei.'},
-    fr:{ nav:{title:'Théâtre du Selley',desc:"Le théâtre romain du Selley est visible depuis la route cantonale.",address:'Chemin du Selley, 1580 Avenches',distance:'~300 m du Cigognier',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880602,7.048768'},
+    fr:{ nav:{title:'Théâtre du Selley',desc:"Le théâtre romain du Selley est visible depuis la route cantonale.",address:'Chemin du Selley, 1580 Avenches',distance:'~{m} m du Cigognier',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880602,7.048768'},
       narrative:"Le plus grand théâtre romain de Suisse : onze mille spectateurs. Deux mille ans plus tard, des restaurateurs sont venus sauver ce qui restait et ont signé leur travail dans la pierre. Parmi des centaines de blocs, ils ont gravé un cartouche octogonal : une initiale, une date. C'est l'indice le plus discret du parcours.",
       question:"Un cartouche octogonal a été sculpté dans la maçonnerie basse de la cavea. Il porte une initiale et une date à 4 chiffres. Cherche-le dans les gradins, à hauteur de genou ou de taille, petit, discret, en pierre calcaire. L'année gravée est ton code. Entre les 4 chiffres.",
       hints:[{text:"Cherche un bloc de calcaire avec un encadrement sculpté à 8 côtés (un octogone) encastré dans la maçonnerie basse des gradins. Il n'est pas en hauteur : il est à portée de main.",cost:20},{text:"Une seule lettre, initiale du mot Restauration, précède quatre chiffres. Ces chiffres désignent une année du tout début du XXe siècle.",cost:40},{text:"Le code est 1902.",cost:0}]},
-    en:{ nav:{title:'Selley Theatre',desc:"The Roman Selley theatre is visible from the cantonal road.",address:'Chemin du Selley, 1580 Avenches',distance:'~300 m from the Cigognier',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880602,7.048768'},
+    en:{ nav:{title:'Selley Theatre',desc:"The Roman Selley theatre is visible from the cantonal road.",address:'Chemin du Selley, 1580 Avenches',distance:'~{m} m from the Cigognier',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880602,7.048768'},
       narrative:"The greatest Roman theatre in Switzerland: eleven thousand spectators. Two thousand years later, restorers came to save what remained and signed their work in stone. Among hundreds of blocks, they carved an octagonal cartouche: an initial, a date. It is the most discreet clue of the entire course.",
       question:"An octagonal cartouche was carved into the lower masonry of the cavea, bearing an initial and a 4-digit year. Find it in the seating tiers, small, discreet, at knee or waist height. The engraved year is your code. Enter the 4 digits.",
       hints:[{text:"Look for a limestone block with an 8-sided carved frame (an octagon) set into the low masonry of the seating tiers. It is not high up: it is within arm's reach.",cost:20},{text:"A single letter, initial of the word Restauration, precedes four digits. These digits designate a year from the very beginning of the 20th century.",cost:40},{text:"The code is 1902.",cost:0}]},
-    de:{ nav:{title:'Selley-Theater',desc:"Das römische Selley-Theater ist von der Kantonsstrasse aus sichtbar.",address:'Chemin du Selley, 1580 Avenches',distance:'~300 m vom Cigognier',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880602,7.048768'},
+    de:{ nav:{title:'Selley-Theater',desc:"Das römische Selley-Theater ist von der Kantonsstrasse aus sichtbar.",address:'Chemin du Selley, 1580 Avenches',distance:'~{m} m vom Cigognier',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880602,7.048768'},
       narrative:"Das grösste römische Theater der Schweiz: elftausend Zuschauer. Zweitausend Jahre später kamen Restauratoren, um das Verbliebene zu retten, und signierten ihre Arbeit im Stein. Unter Hunderten von Blöcken meisselten sie ein achteckiges Cartouche: einen Anfangsbuchstaben, eine Jahreszahl. Es ist der diskreteste Hinweis des gesamten Kurses.",
       question:"Ein achteckiges Cartouche wurde in das untere Mauerwerk der Cavea gemeisselt, mit einem Anfangsbuchstaben und einer vierstelligen Jahreszahl. Findet es in den Sitzreihen, klein, diskret, auf Knie- oder Taillenhöhe. Die eingravierte Jahreszahl ist euer Code. Gebt die 4 Ziffern ein.",
       hints:[{text:"Sucht nach einem Kalksteinblock mit einem 8-seitigen gemeisselten Rahmen (ein Achteck) im niedrigen Mauerwerk der Sitzreihen. Es ist nicht hoch oben: es ist in Reichweite.",cost:20},{text:"Ein einziger Buchstabe, Anfang des Wortes Restauration, steht vor vier Ziffern. Diese Ziffern bezeichnen ein Jahr vom ganz Anfang des 20. Jahrhunderts.",cost:40},{text:"Der Code ist 1902.",cost:0}]}
   },
   // ─── ÉNIGME 7 THERMES DU FORUM (TTS + STT) ────────────────────────────
   { id:7, step:'VII', fragment:'I', clue:'HYPOCAUSTE', type:'text', answers:['HYPOCAUSTE','HYPOCAUST','HYPOKAUST','HYPOCAUSTUM','HYPOKAUSTE','IPOCAUSTE'],
-    fr:{ nav:{title:'Thermes du Forum',desc:"Les fondations des thermes romains sont visibles depuis la rue principale.",address:'Place du Bourg, 1580 Avenches',distance:'~700 m du Cigognier',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.885937,7.050096'},
+    fr:{ nav:{title:'Thermes du Forum',desc:"Les fondations des thermes romains sont visibles depuis la rue principale.",address:'Route de Berne, 1580 Avenches',distance:'~{m} m du Théâtre du Selley',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.885937,7.050096'},
       narrative:"Devant toi s'étend le sous-sol des bains publics d'Aventicum. Des centaines de petits piliers de brique soutiennent le plancher disparu où les Romains vivaient et débattaient. L'air chaud y circulait : c'était le cœur technique de la vie sociale romaine. Le traître connaît ce mécanisme par cœur. C'est ton tour de le découvrir.",
       question:"Ce sous-sol des thermes cache un système de chauffage romain. Ses centaines de petits piliers, appelés pilae, soutenaient un plancher sous lequel circulait l'air chaud. Quel est le nom de ce système de chauffage par le sol dans son ensemble ? Entre ta réponse en majuscules.",
       hints:[{text:"Regarde la forme exacte des petites colonnes devant toi : des briques carrées ou des disques de terre cuite, empilés les uns sur les autres comme des piles de jetons, assez bas pour qu'on puisse les enjamber. Chaque pilier individuel porte un nom latin précis, pas le nom du système entier.",cost:20},{text:"Chaque pilier s'appelle un pila (au pluriel : pilae, du latin « pieu »). Ensemble, ces pilae soutenaient un plancher surélevé sous lequel circulait l'air chaud d'un foyer (praefurnium) : c'est ce système entier de chauffage par le sol qu'il faut nommer.",cost:40},{text:"La réponse est HYPOCAUSTE.",cost:0}]},
-    en:{ nav:{title:'Forum Baths',desc:"The foundations of the Roman baths are visible from the main street.",address:'Place du Bourg, 1580 Avenches',distance:'~700 m from the Cigognier',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.885937,7.050096'},
+    en:{ nav:{title:'Forum Baths',desc:"The foundations of the Roman baths are visible from the main street.",address:'Route de Berne, 1580 Avenches',distance:'~{m} m from the Selley Theatre',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.885937,7.050096'},
       narrative:"Before you stretches the underfloor of Aventicum's public baths. Hundreds of small brick pillars support the vanished floor where Romans bathed and debated. Hot air circulated here: this was the technical heart of Roman social life. The traitor knows this mechanism by heart. Now it is your turn to discover it.",
       question:"This underfloor area of the baths hides a Roman heating system. Its hundreds of small pillars, called pilae, held up a raised floor under which hot air circulated. What is the name of this underfloor heating system as a whole? Enter your answer in capital letters.",
       hints:[{text:"Look closely at the shape of the small columns in front of you: square bricks or terracotta discs, stacked like piles of coins, low enough to step over. Each individual pillar had its own precise Latin name, not the name of the whole system.",cost:20},{text:"Each pillar is called a pila (plural: pilae, Latin for \"stake\"). Together, these pilae held up a raised floor, under which hot air from a furnace (praefurnium) circulated: that whole underfloor heating system is what you need to name.",cost:40},{text:"The answer is HYPOCAUST.",cost:0}]},
-    de:{ nav:{title:'Forumthermen',desc:"Die Fundamente der römischen Thermen sind von der Hauptstrasse aus sichtbar.",address:'Place du Bourg, 1580 Avenches',distance:'~700 m vom Cigognier',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.885937,7.050096'},
+    de:{ nav:{title:'Forumthermen',desc:"Die Fundamente der römischen Thermen sind von der Hauptstrasse aus sichtbar.",address:'Route de Berne, 1580 Avenches',distance:'~{m} m vom Selley-Theater',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.885937,7.050096'},
       narrative:"Vor euch erstreckt sich der Unterboden der öffentlichen Bäder von Aventicum. Hunderte kleiner Ziegelsteinpfeiler stützen den verschwundenen Fussboden, auf dem die Römer lebten und badeten. Heissluft zirkulierte hier: das war das technische Herz des römischen Soziallebens. Der Verräter kennt diesen Mechanismus auswendig. Jetzt seid ihr an der Reihe, ihn zu entdecken.",
       question:"Dieser Unterboden der Thermen verbirgt ein römisches Heizsystem. Die hunderten kleinen Pfeiler, pilae genannt, trugen einen erhöhten Boden, unter dem heisse Luft zirkulierte. Wie heisst dieses Fussbodenheizungssystem insgesamt? Gebt eure Antwort in Grossbuchstaben ein.",
       hints:[{text:"Betrachtet genau die Form der kleinen Säulen vor euch: quadratische Ziegel oder Terrakotta-Scheiben, aufeinandergestapelt wie Münztürme, niedrig genug, um darüber zu steigen. Jeder einzelne Pfeiler hatte einen eigenen lateinischen Namen, nicht den Namen des ganzen Systems.",cost:20},{text:"Jeder Pfeiler heisst pila (Mehrzahl: pilae, lateinisch für „Pfahl“). Zusammen trugen diese pilae einen erhöhten Boden, unter dem heisse Luft aus einem Ofen (Praefurnium) zirkulierte: genau dieses Fussbodenheizungssystem müsst ihr benennen.",cost:40},{text:"Die Antwort ist HYPOKAUST.",cost:0}]}
   },
   // ─── ÉNIGME 8 PORTE DE L'EST (Vision panoramique + Serment vocal) ──────
   { id:8, step:'VIII', fragment:'I', clue:'AQUILA', type:'text', answers:['AVENTICUM','AVENTICVM','AVENTUCUM','AVANTICUM'],
-    fr:{ nav:{title:"Porte de l'Est",desc:"La porte romaine monumentale se trouve sur le côté est du mur d'enceinte.",address:"Chemin de la Porte de l'Est, 1580 Avenches",distance:'~1 km des thermes',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.887844,7.058160'},
+    fr:{ nav:{title:"Porte de l'Est",desc:"La porte romaine monumentale se trouve sur le côté est du mur d'enceinte.",address:"Route de Berne, 1580 Avenches",distance:'~{m} m des thermes',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.887844,7.058160'},
       narrative:"Tu es aux portes de l'Empire. La Porte de l'Est gardait l'entrée principale d'Aventicum, construite sous Vespasien vers l'an 72. C'est ici que le traître a caché l'aquila, convaincu que tu n'irais jamais jusqu'au bout. Il s'est trompé.",
       question:"À la Porte de l'Est, une dernière question referme ta quête : quel est le nom latin de cette cité, capitale du peuple helvète, que tu as parcourue tout au long de cette enquête ? Entre-le en majuscules.",
       hints:[{text:"Cherche le panneau officiel d'information sur ou à côté de la Porte de l'Est : le nom de la cité y est indiqué. Si ce panneau est inaccessible (travaux en cours), passe directement à l'indice suivant : tu n'en as pas besoin pour continuer.",cost:20},{text:"C'est le nom que tu as lu et entendu à chaque étape de ce parcours, sur les panneaux et dans le récit du traître. Il commence par A.",cost:40},{text:"La réponse est AVENTICUM.",cost:0}]},
-    en:{ nav:{title:"East Gate",desc:"The monumental Roman gate is on the east side of the city wall.",address:"Chemin de la Porte de l'Est, 1580 Avenches",distance:'~1 km from the baths',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.887844,7.058160'},
+    en:{ nav:{title:"East Gate",desc:"The monumental Roman gate is on the east side of the city wall.",address:"Route de Berne, 1580 Avenches",distance:'~{m} m from the baths',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.887844,7.058160'},
       narrative:"You are at the gates of the Empire. The East Gate guarded Aventicum's main entrance, built under Vespasian around AD 72. This is where the traitor hid the aquila, convinced you would never come this far. He was wrong.",
       question:"At the East Gate, one last question closes your quest: what is the Latin name of this city, capital of the Helvetii people, that you have walked through this whole adventure? Enter it in capital letters.",
       hints:[{text:"Look for the official information panel on or next to the East Gate: the city's name is written there. If the panel is inaccessible (ongoing restoration work), skip straight to the next hint: you don't need it to continue.",cost:20},{text:"It's the name you've read and heard at every stop of this quest, on the panels and in the traitor's story. It starts with A.",cost:40},{text:"The answer is AVENTICUM.",cost:0}]},
-    de:{ nav:{title:"Osttor",desc:"Das monumentale römische Tor befindet sich auf der Ostseite der Stadtmauer.",address:"Chemin de la Porte de l'Est, 1580 Avenches",distance:'~1 km von den Thermen',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.887844,7.058160'},
+    de:{ nav:{title:"Osttor",desc:"Das monumentale römische Tor befindet sich auf der Ostseite der Stadtmauer.",address:"Route de Berne, 1580 Avenches",distance:'~{m} m von den Thermen',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.887844,7.058160'},
       narrative:"Ihr seid an den Toren des Imperiums. Das Osttor bewachte den Haupteingang von Aventicum, unter Vespasian um 72 n. Chr. erbaut. Hier versteckte der Verräter die Aquila, überzeugt, dass ihr nie so weit kommen würdet. Er irrte sich.",
       question:"Am Osttor schliesst sich eine letzte Frage: Wie lautet der lateinische Name dieser Stadt, Hauptstadt des helvetischen Volkes, die ihr während dieser ganzen Suche durchquert habt? Gebt ihn in Grossbuchstaben ein.",
       hints:[{text:"Sucht nach der offiziellen Informationstafel am oder neben dem Osttor: der Stadtname steht dort. Ist die Tafel nicht zugänglich (laufende Restaurierungsarbeiten), geht direkt zum nächsten Hinweis weiter, ihr braucht sie nicht, um fortzufahren.",cost:20},{text:"Es ist der Name, den ihr bei jeder Station dieser Suche gelesen und gehört habt, auf den Tafeln und in der Geschichte des Verräters. Er beginnt mit A.",cost:40},{text:"Die Antwort ist AVENTICUM.",cost:0}]}
@@ -2932,6 +2931,16 @@ function routeLengthM(coords){
   let m=0;for(let i=1;i<coords.length;i++)m+=haversineM(coords[i-1],coords[i]);return m;
 }
 function roundTo10(m){ return Math.round(m/10)*10; }
+/* Distance affichée sur la fiche d'une station : le modèle {m} (trajet depuis la station précédente) et
+   {s} (longueur du tronçon) est rempli depuis les tracés précalculés, arrondi à 10 m. Sans tracé fiable,
+   la ligne n'est pas affichée (jamais de chiffre écrit à la main). */
+function navDistance(idx){
+  const raw = ENIGMAS[idx][currentLang].nav.distance || '';
+  if(raw.indexOf('{')===-1) return raw;
+  const leg = routeFor(idx), seg = (PRECOMPUTED_ROUTES.segments||{})[idx];
+  if((raw.indexOf('{m}')!==-1 && !leg) || (raw.indexOf('{s}')!==-1 && !(seg && seg.length>1))) return '';
+  return raw.replace('{m}', leg ? roundTo10(routeLengthM(leg)) : '').replace('{s}', seg ? roundTo10(routeLengthM(seg)) : '');
+}
 /* ══════ STATE ══════ */
 const N_ENIGMAS = 8;
 const G = {
@@ -3252,58 +3261,71 @@ async function submitCode(){
 
 /* ══════ TRANSITION NARRATIVE ══════ */
 const TRANSITION_MSGS = {
+  /* Textes de trajet. {d} = distance du tracé précalculé vers la station (arrondie à 10 m), {s} = longueur du
+     tronçon de la Rue des Alpes : remplacés par transitionText(). Aucune distance n'est écrite à la main.
+     Les caps (nord, sud-est...) viennent du tracé ; les noms de rue sont ceux d'OpenStreetMap le long du tracé
+     (Rue Centrale, Rue des Alpes, Avenue Jomini, Route du Faubourg, Chemin du Selley). Pas d'instruction
+     « à gauche / à droite » : elles ne sont pas vérifiables. */
   fr: [
-    // 0→1 : Hôtel de Ville → Tour de Benneville (~30m)
-    "Quittez la façade de l'Hôtel de Ville et remontez la Grand-Rue vers le nord sur une trentaine de mètres. Tournez à gauche dans le Passage de Benneville. La tour médiévale se dresse devant vous. Le voleur a gravé quelque chose sur sa pierre...",
-    // 1→2 : Tour de Benneville → Rue des Alpes (~50m)
-    "Revenez sur la Grand-Rue et descendez vers le sud jusqu'à la Rue des Alpes. En longeant cette rue, scrutez attentivement les façades des bâtiments de chaque côté. Le voleur a observé deux emblèmes cachés en pleine vue. Arrêtez-vous et levez les yeux.",
-    // 2→3 : Rue des Alpes → Amphithéâtre (~250m)
-    "Remontez la Rue des Alpes vers le nord, puis tournez à droite sur la Route d'Avenches. Après 200 mètres, l'Amphithéâtre romain apparaît sur votre gauche, au pied du château. Vous ne pouvez pas le manquer : ses murs de pierre antique percent la végétation.",
-    // 3→4 : Amphithéâtre → Cigognier (~500m)
-    "Depuis l'Amphithéâtre, prenez la direction de l'est en suivant l'Avenue Jomini. Après 400 mètres, tournez à droite sur la Rue de Berne. À l'intersection, une colonne solitaire de 12 mètres se dresse dans les champs : c'est le Sanctuaire du Cigognier. On la voit de loin.",
-    // 4→5 : Cigognier → Théâtre du Selley (~300m)
-    "Le Théâtre du Selley est en face du sanctuaire, de l'autre côté de la Rue de Berne. Traversez la route et prenez le Chemin du Selley sur votre droite. En 200 mètres, les gradins de pierre du théâtre romain se dévoilent dans le paysage. Le théâtre et le Cigognier formaient un seul ensemble sacré.",
-    // 5→6 : Théâtre → Thermes du Forum (~600m)
-    "Quittez le théâtre et remontez le Chemin du Selley vers le nord. Continuez tout droit sur 500 mètres en longeant les champs. Les Thermes du Forum se trouvent le long de cette route ; guettez les murs romains partiellement cachés par la végétation sur votre gauche. Le voleur s'y est réchauffé.",
-    // 6→7 : Thermes → Porte de l'Est (~900m)
-    "Ultime déplacement, speculator. Depuis les thermes, poursuivez vers l'est sur le Chemin du Selley pendant 800 mètres. La route longe l'ancienne enceinte romaine. La Porte de l'Est se révèle au bout du chemin, avec sa tour Tornallaz qui se dresse comme un dernier rempart. L'aquila est toute proche."
+    // 0→1 : place de l'Église → Tour de Benneville
+    "Quittez la place de l'Église et dirigez-vous vers le sud-est, en suivant la Rue Centrale. La tour médiévale se trouve à {d}. Le voleur a gravé quelque chose sur sa pierre...",
+    // 1→2 : Tour de Benneville → début de la Rue des Alpes
+    "La Rue des Alpes commence à {d}, vers le nord. Parcourez-la d'un bout à l'autre, en direction du nord-est : {s} à pied. En chemin, scrutez attentivement les façades des bâtiments de chaque côté. Le voleur a observé deux emblèmes cachés en pleine vue. Arrêtez-vous et levez les yeux.",
+    // 2→3 : fin de la Rue des Alpes → Amphithéâtre
+    "Au bout de la Rue des Alpes, rejoignez la Rue Centrale et poursuivez vers le nord-est : l'amphithéâtre romain se trouve à {d}, près du château. Vous ne pouvez pas le manquer : ses murs de pierre antique percent la végétation.",
+    // 3→4 : Amphithéâtre → Cigognier
+    "Depuis l'amphithéâtre, prenez la direction de l'est, par l'Avenue Jomini puis la Route du Faubourg. Le Sanctuaire du Cigognier se trouve à {d} : une colonne solitaire de 12 mètres se dresse dans les champs. On la voit de loin.",
+    // 4→5 : Cigognier → Théâtre du Selley
+    "Le Théâtre du Selley se trouve à {d}, vers le sud-est du sanctuaire. Les gradins de pierre du théâtre romain se dévoilent dans le paysage. Le théâtre et le Cigognier formaient un seul ensemble sacré.",
+    // 5→6 : Théâtre → Thermes du Forum
+    "Quittez le théâtre et prenez la direction du nord, par le Chemin du Selley. Les Thermes du Forum se trouvent à {d}. Guettez les murs romains partiellement cachés par la végétation. Le voleur s'y est réchauffé.",
+    // 6→7 : Thermes → Porte de l'Est
+    "Ultime déplacement, speculator. Depuis les thermes, prenez la direction de l'est : la Porte de l'Est se trouve à {d}. Elle se révèle au bout du chemin, avec sa tour Tornallaz qui se dresse comme un dernier rempart. L'aquila est toute proche."
   ],
   en: [
     // 0→1
-    "Leave the Town Hall façade and head north along Grand-Rue for about thirty metres. Turn left into Passage de Benneville. The medieval tower rises before you. The thief carved something into its stone...",
+    "Leave the church square and head south-east along Rue Centrale. The medieval tower is {d} away. The thief carved something into its stone...",
     // 1→2
-    "Return to Grand-Rue and head south to Rue des Alpes. As you walk along this street, scrutinize the building façades carefully on both sides. The thief observed two emblems hidden in plain sight. Stop and look up.",
+    "Rue des Alpes begins {d} away, to the north. Walk it from one end to the other, heading north-east: {s} on foot. As you go, scrutinize the building facades carefully on both sides. The thief observed two emblems hidden in plain sight. Stop and look up.",
     // 2→3
-    "Head north along Rue des Alpes, then turn right onto Route d'Avenches. After 200 metres, the Roman Amphitheatre appears on your left, at the foot of the castle. You cannot miss it: its ancient stone walls pierce through the vegetation.",
+    "At the end of Rue des Alpes, join Rue Centrale and keep heading north-east: the Roman Amphitheatre is {d} away, near the castle. You cannot miss it: its ancient stone walls pierce through the vegetation.",
     // 3→4
-    "From the Amphitheatre, head east along Avenue Jomini. After 400 metres, turn right onto Rue de Berne. At the intersection, a solitary 12-metre column stands in the fields: that is the Cigognier Sanctuary. It is visible from afar.",
+    "From the Amphitheatre, head east along Avenue Jomini, then Route du Faubourg. The Cigognier Sanctuary is {d} away: a solitary 12-metre column stands in the fields. It is visible from afar.",
     // 4→5
-    "The Selley Theatre is directly across from the sanctuary, on the other side of Rue de Berne. Cross the road and take Chemin du Selley on your right. Within 200 metres, the stone tiers of the Roman theatre reveal themselves in the landscape. The theatre and the Cigognier once formed a single sacred complex.",
+    "The Selley Theatre is {d} away, to the south-east of the sanctuary. The stone tiers of the Roman theatre reveal themselves in the landscape. The theatre and the Cigognier once formed a single sacred complex.",
     // 5→6
-    "Leave the theatre and head north along Chemin du Selley. Continue straight for 500 metres along the fields. The Forum Baths lie along this road. Watch for Roman walls partially hidden by vegetation on your left. The thief warmed himself here.",
+    "Leave the theatre and head north along Chemin du Selley. The Forum Baths are {d} away. Watch for Roman walls partially hidden by vegetation. The thief warmed himself here.",
     // 6→7
-    "Final march, speculator. From the baths, continue east along Chemin du Selley for 800 metres. The road follows the old Roman rampart wall. The East Gate reveals itself at the end of the path, with the Tornallaz tower rising as a final sentinel. The aquila is very close."
+    "Final march, speculator. From the baths, head east: the East Gate is {d} away. It reveals itself at the end of the path, with the Tornallaz tower rising as a final sentinel. The aquila is very close."
   ],
   de: [
     // 0→1
-    "Verlasst die Fassade des Rathauses und geht etwa dreissig Meter nach Norden entlang der Grand-Rue. Biegt links in den Passage de Benneville ein. Der mittelalterliche Turm erhebt sich vor euch. Der Dieb hat etwas in seinen Stein geritzt...",
+    "Verlasst den Kirchplatz und geht nach Südosten, der Rue Centrale entlang. Der mittelalterliche Turm ist {d} entfernt. Der Dieb hat etwas in seinen Stein geritzt...",
     // 1→2
-    "Kehrt zur Grand-Rue zurück und geht nach Süden zur Rue des Alpes. Während ihr diese Strasse entlanggeht, untersucht die Fassaden der Gebäude auf beiden Seiten. Der Dieb hat zwei Embleme beobachtet, die offen sichtbar versteckt sind. Haltet an und schaut hoch.",
+    "Die Rue des Alpes beginnt {d} entfernt, im Norden. Geht sie von einem Ende zum anderen ab, in Richtung Nordosten: {s} zu Fuss. Untersucht dabei die Fassaden der Gebäude auf beiden Seiten. Der Dieb hat zwei Embleme beobachtet, die offen sichtbar versteckt sind. Haltet an und schaut hoch.",
     // 2→3
-    "Geht nach Norden entlang der Rue des Alpes, dann rechts auf die Route d'Avenches. Nach 200 Metern erscheint das römische Amphitheater auf eurer linken Seite, am Fuss des Schlosses. Ihr könnt es nicht verfehlen: seine antiken Steinmauern durchbrechen die Vegetation.",
+    "Am Ende der Rue des Alpes geht ihr auf die Rue Centrale und weiter nach Nordosten: Das römische Amphitheater ist {d} entfernt, in der Nähe des Schlosses. Ihr könnt es nicht verfehlen: seine antiken Steinmauern durchbrechen die Vegetation.",
     // 3→4
-    "Vom Amphitheater aus geht nach Osten entlang der Avenue Jomini. Nach 400 Metern rechts auf die Rue de Berne abbiegen. An der Kreuzung erhebt sich eine einsame 12-Meter-Säule in den Feldern: das ist das Cigognier-Heiligtum. Sie ist von weitem sichtbar.",
+    "Vom Amphitheater aus geht ihr nach Osten, über die Avenue Jomini und dann die Route du Faubourg. Das Cigognier-Heiligtum ist {d} entfernt: Eine einsame 12-Meter-Säule steht in den Feldern. Sie ist von weitem sichtbar.",
     // 4→5
-    "Das Selley-Theater liegt direkt gegenüber dem Heiligtum, auf der anderen Seite der Rue de Berne. Überquert die Strasse und nehmt rechts den Chemin du Selley. Nach 200 Metern enthüllen sich die Steinstufen des römischen Theaters in der Landschaft. Theater und Cigognier bildeten einst ein heiliges Ensemble.",
+    "Das Selley-Theater ist {d} entfernt, im Südosten des Heiligtums. Die Steinstufen des römischen Theaters enthüllen sich in der Landschaft. Theater und Cigognier bildeten einst ein heiliges Ensemble.",
     // 5→6
-    "Verlasst das Theater und geht nach Norden entlang des Chemin du Selley. Weiter geradeaus für 500 Meter entlang der Felder. Die Forum-Thermen liegen entlang dieser Strasse. Achtet auf die römischen Mauern, die teilweise von der Vegetation verborgen sind, auf eurer linken Seite.",
+    "Verlasst das Theater und geht nach Norden, dem Chemin du Selley entlang. Die Forum-Thermen sind {d} entfernt. Achtet auf die römischen Mauern, die teilweise von der Vegetation verborgen sind. Der Dieb hat sich hier aufgewärmt.",
     // 6→7
-    "Letzter Marsch, Speculator. Von den Thermen aus weiter nach Osten entlang des Chemin du Selley für 800 Meter. Der Weg folgt der alten römischen Stadtmauer. Das Osttor enthüllt sich am Ende des Weges, mit dem Tornallaz-Turm als letztem Wächter. Die Aquila ist ganz nah."
+    "Letzter Marsch, Speculator. Von den Thermen aus geht ihr nach Osten: Das Osttor ist {d} entfernt. Es enthüllt sich am Ende des Weges, mit dem Tornallaz-Turm als letztem Wächter. Die Aquila ist ganz nah."
   ]
 };
 
+/* Texte de trajet vers la station nextIdx, avec les distances tirées des tracés précalculés (arrondies à 10 m). */
+function transitionText(nextIdx){
+  const raw = (TRANSITION_MSGS[currentLang] || TRANSITION_MSGS.fr)[nextIdx - 1] || '';
+  const leg = routeFor(nextIdx), seg = (PRECOMPUTED_ROUTES.segments || {})[nextIdx];
+  const phrase = r => (r && r.length > 1) ? t('distAbout', roundTo10(routeLengthM(r))) : t('distFallback');
+  return raw.replace(/\{d\}/g, phrase(leg)).replace(/\{s\}/g, phrase(seg));
+}
+
 function showTransition(nextIdx, callback) {
-  const msg = TRANSITION_MSGS[currentLang][nextIdx - 1] || '';
+  const msg = transitionText(nextIdx);
   const loc = ENIGMAS[nextIdx][currentLang];
   const fromCoords = ENIGMA_END_COORDS[nextIdx - 1] || ENIGMA_COORDS[nextIdx - 1]; // fin du tronçon si la station précédente en est un
   const toCoords   = ENIGMA_COORDS[nextIdx];
@@ -3968,8 +3990,10 @@ function checkMultiStep(idx, si){
 }
 // ── End FIX 7 ──────────────────────────────────────────────────────────────
 
+function mapsUrlFor(c){ return 'https://www.google.com/maps/search/?api=1&query='+c[0].toFixed(6)+','+c[1].toFixed(6); }
 function buildEnigmaHTML(e,idx){
   const loc=e[currentLang];
+  const segEndCoords=ENIGMA_END_COORDS[idx]; // station-tronçon : un second lien pour la fin
   const enigmaType = e.type || 'text';
   const MONUMENT_IMAGES = ['#','#','#','#','#','#','#','#'];
   const imgUrl = MONUMENT_IMAGES[idx];
@@ -4069,10 +4093,11 @@ function buildEnigmaHTML(e,idx){
       <div style="margin-top:14px;padding:10px 12px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:10px">
         <div style="font-family:var(--font-mono);font-size:8px;letter-spacing:.18em;color:rgba(201,168,76,.4);margin-bottom:6px">${t('nextStepLabel')}</div>
         <div style="font-size:13px;color:rgba(250,247,240,.7);margin-bottom:4px">${loc.nav.address}</div>
-        <div style="font-size:12px;color:rgba(250,247,240,.35);margin-bottom:8px">${loc.nav.distance}</div>
+        <div style="font-size:12px;color:rgba(250,247,240,.35);margin-bottom:8px">${navDistance(idx)}</div>
         <a href="${loc.nav.mapsUrl}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;color:rgba(201,168,76,.55);text-decoration:none;background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.2);border-radius:6px;padding:5px 10px">
-          ${t('openMaps')}
+          ${segEndCoords ? t('openMaps')+' ('+t('segStart')+')' : t('openMaps')}
         </a>
+        ${segEndCoords ? '<a href="'+mapsUrlFor(segEndCoords)+'" target="_blank" rel="noopener" '+'style="display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;color:rgba(201,168,76,.55);text-decoration:none;background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.2);border-radius:6px;padding:5px 10px"'+'>'+t('openMaps')+' ('+t('segEnd')+')</a>' : ''}
         <a href="tel:+41772886252" style="margin-left:6px;display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;color:rgba(250,247,240,.25);text-decoration:none">
           ${t('supportBtn')}
         </a>
