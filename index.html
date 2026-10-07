@@ -203,7 +203,18 @@ html, body {
 /* Override Leaflet for dark theme */
 .map-block .leaflet-tile-pane { filter: brightness(0.7) saturate(0.6); }
 .map-block .leaflet-control-zoom { display: none; }
-.map-block .leaflet-control-attribution { display: none; }
+/* Attribution des cartes : obligatoire (OpenStreetMap, CARTO), donc visible et discrète */
+.map-block .leaflet-control-attribution,
+#navMap .leaflet-control-attribution {
+  display: block;
+  font-size: 9px;
+  line-height: 1.35;
+  padding: 1px 6px;
+  background: rgba(0,0,0,.6);
+  color: rgba(255,255,255,.8);
+}
+.map-block .leaflet-control-attribution a,
+#navMap .leaflet-control-attribution a { color: rgba(240,208,96,.95); }
 
 /* ── PROGRESS ROW ── */
 .prog-row {
@@ -1965,7 +1976,7 @@ html, body {
 <div id="midShareOverlay" class="midshare-overlay">
   <div class="midshare-card">
     <div class="midshare-title" id="midShareTitle">🦅 MI-PARCOURS !</div>
-    <div class="midshare-msg" id="midShareMsg">Vous avez récupéré 4 fragments sur 8. Plus que la moitié avant de retrouver l'Aquila !</div>
+    <div class="midshare-msg" id="midShareMsg">La moitié du parcours est faite.</div>
     <div class="midshare-btn-row">
       <button class="btn btn-primary" id="midShareBtn" onclick="shareMidProgress()">📤 Partager ma progression</button>
       <button class="btn" id="midShareDismiss" onclick="closeMidShare()">Continuer la mission</button>
@@ -2326,6 +2337,11 @@ html, body {
 /* ══════ LANGUAGE ══════ */
 let currentLang = 'fr';
 
+/* Vrai seulement pour localhost, 127.0.0.1, [::1] et *.localhost (jamais pour un vrai domaine). */
+function isLocalHost(h){
+  return h==='localhost' || h==='127.0.0.1' || h==='[::1]' || h==='::1' || /\.localhost$/.test(h||'');
+}
+
 const translations = {
   fr: {
     tagline: "Le Sénat d'Aventicum vous attend, soldat.",
@@ -2340,6 +2356,8 @@ const translations = {
     realTimePos: "POSITION EN TEMPS RÉEL",
     gpsOff: "Activez la localisation pour voir votre position",
     openMaps: "Ouvrir dans Google Maps",
+    segStart: "début",
+    segEnd: "fin",
     stepLabel: "ÉTAPE",
     answerPlaceholder: "Votre réponse...",
     confirmBtn: "🔱 CONFIRMER",
@@ -2382,9 +2400,9 @@ const translations = {
     shareBtn: "📤 PARTAGER MA VICTOIRE",
     shareText: (s,t) => `🦅 Mission accomplie ! J'ai terminé Aventicum Quest avec ${s} pts en équipe « ${t} » ! #AventicumQuest`,
     midShareTitle: "🦅 MI-PARCOURS !",
-    midShareMsg: "Vous avez récupéré 4 fragments sur 8. Plus que la moitié avant de retrouver l'Aquila !",
+    midShareMsg: (n) => `Vous avez récupéré ${n} fragments sur 8. La moitié du parcours est faite, l'Aquila se rapproche !`,
     midShareBtn: "📤 Partager ma progression",
-    midShareText: (t) => `⚔️ À mi-chemin sur Aventicum Quest ! Mon équipe « ${t} » a déjà récupéré 4 fragments sur 8. #AventicumQuest`,
+    midShareText: (t, n) => `⚔️ À mi-chemin sur Aventicum Quest ! Mon équipe « ${t} » a déjà récupéré ${n} fragments sur 8. #AventicumQuest`,
     midShareDismiss: "Continuer la mission",
     shareCopied: "✅ Copié ! Colle-le où tu veux.",
     ranks: [
@@ -2407,6 +2425,8 @@ const translations = {
     realTimePos: "REAL-TIME POSITION",
     gpsOff: "Enable location to see your position",
     openMaps: "Open in Google Maps",
+    segStart: "start",
+    segEnd: "end",
     stepLabel: "STEP",
     answerPlaceholder: "Your answer...",
     confirmBtn: "🔱 CONFIRM",
@@ -2449,9 +2469,9 @@ const translations = {
     shareBtn: "📤 SHARE MY VICTORY",
     shareText: (s,t) => `🦅 Mission accomplished! I completed Aventicum Quest with ${s} pts as team « ${t} »! #AventicumQuest`,
     midShareTitle: "🦅 HALFWAY THERE!",
-    midShareMsg: "You've recovered 4 of 8 fragments. Just over halfway to finding the Aquila!",
+    midShareMsg: (n) => `You have recovered ${n} of 8 fragments. Half of the route is done, the Aquila is getting closer!`,
     midShareBtn: "📤 Share my progress",
-    midShareText: (t) => `⚔️ Halfway through Aventicum Quest! My team « ${t} » has already recovered 4 of 8 fragments. #AventicumQuest`,
+    midShareText: (t, n) => `⚔️ Halfway through Aventicum Quest! My team « ${t} » has already recovered ${n} of 8 fragments. #AventicumQuest`,
     midShareDismiss: "Continue the mission",
     shareCopied: "✅ Copied! Paste it anywhere.",
     ranks: [
@@ -2474,6 +2494,8 @@ const translations = {
     realTimePos: "ECHTZEIT-POSITION",
     gpsOff: "Aktiviere die Ortung, um deine Position zu sehen",
     openMaps: "In Google Maps öffnen",
+    segStart: "Anfang",
+    segEnd: "Ende",
     stepLabel: "SCHRITT",
     answerPlaceholder: "Deine Antwort...",
     confirmBtn: "🔱 BESTÄTIGEN",
@@ -2515,9 +2537,9 @@ const translations = {
     shareBtn: "📤 SIEG TEILEN",
     shareText: (s,t) => `🦅 Mission erfüllt! Ich habe Aventicum Quest mit ${s} Pkt als Team « ${t} » abgeschlossen! #AventicumQuest`,
     midShareTitle: "🦅 AUF HALBEM WEG!",
-    midShareMsg: "Ihr habt 4 von 8 Fragmenten gefunden. Nur noch über die Hälfte, um die Aquila zu finden!",
+    midShareMsg: (n) => `Ihr habt ${n} von 8 Fragmenten gefunden. Die Hälfte des Weges ist geschafft, die Aquila rückt näher!`,
     midShareBtn: "📤 Fortschritt teilen",
-    midShareText: (t) => `⚔️ Auf halbem Weg bei Aventicum Quest! Unser Team « ${t} » hat bereits 4 von 8 Fragmenten gefunden. #AventicumQuest`,
+    midShareText: (t, n) => `⚔️ Auf halbem Weg bei Aventicum Quest! Unser Team « ${t} » hat bereits ${n} von 8 Fragmenten gefunden. #AventicumQuest`,
     midShareDismiss: "Mission fortsetzen",
     shareCopied: "✅ Kopiert! Füge es überall ein.",
     ranks: [
@@ -2530,7 +2552,7 @@ const translations = {
 };
 
 function t(key, ...args) {
-  const val = translations[currentLang][key];
+  const val = (translations[currentLang] || translations.fr)[key];
   return typeof val === 'function' ? val(...args) : (val || translations.fr[key]);
 }
 
@@ -2610,15 +2632,17 @@ function clearToken(){ try{ sessionStorage.removeItem(TOKEN_KEY); }catch(e){} }
    carte juste ferait mauvaise impression.
    ═══════════════════════════════════════════════════════════════════════ */
 const ENIGMA_COORDS = [
-  [46.87991, 7.04049],  // 0 Hôtel de Ville (Rue Centrale)
-  [46.87943, 7.04118],  // 1 Tour de Benneville (Passage de Benneville)
-  [46.87961, 7.04109],  // 2 Rue des Alpes
-  [46.88105, 7.04255],  // 3 Arènes (Amphithéâtre romain)
-  [46.88190, 7.04639],  // 4 Sanctuaire du Cigognier
-  [46.88026, 7.04876],  // 5 Théâtre du Selley
-  [46.88576, 7.04994],  // 6 Thermes du Forum
-  [46.88769, 7.05793]   // 7 Porte de l'Est
+  [46.880126, 7.040356],  // 0 Hôtel de Ville (Place de l'Église, cadran solaire)
+  [46.879440, 7.041184],  // 1 Tour de Benneville
+  [46.879617, 7.041082],  // 2 Rue des Alpes, DÉBUT du tronçon
+  [46.880776, 7.042174],  // 3 Arènes romaines (Amphithéâtre)
+  [46.881942, 7.046134],  // 4 Sanctuaire du Cigognier (la tour)
+  [46.880602, 7.048768],  // 5 Théâtre du Selley
+  [46.885937, 7.050096],  // 6 Thermes du Forum
+  [46.887844, 7.058160]   // 7 Porte de l'Est
 ];
+/* Station 3 (Rue des Alpes) est un tronçon : ENIGMA_COORDS donne son début, ENIGMA_END_COORDS sa fin. */
+const ENIGMA_END_COORDS = { 2: [46.880465, 7.041880] };  // 2 Rue des Alpes, FIN du tronçon
 
 const BRIEFING_TEXTS = {
   fr: `L'aquila est volée. L'aigle d'or de la Legio XXI Rapax, insigne sacré de la légion et symbole de l'honneur de Rome, a disparu cette nuit. Un traître, connu de nos rangs, l'a dissimulée quelque part dans Aventicum. Avant l'aube, il a semé des indices à travers la ville. L'Empereur Hadrien arrive dans cent vingt minutes. Il attend l'aigle. Pas d'excuses. Pas de retard. Tu es l'agent envoyé par le légat. Ta mission : suivre la piste du traître monument par monument, déchiffrer ses indices, et ramener l'aquila. Huit monuments. Huit fragments. Un seul code. Chaque monument te livrera une lettre. Ces huit lettres, dans le bon ordre, forment le nom que tu cherches. Si tu échoues, la légion est dissoute. Commence. Le temps presse. LEGIO XXI Rapax : l'aigle sacrée, symbole de la puissance de Rome. Dans 120 minutes, l'Empereur Hadrien foule le sol de notre cité.
@@ -2642,131 +2666,157 @@ Möge Jupiter eure Schritte leiten, [TEAM]. Aventicum zählt auf euch.`
 const ENIGMAS = [
   // ─── ÉNIGME 1 HÔTEL DE VILLE (Tête de Maure) ───────────────────────────
   { id:1, step:'I', fragment:'H', clue:'MARS', type:'qcm', qcmRequired:1, answers:['A'], qcmImages:['#','#','#'], qcmEmojis:['⚔️','🏺','⛪'], qcmLabels:{fr:["A. Parce que l'année romaine commençait en mars, mois de Mars, dieu de la guerre","B. Parce que les Romains ont supprimé deux mois pendant les guerres puniques","C. Parce que le pape Grégoire a décalé le calendrier en 1582"],en:["A. Because the Roman year began in March, the month of Mars, god of war","B. Because the Romans removed two months during the Punic Wars","C. Because Pope Gregory shifted the calendar in 1582"],de:["A. Weil das römische Jahr im März begann, dem Monat des Mars, des Kriegsgottes","B. Weil die Römer während der Punischen Kriege zwei Monate strichen","C. Weil Papst Gregor 1582 den Kalender verschob"]},
-    fr:{ nav:{title:'Hôtel de Ville',desc:"Juste en face de l'Hôtel de Ville, l'église Sainte-Madeleine porte un cadran solaire du XVIIIe siècle.",address:"Place de l'Église, 1580 Avenches",distance:'Point de départ',mapsUrl:'https://maps.google.com/?q=46.880142,7.040460'},
+    fr:{ nav:{title:'Hôtel de Ville',desc:"Juste en face de l'Hôtel de Ville, l'église Sainte-Madeleine porte un cadran solaire du XVIIIe siècle.",address:"Place de l'Église, 1580 Avenches",distance:'Point de départ',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880126,7.040356'},
       narrative:"Le traître a commencé ici, au cœur de la cité, sous les yeux de tous. Juste en face de l'Hôtel de Ville, la façade de l'église Sainte-Madeleine porte un cadran solaire du XVIIIe siècle, où l'on venait autrefois régler sa montre sur le soleil. C'est en l'observant de près que le traître a repéré une anomalie qui remonte bien plus loin que le XVIIIe siècle. Approche-toi. Observe ce que des générations ont regardé sans jamais le voir.",
       question:"Cherche le cadran solaire sur la façade de l'église, juste en face de l'Hôtel de Ville. À côté d'un des mois de l'année est gravée une abréviation étrange : « 7bre ». Ce n'est pas une erreur de gravure. Pourquoi les Romains désignaient-ils ce mois comme le « septième », alors qu'il est aujourd'hui le neuvième mois de l'année ? Sélectionne la bonne explication.",
       hints:[{text:"Le cadran solaire est gravé sur le mur de l'église Sainte-Madeleine, juste en face de l'Hôtel de Ville. Cherche les noms des mois : l'un d'eux est abrégé par un chiffre suivi de « bre ».",cost:20},{text:"« 7bre » désigne septembre. En latin, septem veut dire sept. Réfléchis à quel mois devait ouvrir l'année chez les Romains pour que septembre soit vraiment leur septième mois.",cost:40},{text:"La réponse est A : l'année romaine commençait en mars, le mois du dieu Mars.",cost:80}]},
-    en:{ nav:{title:'Town Hall',desc:"Right across from the Town Hall, the Sainte-Madeleine church bears an 18th-century sundial.",address:"Place de l'Église, 1580 Avenches",distance:'Starting point',mapsUrl:'https://maps.google.com/?q=46.880142,7.040460'},
+    en:{ nav:{title:'Town Hall',desc:"Right across from the Town Hall, the Sainte-Madeleine church bears an 18th-century sundial.",address:"Place de l'Église, 1580 Avenches",distance:'Starting point',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880126,7.040356'},
       narrative:"The traitor began here, at the heart of the city, in plain sight. Right across from the Town Hall, the façade of the Sainte-Madeleine church bears an 18th-century sundial, once used to set watches by the sun. Looking closely at it, the traitor spotted an anomaly reaching back much further than the 18th century. Come closer. Observe what generations have looked at without ever truly seeing.",
       question:"Find the sundial on the church façade, right across from the Town Hall. Next to one of the months, a strange abbreviation is carved: \"7bre\". It is not an engraving mistake. Why did the Romans call this month the \"seventh\", when it is today the ninth month of the year? Select the correct explanation.",
       hints:[{text:"The sundial is carved on the wall of the Sainte-Madeleine church, right across from the Town Hall. Look for the month names: one of them is abbreviated with a digit followed by \"bre\".",cost:20},{text:"\"7bre\" stands for September. In Latin, septem means seven. Think about which month had to open the Roman year for September to truly be their seventh month.",cost:40},{text:"The answer is A: the Roman year began in March, the month of the god Mars.",cost:80}]},
-    de:{ nav:{title:'Rathaus',desc:"Direkt gegenüber dem Rathaus trägt die Kirche Sainte-Madeleine eine Sonnenuhr aus dem 18. Jahrhundert.",address:"Place de l'Église, 1580 Avenches",distance:'Startpunkt',mapsUrl:'https://maps.google.com/?q=46.880142,7.040460'},
+    de:{ nav:{title:'Rathaus',desc:"Direkt gegenüber dem Rathaus trägt die Kirche Sainte-Madeleine eine Sonnenuhr aus dem 18. Jahrhundert.",address:"Place de l'Église, 1580 Avenches",distance:'Startpunkt',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880126,7.040356'},
       narrative:"Der Verräter begann hier, im Herzen der Stadt, für alle sichtbar. Direkt gegenüber dem Rathaus trägt die Fassade der Kirche Sainte-Madeleine eine Sonnenuhr aus dem 18. Jahrhundert, an der man einst seine Uhr nach der Sonne stellte. Bei genauer Betrachtung entdeckte der Verräter eine Anomalie, die viel weiter zurückreicht als das 18. Jahrhundert. Tretet näher. Beobachtet, was Generationen angesehen haben, ohne es je wirklich zu sehen.",
       question:"Sucht die Sonnenuhr an der Kirchenfassade, direkt gegenüber dem Rathaus. Neben einem der Monate ist eine seltsame Abkürzung eingraviert: „7bre“. Das ist kein Gravurfehler. Warum nannten die Römer diesen Monat den „siebten“, obwohl er heute der neunte Monat des Jahres ist? Wählt die richtige Erklärung.",
       hints:[{text:"Die Sonnenuhr ist an der Wand der Kirche Sainte-Madeleine eingraviert, direkt gegenüber dem Rathaus. Sucht nach den Monatsnamen: einer davon ist mit einer Ziffer gefolgt von „bre“ abgekürzt.",cost:20},{text:"„7bre“ steht für September. Auf Lateinisch bedeutet septem sieben. Überlegt, welcher Monat das römische Jahr eröffnen musste, damit September wirklich ihr siebter Monat war.",cost:40},{text:"Die Antwort ist A: Das römische Jahr begann im März, dem Monat des Gottes Mars.",cost:80}]}
   },
   // ─── ÉNIGME 2 TOUR DE BENNEVILLE ───────────────────────────────────────
   { id:2, step:'II', fragment:'E', clue:'CIGOGNIER', answers:['CIGOGNIER','LE CIGOGNIER','CIGOGNER'], warning:{fr:'Tour ouverte de 9h à 21h (1er mai – 30 sept.) et de 9h à 17h le reste de l\'année. Max. 20 personnes en même temps dans la tour.',en:'Tower open 9am-9pm (May 1 – Sept 30) and 9am-5pm the rest of the year. Max. 20 people inside the tower at once.',de:'Turm geöffnet 9-21 Uhr (1. Mai – 30. Sept.) und 9-17 Uhr den Rest des Jahres. Max. 20 Personen gleichzeitig im Turm.'}, groupMission:{fr:'Montez ensemble au sommet, puis répartissez-vous : chacun regarde par une fenêtre différente. Qui repère la colonne solitaire dans les champs ?',en:'Climb to the top together, then split up: each person looks through a different window. Who spots the lone column in the fields?',de:'Steigt gemeinsam zum Gipfel, dann verteilt euch: jeder schaut durch ein anderes Fenster. Wer entdeckt die einsame Säule in den Feldern?'},
-    fr:{ nav:{title:'Tour de Benneville',desc:"La tour médiévale se dresse à quelques pas de l'Hôtel de Ville.",address:'Rue de Lausanne, 1580 Avenches',distance:'~100 m de l\'Hôtel de Ville',mapsUrl:'https://maps.google.com/?q=Tour+de+Benneville+Avenches'},
+    fr:{ nav:{title:'Tour de Benneville',desc:"La tour médiévale se dresse à quelques pas de l'Hôtel de Ville.",address:'Rue de Lausanne, 1580 Avenches',distance:'~100 m de l\'Hôtel de Ville',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879440,7.041184'},
       narrative:"La Tour de Benneville domine la plaine depuis le XIIIe siècle : cinq niveaux, des meurtrières, une vue imprenable. C'est d'ici que le traître a repéré sa cachette. Au loin, dans les champs, se dresse la dernière colonne du plus grand sanctuaire d'Aventicum. Pendant des siècles, des cigognes ont niché à son sommet, et les habitants ont fini par baptiser le monument du nom de cet oiseau. Monte, et trouve ce que le traître a vu.",
       question:"Monte jusqu'au sommet de la tour. Depuis la fenêtre donnant sur la plaine, repère la colonne romaine qui se dresse seule dans les champs. Son nom vient de l'oiseau qui nichait à son sommet, la cigogne. Quel est le nom de ce monument ? Entre-le en majuscules, sans espace.",
       hints:[{text:"Cherche une fenêtre donnant vers la plaine, au-delà des toits. Un élément romain se dresse seul dans les champs, comme une sentinelle oubliée. Ce n'est pas un bâtiment, juste une colonne.",cost:20},{text:"Le nom du monument se forme à partir du mot cigogne : c'est le lieu des cigognes, comme un pommier est l'arbre des pommes. Cigogne... ?",cost:40},{text:"La réponse est CIGOGNIER.",cost:80}]},
-    en:{ nav:{title:'Benneville Tower',desc:"The medieval tower stands a few steps from the Town Hall.",address:'Rue de Lausanne, 1580 Avenches',distance:'~100 m from Town Hall',mapsUrl:'https://maps.google.com/?q=Tour+de+Benneville+Avenches'},
+    en:{ nav:{title:'Benneville Tower',desc:"The medieval tower stands a few steps from the Town Hall.",address:'Rue de Lausanne, 1580 Avenches',distance:'~100 m from Town Hall',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879440,7.041184'},
       narrative:"The Benneville Tower has dominated the plain since the 13th century: five levels, arrow slits, a breathtaking view. From this vantage point, the traitor scouted his hiding place. Far off in the fields stands the last column of Aventicum's greatest sanctuary. For centuries, storks nested at its top, and the locals ended up naming the monument after that bird: in French, a stork is a cigogne. Climb, and find what the traitor saw.",
       question:"Climb to the top of the tower. From the window facing the plain, spot the Roman column standing alone in the fields. Its French name is built from cigogne, the stork that nested at its top. What is the name of this monument? Enter it in capital letters, no spaces, exactly as the locals write it.",
       hints:[{text:"Look for a window facing the plain, beyond the rooftops. A Roman element stands alone in the fields, like a forgotten sentinel. It is not a building, just a column.",cost:20},{text:"Take the French word cigogne and add the ending -IER, the way French turns pomme (apple) into pommier (apple tree): the place of the storks.",cost:40},{text:"The answer is CIGOGNIER.",cost:80}]},
-    de:{ nav:{title:'Benneville-Turm',desc:"Der mittelalterliche Turm steht wenige Schritte vom Rathaus entfernt.",address:'Rue de Lausanne, 1580 Avenches',distance:'~100 m vom Rathaus',mapsUrl:'https://maps.google.com/?q=Tour+de+Benneville+Avenches'},
+    de:{ nav:{title:'Benneville-Turm',desc:"Der mittelalterliche Turm steht wenige Schritte vom Rathaus entfernt.",address:'Rue de Lausanne, 1580 Avenches',distance:'~100 m vom Rathaus',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879440,7.041184'},
       narrative:"Der Benneville-Turm beherrscht die Ebene seit dem 13. Jahrhundert: fünf Stockwerke, Schiessscharten, ein atemberaubender Ausblick. Von hier aus kundschaftete der Verräter sein Versteck aus. Weit draussen in den Feldern steht die letzte Säule des grössten Heiligtums von Aventicum. Jahrhundertelang nisteten Störche auf ihrer Spitze, und die Einheimischen benannten das Monument schliesslich nach diesem Vogel: auf Französisch heisst der Storch cigogne. Steigt hinauf und findet, was der Verräter sah.",
       question:"Steigt bis zum Gipfel des Turms. Vom Fenster mit Blick auf die Ebene aus entdeckt ihr die römische Säule, die einsam in den Feldern steht. Ihr französischer Name leitet sich von cigogne ab, dem Storch, der einst auf ihrer Spitze nistete. Wie heisst dieses Monument? Gebt den Namen in Grossbuchstaben ein, ohne Leerzeichen, genau wie die Einheimischen ihn schreiben.",
       hints:[{text:"Sucht am Turmgipfel ein Fenster mit Blick auf die Ebene, über die Dächer hinweg. Dort, allein in den Feldern, erhebt sich ein römisches Element wie eine vergessene Wache. Es ist kein Gebäude, nur eine Säule.",cost:20},{text:"Nehmt das französische Wort cigogne und hängt die Endung -IER an, so wie aus pomme (Apfel) ein pommier (Apfelbaum) wird: der Ort der Störche.",cost:40},{text:"Die Antwort ist CIGOGNIER.",cost:80}]}
   },
   // ─── ÉNIGME 3 RUE DES ALPES (QCM visuel) ──────────────────────────────
   { id:3, step:'III', fragment:'L', clue:'LOUVE', type:'qcm', qcmRequired:2, answers:['A+B'], qcmImages:['qcm-louve.jpg','qcm-rosace.jpg','qcm-lion.jpg','qcm-porte-fer.jpg'], /* Images à la racine du repo, à côté d'index.html : qcm-louve.jpg (Louve), qcm-rosace.jpg (rosace tressée), qcm-lion.jpg (leurre), qcm-porte-fer.jpg (leurre). */ qcmEmojis:['🐺','🌸','🦁','🚪'], qcmLabels:{fr:['A. Louve romaine','B. Rosace tressée sur porte en bois','C. Lion sculpté','D. Porte en fer forgé'],en:['A. Roman she-wolf','B. Woven rosette on a wooden door','C. Carved lion','D. Wrought-iron gate'],de:['A. Römische Wölfin','B. Geflochtene Rosette an einer Holztür','C. Geschnitzter Löwe','D. Schmiedeeisernes Tor']},
-    fr:{ nav:{title:'Rue des Alpes',desc:"Observez les façades des immeubles le long de la Rue des Alpes.",address:'Rue des Alpes, 1580 Avenches',distance:'~150 m de la Tour de Benneville',mapsUrl:'https://maps.google.com/?q=Rue+des+Alpes+Avenches'},
+    fr:{ nav:{title:'Rue des Alpes',desc:"Observez les façades des immeubles le long de la Rue des Alpes.",address:'Rue des Alpes, 1580 Avenches',distance:'~150 m de la Tour de Benneville',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879617,7.041082'},
       narrative:"La Rue des Alpes relie l'Hôtel de Ville au reste de la cité. En apparence, une rue ordinaire. Mais le traître l'a longée les yeux ouverts, et il y a vu ce que personne d'autre ne voit. Sur une façade veille une louve de pierre, allaitant deux jumeaux, la légende même de la fondation de Rome, gravée là depuis des générations. Un peu plus loin, une porte en bois porte une rosace tressée, un détail d'artisanat local que personne ne remarque en passant. Deux éléments en pleine vue, invisibles à qui ne cherche pas.",
       question:`En remontant toute la Rue des Alpes, observe attentivement les façades des bâtiments eux-mêmes, la pierre et le bois, pas les vitrines ni les enseignes commerciales. Parmi ces quatre ornements ci-dessous (A, B, C, D), deux sont RÉELLEMENT présents sur ces façades. Sélectionne les deux bons éléments, puis confirme.`,
       hints:[{text:"Parcours toute la longueur de la rue en levant les yeux du trottoir vers les murs et les portes, du rez-de-chaussée jusqu'au premier étage. Les deux éléments ne sont pas cachés : on les manque seulement si on ne regarde pas les façades elles-mêmes.",cost:20},{text:"L'un des deux est un animal sculpté lié à la légende de la fondation de Rome ; l'autre est un motif circulaire tressé, en bois, au centre d'une porte.",cost:40},{text:"Les deux éléments présents sont la louve romaine et la rosace tressée sur la porte en bois. Sélectionnez A et B, puis appuyez sur CONFIRMER.",cost:80}]},
-    en:{ nav:{title:'Rue des Alpes',desc:"Observe the building facades along Rue des Alpes.",address:'Rue des Alpes, 1580 Avenches',distance:'~150 m from Benneville Tower',mapsUrl:'https://maps.google.com/?q=Rue+des+Alpes+Avenches'},
+    en:{ nav:{title:'Rue des Alpes',desc:"Observe the building facades along Rue des Alpes.",address:'Rue des Alpes, 1580 Avenches',distance:'~150 m from Benneville Tower',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879617,7.041082'},
       narrative:"Rue des Alpes connects the Town Hall to the rest of the city. It looks like an ordinary street. But the traitor walked it with open eyes, and saw what others never notice. On one façade watches a stone she-wolf, nursing two twins, the very legend of Rome's founding, carved there for generations. A little further on, a wooden door bears a woven rosette, a piece of local craftsmanship nobody notices walking by. Two elements in plain sight, invisible to those not looking.",
       question:`Walking the full length of Rue des Alpes, look closely at the buildings' façades themselves, the stone and wood, not shop windows or signs. Of these four ornaments (A, B, C, D), TWO are REALLY present on these façades. Select the two correct elements, then confirm.`,
       hints:[{text:"Walk the whole length of the street, lifting your eyes from the pavement to the walls and doors, from ground floor up to first-floor height. The two elements aren't hidden: you'll only miss them by not looking at the façades themselves.",cost:20},{text:"One is a carved animal linked to the legend of Rome's founding; the other is a round woven wooden pattern, at the centre of a door.",cost:40},{text:"The two elements present are the Roman she-wolf and the woven rosette on the wooden door. Select A and B, then press CONFIRM.",cost:80}]},
-    de:{ nav:{title:'Rue des Alpes',desc:"Beobachtet die Gebäudefassaden entlang der Rue des Alpes.",address:'Rue des Alpes, 1580 Avenches',distance:'~150 m vom Benneville-Turm',mapsUrl:'https://maps.google.com/?q=Rue+des+Alpes+Avenches'},
+    de:{ nav:{title:'Rue des Alpes',desc:"Beobachtet die Gebäudefassaden entlang der Rue des Alpes.",address:'Rue des Alpes, 1580 Avenches',distance:'~150 m vom Benneville-Turm',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879617,7.041082'},
       narrative:"Die Rue des Alpes verbindet das Rathaus mit dem Rest der Stadt. Sie sieht wie eine gewöhnliche Strasse aus. Doch der Verräter ging sie mit offenen Augen entlang und sah, was andere nie bemerken. Auf einer Fassade wacht eine steinerne Wölfin, die zwei Zwillinge säugt, die Gründungslegende Roms selbst, seit Generationen dort eingemeisselt. Etwas weiter trägt eine Holztür eine geflochtene Rosette, ein Detail lokaler Handwerkskunst, das niemand im Vorbeigehen bemerkt. Zwei Elemente in aller Öffentlichkeit, unsichtbar für jene, die nicht suchen.",
       question:`Geht die ganze Rue des Alpes entlang und betrachtet genau die Fassaden der Gebäude selbst, Stein und Holz, nicht Schaufenster oder Schilder. Von diesen vier Ornamenten (A, B, C, D) befinden sich ZWEI WIRKLICH an diesen Fassaden. Wähle die zwei richtigen Elemente und bestätige.`,
       hints:[{text:"Geht die ganze Strasse entlang und hebt den Blick vom Gehsteig zu den Wänden und Türen, vom Erdgeschoss bis zur Höhe des ersten Stockwerks. Die zwei Elemente sind nicht versteckt: man übersieht sie nur, wenn man nicht auf die Fassaden selbst schaut.",cost:20},{text:"Eines ist ein geschnitztes Tier, verbunden mit der Gründungslegende Roms; das andere ist ein rundes, geflochtenes Holzmuster in der Mitte einer Tür.",cost:40},{text:"Die zwei vorhandenen Elemente sind die römische Wölfin und die geflochtene Rosette auf der Holztür. Wähle A und B, dann drücke BESTÄTIGEN.",cost:80}]}
   },
   // ─── ÉNIGME 4 ARÈNES (Amphithéâtre) ───────────────────────────────────
   { id:4, step:'IV', fragment:'V', clue:'ARÈNE', answers:['6'], groupMission:{fr:'Cherchez ensemble le panneau du plan de restauration sur la terrasse couverte du musée, qui représente l\'amphithéâtre vu du dessus, divisé en zones numérotées.',en:'Search together for the restoration plan panel on the museum\'s covered terrace, showing the amphitheatre from above, divided into numbered zones.',de:'Sucht gemeinsam das Schild mit dem Restaurierungsplan auf der überdachten Museumsterrasse, das das Amphitheater von oben zeigt, in nummerierte Zonen unterteilt.'},
-    fr:{ nav:{title:'Amphithéâtre Romain',desc:"L'amphithéâtre romain se trouve à l'entrée est de la ville d'Avenches.",address:'Rue du Clos 6, 1580 Avenches',distance:'~400 m de la Rue des Alpes',mapsUrl:'https://maps.google.com/?q=Amphitheatre+romain+Avenches'},
+    fr:{ nav:{title:'Amphithéâtre Romain',desc:"L'amphithéâtre romain se trouve à l'entrée est de la ville d'Avenches.",address:'Rue du Clos 6, 1580 Avenches',distance:'~400 m de la Rue des Alpes',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880776,7.042174'},
       narrative:"Quatorze mille spectateurs, des gladiateurs, du sang sur le sable. L'amphithéâtre d'Avenches, construit au IIe siècle puis agrandi jusqu'à cette capacité, est l'un des mieux conservés de Suisse. Le traître a caché son message dans les chiffres mêmes de ce monument. Entre dans l'arène et compte.",
       question:"Sur la terrasse couverte du musée romain, juste à côté de l'amphithéâtre, un panneau affiche le plan officiel de restauration du monument : un schéma vu du dessus, divisant l'amphithéâtre en plusieurs zones numérotées. Repère sur ce plan le numéro attribué à la terrasse couverte où tu te trouves. Entre ce numéro.",
       hints:[{text:"Cherche le panneau de restauration sur la terrasse couverte du musée romain, à côté de l'amphithéâtre, affiché à hauteur des yeux, près de l'entrée de la terrasse.",cost:20},{text:"Le plan divise l'amphithéâtre en 8 zones numérotées. Chaque zone couvre une section différente du monument. Repère celle qui correspond à l'endroit où tu lis le panneau.",cost:40},{text:"La terrasse couverte du musée correspond à la zone 6, c'est inscrit sur le panneau.",cost:80}]},
-    en:{ nav:{title:'Roman Amphitheatre',desc:"The Roman amphitheatre is at the eastern entrance of the city.",address:'Rue du Clos 6, 1580 Avenches',distance:'~400 m from Rue des Alpes',mapsUrl:'https://maps.google.com/?q=Amphitheatre+romain+Avenches'},
+    en:{ nav:{title:'Roman Amphitheatre',desc:"The Roman amphitheatre is at the eastern entrance of the city.",address:'Rue du Clos 6, 1580 Avenches',distance:'~400 m from Rue des Alpes',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880776,7.042174'},
       narrative:"Fourteen thousand spectators, gladiators, blood on the sand. Avenches' amphitheatre, built in the 2nd century and later enlarged to that capacity, is one of the best-preserved in Switzerland. The traitor hid his message in the very numbers of this monument. Enter the arena and count.",
       question:"On the covered terrace of the Roman museum, right next to the amphitheatre, a panel displays the monument's official restoration plan: a diagram seen from above, dividing the amphitheatre into several numbered zones. Find the number assigned to the covered terrace where you're standing. Enter that number.",
       hints:[{text:"Look for the restoration panel on the covered terrace of the Roman museum, next to the amphitheatre, posted at eye level, near the terrace entrance.",cost:20},{text:"The plan divides the amphitheatre into 8 numbered zones, each covering a different section of the monument. Find the one matching where you're reading the panel.",cost:40},{text:"The covered terrace corresponds to zone 6, as written on the panel.",cost:80}]},
-    de:{ nav:{title:'Römisches Amphitheater',desc:"Das römische Amphitheater befindet sich am östlichen Stadteingang.",address:'Rue du Clos 6, 1580 Avenches',distance:'~400 m von Rue des Alpes',mapsUrl:'https://maps.google.com/?q=Amphitheatre+romain+Avenches'},
+    de:{ nav:{title:'Römisches Amphitheater',desc:"Das römische Amphitheater befindet sich am östlichen Stadteingang.",address:'Rue du Clos 6, 1580 Avenches',distance:'~400 m von Rue des Alpes',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880776,7.042174'},
       narrative:"Vierzehntausend Zuschauer, Gladiatoren, Blut auf dem Sand. Das Amphitheater von Avenches, im 2. Jahrhundert erbaut und später auf diese Kapazität erweitert, ist eines der besterhaltenen der Schweiz. Der Verräter versteckte seine Nachricht in den Zahlen dieses Monuments. Betretet die Arena und zählt.",
       question:"Auf der überdachten Terrasse des Römermuseums, direkt neben dem Amphitheater, zeigt ein Schild den offiziellen Restaurierungsplan des Monuments: ein Schema von oben, das das Amphitheater in mehrere nummerierte Zonen unterteilt. Findet auf diesem Plan die Nummer der überdachten Terrasse, auf der ihr steht. Gebt diese Nummer ein.",
       hints:[{text:"Sucht das Restaurierungsschild auf der überdachten Terrasse des Römermuseums neben dem Amphitheater, auf Augenhöhe, nahe dem Terrasseneingang.",cost:20},{text:"Der Plan teilt das Amphitheater in 8 nummerierte Zonen ein, jede deckt einen anderen Abschnitt des Monuments. Findet jene, die zu eurem Standort auf der Terrasse passt.",cost:40},{text:"Die überdachte Terrasse entspricht Zone 6, wie auf dem Schild steht.",cost:80}]}
   },
   // ─── ÉNIGME 5 SANCTUAIRE DU CIGOGNIER ─────────────────────────────────
   { id:5, step:'V', fragment:'E', clue:'MARC-AURÈLE', answers:['MARC AURELE','MARC-AURELE','MARC AURÈLE','MARC-AURÈLE','MARCUS AURELIUS','MARCUS AURELIUS ANTONINUS','MARK AUREL','MARCUS AUREL'],
-    fr:{ nav:{title:'Sanctuaire du Cigognier',desc:"La colonne solitaire de 12 mètres est visible depuis la route.",address:'Chemin du Cigognier, 1580 Avenches',distance:'~600 m des arènes',mapsUrl:'https://maps.google.com/?q=Sanctuaire+Cigognier+Avenches'},
+    fr:{ nav:{title:'Sanctuaire du Cigognier',desc:"La colonne solitaire de 12 mètres est visible depuis la route.",address:'Chemin du Cigognier, 1580 Avenches',distance:'~600 m des arènes',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.881942,7.046134'},
       narrative:"Tu es au cœur du plus grand sanctuaire d'Aventicum. En 1939, dans un égout romain sous ces pierres, des ouvriers ont mis au jour le trésor le plus précieux de Suisse romaine : un buste en or d'Empereur. Le traître sait que l'aquila mérite d'être cachée près d'ici. Mais d'abord : qui est cet Empereur ?",
       question:"En 1939, un buste en or d'Empereur fut découvert dans les égouts de ce sanctuaire, le trésor le plus précieux de Suisse romaine. Cet Empereur régna de 161 à 180 apr. J.-C., guerrier et philosophe, auteur des Pensées encore lues aujourd'hui. Qui est-il ? Entre son nom en majuscules.",
       hints:[{text:"Cet Empereur était aussi philosophe stoïcien, rare pour un chef de guerre romain. Ses Pensées sont un journal intime écrit sur les campagnes militaires. Son livre est encore imprimé aujourd'hui.",cost:20},{text:"Son prénom est Marc. Son surnom latin vient de aureus, \"doré\". Deux mots. Le second mot signifie littéralement \"le doré\" ou \"celui qui brille comme l'or\".",cost:40},{text:"La réponse est MARC AURELE.",cost:80}]},
-    en:{ nav:{title:'Cigognier Sanctuary',desc:"The solitary 12-metre column is visible from the road.",address:'Chemin du Cigognier, 1580 Avenches',distance:'~600 m from the arena',mapsUrl:'https://maps.google.com/?q=Sanctuaire+Cigognier+Avenches'},
+    en:{ nav:{title:'Cigognier Sanctuary',desc:"The solitary 12-metre column is visible from the road.",address:'Chemin du Cigognier, 1580 Avenches',distance:'~600 m from the arena',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.881942,7.046134'},
       narrative:"You are at the heart of Aventicum's greatest sanctuary. In 1939, workers unearthed the most precious treasure of Roman Switzerland in a sewer beneath these stones: a golden Emperor's bust. The traitor knows the aquila deserves to be hidden near this place. But first: who is this Emperor?",
       question:"In 1939, a golden Emperor's bust was found in the sewers of this sanctuary, the greatest treasure of Roman Switzerland. He reigned from 161 to 180 AD, both warrior and philosopher, author of the Meditations. Who is he? Enter his name in capital letters.",
       hints:[{text:"This Emperor was also a Stoic philosopher, rare for a Roman warlord. His Meditations are a private journal written during military campaigns. His book is still printed today.",cost:20},{text:"His first name is Marcus. His Latin surname comes from aureus, \"golden.\" Two words. The second literally means \"the golden one,\" or \"he who shines like gold.\"",cost:40},{text:"The answer is MARCUS AURELIUS.",cost:80}]},
-    de:{ nav:{title:'Cigognier-Heiligtum',desc:"Die einsame 12-Meter-Säule ist von der Strasse aus sichtbar.",address:'Chemin du Cigognier, 1580 Avenches',distance:'~600 m vom Amphitheater',mapsUrl:'https://maps.google.com/?q=Sanctuaire+Cigognier+Avenches'},
+    de:{ nav:{title:'Cigognier-Heiligtum',desc:"Die einsame 12-Meter-Säule ist von der Strasse aus sichtbar.",address:'Chemin du Cigognier, 1580 Avenches',distance:'~600 m vom Amphitheater',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.881942,7.046134'},
       narrative:"Ihr seid im Herzen des grössten Heiligtums von Aventicum. 1939 entdeckten Arbeiter den kostbarsten Schatz der römischen Schweiz in einem Abwasserkanal unter diesen Steinen: eine goldene Kaiserbüste. Der Verräter weiss, dass die Aquila in der Nähe dieses Ortes versteckt werden sollte. Aber zuerst: wer ist dieser Kaiser?",
       question:"1939 wurde eine goldene Kaiserbüste in den Abwasserkanälen dieses Heiligtums entdeckt, der grösste Schatz der römischen Schweiz. Dieser Kaiser herrschte von 161 bis 180 n. Chr., Krieger und Philosoph zugleich, Autor der Selbstbetrachtungen. Wer ist er? Gebt seinen Namen in Grossbuchstaben ein.",
       hints:[{text:"Dieser Kaiser war auch stoischer Philosoph, selten für einen römischen Kriegsherrn. Seine Selbstbetrachtungen sind ein privates Tagebuch, geschrieben während seiner Feldzüge. Sein Buch wird noch heute gedruckt.",cost:20},{text:"Sein Vorname ist Marcus. Sein lateinischer Beiname kommt von aureus, \"golden\". Zwei Wörter. Das zweite bedeutet wörtlich \"der Goldene\" oder \"der wie Gold Glänzende\".",cost:40},{text:"Die Antwort ist MARK AUREL.",cost:80}]}
   },
   // ─── ÉNIGME 6 THÉÂTRE DU SELLEY (Claude Vision API) ───────────────────
   { id:6, step:'VI', fragment:'T', clue:'CARTOUCHE-1902', type:'text', answers:['1902'], groupMission:{fr:'Cherchez ensemble le cartouche gravé dans la pierre. Il faut deux paires d\'yeux pour le repérer.',en:'Search together for the cartouche carved in the stone. It takes two pairs of eyes to spot it.',de:'Sucht gemeinsam das in den Stein gemeisselte Kartuschenfeld. Vier Augen sehen mehr als zwei.'},
-    fr:{ nav:{title:'Théâtre du Selley',desc:"Le théâtre romain du Selley est visible depuis la route cantonale.",address:'Chemin du Selley, 1580 Avenches',distance:'~300 m du Cigognier',mapsUrl:'https://maps.google.com/?q=Theatre+Selley+Avenches'},
+    fr:{ nav:{title:'Théâtre du Selley',desc:"Le théâtre romain du Selley est visible depuis la route cantonale.",address:'Chemin du Selley, 1580 Avenches',distance:'~300 m du Cigognier',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880602,7.048768'},
       narrative:"Le plus grand théâtre romain de Suisse : onze mille spectateurs. Deux mille ans plus tard, des restaurateurs sont venus sauver ce qui restait et ont signé leur travail dans la pierre. Parmi des centaines de blocs, ils ont gravé un cartouche octogonal : une initiale, une date. C'est l'indice le plus discret du parcours.",
       question:"Un cartouche octogonal a été sculpté dans la maçonnerie basse de la cavea. Il porte une initiale et une date à 4 chiffres. Cherche-le dans les gradins, à hauteur de genou ou de taille, petit, discret, en pierre calcaire. L'année gravée est ton code. Entre les 4 chiffres.",
       hints:[{text:"Cherche un bloc de calcaire avec un encadrement sculpté à 8 côtés (un octogone) encastré dans la maçonnerie basse des gradins. Il n'est pas en hauteur : il est à portée de main.",cost:20},{text:"Une seule lettre, initiale du mot Restauration, précède quatre chiffres. Ces chiffres désignent une année du tout début du XXe siècle.",cost:40},{text:"Le code est 1902.",cost:0}]},
-    en:{ nav:{title:'Selley Theatre',desc:"The Roman Selley theatre is visible from the cantonal road.",address:'Chemin du Selley, 1580 Avenches',distance:'~300 m from the Cigognier',mapsUrl:'https://maps.google.com/?q=Theatre+Selley+Avenches'},
+    en:{ nav:{title:'Selley Theatre',desc:"The Roman Selley theatre is visible from the cantonal road.",address:'Chemin du Selley, 1580 Avenches',distance:'~300 m from the Cigognier',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880602,7.048768'},
       narrative:"The greatest Roman theatre in Switzerland: eleven thousand spectators. Two thousand years later, restorers came to save what remained and signed their work in stone. Among hundreds of blocks, they carved an octagonal cartouche: an initial, a date. It is the most discreet clue of the entire course.",
       question:"An octagonal cartouche was carved into the lower masonry of the cavea, bearing an initial and a 4-digit year. Find it in the seating tiers, small, discreet, at knee or waist height. The engraved year is your code. Enter the 4 digits.",
       hints:[{text:"Look for a limestone block with an 8-sided carved frame (an octagon) set into the low masonry of the seating tiers. It is not high up: it is within arm's reach.",cost:20},{text:"A single letter, initial of the word Restauration, precedes four digits. These digits designate a year from the very beginning of the 20th century.",cost:40},{text:"The code is 1902.",cost:0}]},
-    de:{ nav:{title:'Selley-Theater',desc:"Das römische Selley-Theater ist von der Kantonsstrasse aus sichtbar.",address:'Chemin du Selley, 1580 Avenches',distance:'~300 m vom Cigognier',mapsUrl:'https://maps.google.com/?q=Theatre+Selley+Avenches'},
+    de:{ nav:{title:'Selley-Theater',desc:"Das römische Selley-Theater ist von der Kantonsstrasse aus sichtbar.",address:'Chemin du Selley, 1580 Avenches',distance:'~300 m vom Cigognier',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880602,7.048768'},
       narrative:"Das grösste römische Theater der Schweiz: elftausend Zuschauer. Zweitausend Jahre später kamen Restauratoren, um das Verbliebene zu retten, und signierten ihre Arbeit im Stein. Unter Hunderten von Blöcken meisselten sie ein achteckiges Cartouche: einen Anfangsbuchstaben, eine Jahreszahl. Es ist der diskreteste Hinweis des gesamten Kurses.",
       question:"Ein achteckiges Cartouche wurde in das untere Mauerwerk der Cavea gemeisselt, mit einem Anfangsbuchstaben und einer vierstelligen Jahreszahl. Findet es in den Sitzreihen, klein, diskret, auf Knie- oder Taillenhöhe. Die eingravierte Jahreszahl ist euer Code. Gebt die 4 Ziffern ein.",
       hints:[{text:"Suche nach einem Kalksteinblock mit einem 8-seitigen gemeisselten Rahmen (ein Achteck) im niedrigen Mauerwerk der Sitzreihen. Es ist nicht hoch oben: es ist in Reichweite.",cost:20},{text:"Ein einziger Buchstabe, Anfang des Wortes Restauration, steht vor vier Ziffern. Diese Ziffern bezeichnen ein Jahr vom ganz Anfang des 20. Jahrhunderts.",cost:40},{text:"Der Code ist 1902.",cost:0}]}
   },
   // ─── ÉNIGME 7 THERMES DU FORUM (TTS + STT) ────────────────────────────
   { id:7, step:'VII', fragment:'I', clue:'HYPOCAUSTE', type:'text', answers:['HYPOCAUSTE','HYPOCAUST','HYPOKAUST','HYPOCAUSTUM','HYPOKAUSTE','IPOCAUSTE'],
-    fr:{ nav:{title:'Thermes du Forum',desc:"Les fondations des thermes romains sont visibles depuis la rue principale.",address:'Place du Bourg, 1580 Avenches',distance:'~700 m du Cigognier',mapsUrl:'https://maps.google.com/?q=Thermes+forum+Avenches'},
+    fr:{ nav:{title:'Thermes du Forum',desc:"Les fondations des thermes romains sont visibles depuis la rue principale.",address:'Place du Bourg, 1580 Avenches',distance:'~700 m du Cigognier',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.885937,7.050096'},
       narrative:"Devant toi s'étend le sous-sol des bains publics d'Aventicum. Des centaines de petits piliers de brique soutiennent le plancher disparu où les Romains vivaient et débattaient. L'air chaud y circulait : c'était le cœur technique de la vie sociale romaine. Le traître connaît ce mécanisme par cœur. C'est ton tour de le découvrir.",
       question:"Ce sous-sol des thermes cache un système de chauffage romain. Ses centaines de petits piliers, appelés pilae, soutenaient un plancher sous lequel circulait l'air chaud. Quel est le nom de ce système de chauffage par le sol dans son ensemble ? Entre ta réponse en majuscules.",
       hints:[{text:"Regarde la forme exacte des petites colonnes devant toi : des briques carrées ou des disques de terre cuite, empilés les uns sur les autres comme des piles de jetons, assez bas pour qu'on puisse les enjamber. Chaque pilier individuel porte un nom latin précis, pas le nom du système entier.",cost:20},{text:"Chaque pilier s'appelle un pila (au pluriel : pilae, du latin « pieu »). Ensemble, ces pilae soutenaient un plancher surélevé sous lequel circulait l'air chaud d'un foyer (praefurnium) : c'est ce système entier de chauffage par le sol qu'il faut nommer.",cost:40},{text:"La réponse est HYPOCAUSTE.",cost:0}]},
-    en:{ nav:{title:'Forum Baths',desc:"The foundations of the Roman baths are visible from the main street.",address:'Place du Bourg, 1580 Avenches',distance:'~700 m from the Cigognier',mapsUrl:'https://maps.google.com/?q=Thermes+forum+Avenches'},
+    en:{ nav:{title:'Forum Baths',desc:"The foundations of the Roman baths are visible from the main street.",address:'Place du Bourg, 1580 Avenches',distance:'~700 m from the Cigognier',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.885937,7.050096'},
       narrative:"Before you stretches the underfloor of Aventicum's public baths. Hundreds of small brick pillars support the vanished floor where Romans bathed and debated. Hot air circulated here: this was the technical heart of Roman social life. The traitor knows this mechanism by heart. Now it is your turn to discover it.",
       question:"This underfloor area of the baths hides a Roman heating system. Its hundreds of small pillars, called pilae, held up a raised floor under which hot air circulated. What is the name of this underfloor heating system as a whole? Enter your answer in capital letters.",
       hints:[{text:"Look closely at the shape of the small columns in front of you: square bricks or terracotta discs, stacked like piles of coins, low enough to step over. Each individual pillar had its own precise Latin name, not the name of the whole system.",cost:20},{text:"Each pillar is called a pila (plural: pilae, Latin for \"stake\"). Together, these pilae held up a raised floor, under which hot air from a furnace (praefurnium) circulated: that whole underfloor heating system is what you need to name.",cost:40},{text:"The answer is HYPOCAUST.",cost:0}]},
-    de:{ nav:{title:'Forumthermen',desc:"Die Fundamente der römischen Thermen sind von der Hauptstrasse aus sichtbar.",address:'Place du Bourg, 1580 Avenches',distance:'~700 m vom Cigognier',mapsUrl:'https://maps.google.com/?q=Thermes+forum+Avenches'},
+    de:{ nav:{title:'Forumthermen',desc:"Die Fundamente der römischen Thermen sind von der Hauptstrasse aus sichtbar.",address:'Place du Bourg, 1580 Avenches',distance:'~700 m vom Cigognier',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.885937,7.050096'},
       narrative:"Vor euch erstreckt sich der Unterboden der öffentlichen Bäder von Aventicum. Hunderte kleiner Ziegelsteinpfeiler stützen den verschwundenen Fussboden, auf dem die Römer lebten und badeten. Heissluft zirkulierte hier: das war das technische Herz des römischen Soziallebens. Der Verräter kennt diesen Mechanismus auswendig. Jetzt seid ihr an der Reihe, ihn zu entdecken.",
       question:"Dieser Unterboden der Thermen verbirgt ein römisches Heizsystem. Die hunderten kleinen Pfeiler, pilae genannt, trugen einen erhöhten Boden, unter dem heisse Luft zirkulierte. Wie heisst dieses Fussbodenheizungssystem insgesamt? Gebt eure Antwort in Grossbuchstaben ein.",
       hints:[{text:"Betrachtet genau die Form der kleinen Säulen vor euch: quadratische Ziegel oder Terrakotta-Scheiben, aufeinandergestapelt wie Münztürme, niedrig genug, um darüber zu steigen. Jeder einzelne Pfeiler hatte einen eigenen lateinischen Namen, nicht den Namen des ganzen Systems.",cost:20},{text:"Jeder Pfeiler heisst pila (Mehrzahl: pilae, lateinisch für „Pfahl“). Zusammen trugen diese pilae einen erhöhten Boden, unter dem heisse Luft aus einem Ofen (Praefurnium) zirkulierte: genau dieses Fussbodenheizungssystem müsst ihr benennen.",cost:40},{text:"Die Antwort ist HYPOKAUST.",cost:0}]}
   },
   // ─── ÉNIGME 8 PORTE DE L'EST (Vision panoramique + Serment vocal) ──────
   { id:8, step:'VIII', fragment:'I', clue:'AQUILA', type:'text', answers:['AVENTICUM','AVENTICVM','AVENTUCUM','AVANTICUM'],
-    fr:{ nav:{title:"Porte de l'Est",desc:"La porte romaine monumentale se trouve sur le côté est du mur d'enceinte.",address:"Chemin de la Porte de l'Est, 1580 Avenches",distance:'~1 km des thermes',mapsUrl:'https://maps.google.com/?q=Porte+Est+Avenches'},
+    fr:{ nav:{title:"Porte de l'Est",desc:"La porte romaine monumentale se trouve sur le côté est du mur d'enceinte.",address:"Chemin de la Porte de l'Est, 1580 Avenches",distance:'~1 km des thermes',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.887844,7.058160'},
       narrative:"Tu es aux portes de l'Empire. La Porte de l'Est gardait l'entrée principale d'Aventicum, construite sous Vespasien vers l'an 72. C'est ici que le traître a caché l'aquila, convaincu que tu n'irais jamais jusqu'au bout. Il s'est trompé.",
       question:"À la Porte de l'Est, une dernière question referme ta quête : quel est le nom latin de cette cité, capitale du peuple helvète, que tu as parcourue tout au long de cette enquête ? Entre-le en majuscules.",
       hints:[{text:"Cherche le panneau officiel d'information sur ou à côté de la Porte de l'Est : le nom de la cité y est indiqué. Si ce panneau est inaccessible (travaux en cours), passe directement à l'indice suivant : tu n'en as pas besoin pour continuer.",cost:20},{text:"C'est le nom que tu as lu et entendu à chaque étape de ce parcours, sur les panneaux et dans le récit du traître. Il commence par A.",cost:40},{text:"La réponse est AVENTICUM.",cost:0}]},
-    en:{ nav:{title:"East Gate",desc:"The monumental Roman gate is on the east side of the city wall.",address:"Chemin de la Porte de l'Est, 1580 Avenches",distance:'~1 km from the baths',mapsUrl:'https://maps.google.com/?q=Porte+Est+Avenches'},
+    en:{ nav:{title:"East Gate",desc:"The monumental Roman gate is on the east side of the city wall.",address:"Chemin de la Porte de l'Est, 1580 Avenches",distance:'~1 km from the baths',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.887844,7.058160'},
       narrative:"You are at the gates of the Empire. The East Gate guarded Aventicum's main entrance, built under Vespasian around AD 72. This is where the traitor hid the aquila, convinced you would never come this far. He was wrong.",
       question:"At the East Gate, one last question closes your quest: what is the Latin name of this city, capital of the Helvetii people, that you have walked through this whole adventure? Enter it in capital letters.",
       hints:[{text:"Look for the official information panel on or next to the East Gate: the city's name is written there. If the panel is inaccessible (ongoing restoration work), skip straight to the next hint: you don't need it to continue.",cost:20},{text:"It's the name you've read and heard at every stop of this quest, on the panels and in the traitor's story. It starts with A.",cost:40},{text:"The answer is AVENTICUM.",cost:0}]},
-    de:{ nav:{title:"Osttor",desc:"Das monumentale römische Tor befindet sich auf der Ostseite der Stadtmauer.",address:"Chemin de la Porte de l'Est, 1580 Avenches",distance:'~1 km von den Thermen',mapsUrl:'https://maps.google.com/?q=Porte+Est+Avenches'},
+    de:{ nav:{title:"Osttor",desc:"Das monumentale römische Tor befindet sich auf der Ostseite der Stadtmauer.",address:"Chemin de la Porte de l'Est, 1580 Avenches",distance:'~1 km von den Thermen',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.887844,7.058160'},
       narrative:"Ihr seid an den Toren des Imperiums. Das Osttor bewachte den Haupteingang von Aventicum, unter Vespasian um 72 n. Chr. erbaut. Hier versteckte der Verräter die Aquila, überzeugt, dass ihr nie so weit kommen würdet. Er irrte sich.",
       question:"Am Osttor schliesst sich eine letzte Frage: Wie lautet der lateinische Name dieser Stadt, Hauptstadt des helvetischen Volkes, die ihr während dieser ganzen Suche durchquert habt? Gebt ihn in Grossbuchstaben ein.",
       hints:[{text:"Sucht nach der offiziellen Informationstafel am oder neben dem Osttor: der Stadtname steht dort. Ist die Tafel nicht zugänglich (laufende Restaurierungsarbeiten), geht direkt zum nächsten Hinweis weiter, ihr braucht sie nicht, um fortzufahren.",cost:20},{text:"Es ist der Name, den ihr bei jeder Station dieser Suche gelesen und gehört habt, auf den Tafeln und in der Geschichte des Verräters. Er beginnt mit A.",cost:40},{text:"Die Antwort ist AVENTICUM.",cost:0}]}
   }
 ];
-/* ══════ ROUTING (marche à pied, via OpenRouteService) ══════
-   TODO BJORN : crée une clé gratuite sur https://openrouteservice.org/dev/#/signup
-   (compte gratuit → 2000 requêtes/jour, largement suffisant), puis colle-la ci-dessous.
-   Tant que la clé est vide ou que l'appel échoue, le jeu retombe automatiquement
-   sur la ligne droite habituelle — aucun risque de casser la carte. */
-const ORS_API_KEY = 'eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjRmZTBiNWM1NjNiZjRhNzdiNWQ5Mzc5Y2I2OGYzMGY3IiwiaCI6Im11cm11cjY0In0=';
+/* ══════ TRACÉS À PIED PRÉCALCULÉS ══════
+   Les tracés entre stations sont calculés une fois, hors du jeu, par tools/precompute-routes.mjs
+   (clé lue dans la variable d'environnement ORS_API_KEY, jamais écrite dans le code).
+   Aucun service de routage n'est appelé pendant la partie et la position du joueur n'est envoyée
+   à personne : la ligne en direct est une ligne droite jusqu'à la station suivante.
+   legs[i]     = tracé de la station i-1 (de la fin du tronçon si c'est une station-tronçon) vers la station i
+   segments[i] = tracé le long d'une station-tronçon (début vers fin)
+   Tant qu'un tracé manque, la carte retombe sur une ligne droite et la distance n'est pas affichée. */
+// ROUTES:START (généré par tools/precompute-routes.mjs, ne pas modifier à la main)
+const PRECOMPUTED_ROUTES = {
+  legs: {
+    "1": [[46.880169,7.040449],[46.87962,7.041058],[46.879596,7.04107],[46.879515,7.040931],[46.879456,7.041006],[46.879473,7.041079],[46.879453,7.041107],[46.879477,7.041146],[46.879452,7.041168]],
+    "2": [[46.879452,7.041168],[46.879477,7.041146],[46.879453,7.041107],[46.879473,7.041079],[46.879456,7.041006],[46.879515,7.040931],[46.879609,7.041092]],
+    "3": [[46.880461,7.041871],[46.880528,7.041789],[46.880715,7.042156],[46.880736,7.042128],[46.880775,7.042176]],
+    "4": [[46.880775,7.042176],[46.880872,7.042109],[46.881078,7.042105],[46.881042,7.042289],[46.881096,7.04232],[46.88114,7.042402],[46.881179,7.042503],[46.881204,7.042691],[46.881153,7.04295],[46.881083,7.042963],[46.881212,7.043834],[46.882205,7.044704],[46.882215,7.0448],[46.882126,7.045247],[46.882076,7.045244],[46.882076,7.045399],[46.882151,7.045443],[46.882146,7.045542],[46.881948,7.04608],[46.881962,7.046097]],
+    "5": [[46.881962,7.046097],[46.88215,7.046318],[46.882164,7.046412],[46.882147,7.046497],[46.881946,7.046791],[46.881899,7.046801],[46.881771,7.046721],[46.881722,7.046739],[46.880897,7.048178],[46.880597,7.048646],[46.88064,7.048695]],
+    "6": [[46.88064,7.048695],[46.881082,7.049178],[46.881138,7.049198],[46.881644,7.048782],[46.881862,7.048538],[46.882027,7.048295],[46.883442,7.050188],[46.884945,7.051926],[46.885965,7.05013]],
+    "7": [[46.885965,7.05013],[46.884945,7.051926],[46.885677,7.052827],[46.886367,7.054155],[46.886206,7.054422],[46.886089,7.054906],[46.885859,7.056138],[46.886034,7.056254],[46.886689,7.056431],[46.886855,7.056516],[46.887099,7.05672],[46.887252,7.056981],[46.887832,7.058173]]
+  },
+  segments: {
+    "2": [[46.879609,7.041092],[46.879871,7.04152],[46.880148,7.041867],[46.880313,7.041999],[46.880461,7.041871]]
+  }
+};
+// ROUTES:END
+function routeFor(nextIdx){
+  const r = PRECOMPUTED_ROUTES.legs[nextIdx];
+  return Array.isArray(r) && r.length>1 ? r : null;
+}
+function routeLengthM(coords){
+  let m=0;for(let i=1;i<coords.length;i++)m+=haversineM(coords[i-1],coords[i]);return m;
+}
+function roundTo10(m){ return Math.round(m/10)*10; }
 /* ══════ STATE ══════ */
 const N_ENIGMAS = 8;
 const G = {
@@ -2778,6 +2828,13 @@ const G = {
   stepScored:Array(N_ENIGMAS).fill(false), stepFailed:Array(N_ENIGMAS).fill(false), savedCode:'',
   qcmSelected:{} // for QCM enigmas
 };
+// Stations déjà conclues (réussies ou passées) pendant cette session : empêche qu'un double appui
+// (bouton Confirmer, touche Entrée) relance la validation, le score et la fenêtre de destination.
+let _stationFinished={};
+function finishStationOnce(idx){
+  if(_stationFinished[idx])return false;
+  _stationFinished[idx]=true;return true;
+}
 
 
 /* ══════ CARNET DE L'AGENT ══════ */
@@ -2822,7 +2879,7 @@ function toggleCarnet(){
   initCarnet();
   const panel=document.getElementById('carnetPanel');
   if(panel.classList.contains('open')){panel.classList.remove('open');panel.style.display='none';}
-  else{panel.style.display='flex';requestAnimationFrame(()=>panel.classList.add('open'));}
+  else{panel.style.display='flex';void panel.offsetWidth;panel.classList.add('open');}
 }
 
 /* ══════ LOCALSTORAGE ══════ */
@@ -2855,11 +2912,55 @@ function loadGame(){
       stepFailed:d.stepFailed||Array(N_ENIGMAS).fill(false),
       qcmSelected:d.qcmSelected||{}
     });
-    if(d.lang) currentLang=d.lang;
+    // Anciennes sauvegardes : currentStep désignait la station qu'on venait de réussir. On avance jusqu'à la première non réussie.
+    while(G.currentStep<N_ENIGMAS && G.fragments[G.currentStep]!==null) G.currentStep++;
+    if(['fr','en','de'].includes(d.lang)) currentLang=d.lang;
     return true;
   }catch(e){return false;}
 }
 function clearSave(){try{localStorage.removeItem(SAVE_KEY);}catch(e){} clearToken();}
+
+/* ══════ FOND DE CARTE ══════
+   Fournisseur de tuiles : une seule ligne à changer (TILE_PROVIDER).
+   - 'carto' : CARTO dark_all, exige une clé. CARTO_KEY est une clé de navigateur,
+     restreinte dans le tableau de bord CARTO aux domaines autorisés (aventicumquest.ch,
+     www.aventicumquest.ch, jeu.aventicumquest.ch). Elle n'est utile que sur ces domaines.
+   - 'osm'   : OpenStreetMap standard, sans clé.
+   Repli automatique sur OpenStreetMap sur localhost et sur le réseau local (la clé n'y est pas valable)
+   ou si CARTO_KEY est vide : la carte ne montre jamais le filigrane « API key required ». */
+const CARTO_KEY = 'cb1_4ccp_1_2769d55f59aa66dbef1ffea0';             // <-- LIGNE À REMPLIR : clé CARTO (clé de navigateur restreinte aux domaines)
+const TILE_PROVIDER = 'carto';    // <-- LIGNE FOURNISSEUR : 'carto' ou 'osm'
+const _OSM_LINK = '<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>';
+const _CARTO_LINK = '<a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>';
+/* Réseau de développement : localhost, adresses privées (10.x, 172.16-31.x, 192.168.x, 169.254.x) et noms .local.
+   Sert uniquement au choix du fond de carte ; le mode test, lui, reste limité à localhost (isLocalHost). */
+function isLocalNetworkHost(h){
+  h = h||'';
+  if(isLocalHost(h) || /\.local$/.test(h)) return true;
+  const m = h.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
+  if(!m) return false;
+  const a=+m[1], b=+m[2];
+  return a===10 || (a===172 && b>=16 && b<=31) || (a===192 && b===168) || (a===169 && b===254);
+}
+function tileConfig(host, key, provider){
+  host = host===undefined ? location.hostname : host;
+  key = key===undefined ? CARTO_KEY : key;
+  provider = provider===undefined ? TILE_PROVIDER : provider;
+  if(provider==='carto' && key && !isLocalNetworkHost(host)){
+    return {
+      url:'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key='+encodeURIComponent(key),
+      options:{attribution:'© '+_OSM_LINK+', © '+_CARTO_LINK, subdomains:'abcd', maxZoom:19}
+    };
+  }
+  return {
+    url:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    options:{attribution:'© '+_OSM_LINK, maxZoom:19}
+  };
+}
+function addTileLayer(map){
+  const cfg = tileConfig();
+  return L.tileLayer(cfg.url, cfg.options).addTo(map);
+}
 
 /* ══════ MAP STATE ══════ */
 const _maps={};let _userPos=null,_gpsWatchId=null;
@@ -2909,16 +3010,21 @@ function burstParticles(inputEl){
 function triggerScan(){const el=document.getElementById('scanLine');el.style.animation='none';void el.offsetWidth;el.style.animation='scanSweep 2.2s ease-in-out forwards';}
 
 /* ══════ SCREENS ══════ */
-let _transitionLock=false;
+/* Un seul changement d'écran « en cours » à la fois : un nouvel appel annule le précédent
+   (le dernier gagne). Aucune dépendance à requestAnimationFrame, qui ne se déclenche pas
+   quand l'onglet passe en arrière-plan (par exemple après « Ouvrir dans Google Maps »). */
+let _screenToken=0;
 function goToScreen(fullId){
-  if(_transitionLock)return;_transitionLock=true;
+  const token=++_screenToken;
   document.querySelectorAll('.screen.active').forEach(s=>{s.classList.remove('active');s.classList.add('exit');setTimeout(()=>{s.classList.remove('exit');s.style.display='none';},580);});
   G.currentScreen=fullId;updateHUD();
   setTimeout(()=>{
+    if(token!==_screenToken)return; // un appel plus récent a pris la main
     const el=document.getElementById('screen-'+fullId);
-    if(!el){_transitionLock=false;return;}
+    if(!el)return;
     el.style.display='flex';el.scrollTop=0;
-    requestAnimationFrame(()=>requestAnimationFrame(()=>{el.classList.add('active');_transitionLock=false;}));
+    void el.offsetWidth; // force le calcul de style avant d'ajouter la classe, pour que la transition CSS démarre
+    el.classList.add('active');
   },160);
 }
 function showScreen(id){goToScreen(id);}
@@ -2945,7 +3051,7 @@ function runSplash(){
     setTimeout(()=>span.classList.add('visible'),800+i*75);
   });
   setTimeout(()=>{sub.style.opacity='1';},800+titleText.length*75+200);
-  setTimeout(()=>goToScreen('code'),3600);
+  setTimeout(()=>{ if(G.currentScreen==='splash') goToScreen('code'); },3600); // ne reprend pas la main si une partie a déjà démarré (mode test)
 }
 
 /* ══════ CODE ══════ */
@@ -3074,34 +3180,10 @@ const TRANSITION_MSGS = {
   ]
 };
 
-/* Retourne un tableau de [lat,lon] suivant les rues, ou null si indisponible
-   (clé absente, hors quota, pas de réseau, timeout...). Ne lève jamais d'erreur. */
-async function fetchWalkingRoute(fromCoords, toCoords){
-  if(!ORS_API_KEY) return null;
-  const controller = new AbortController();
-  const timeout = setTimeout(()=>controller.abort(), 5000);
-  try{
-    const toLonLat = c => c[1]+','+c[0]; // ORS attend lon,lat
-    const url = 'https://api.openrouteservice.org/v2/directions/foot-walking?api_key='
-      + encodeURIComponent(ORS_API_KEY)
-      + '&start=' + toLonLat(fromCoords) + '&end=' + toLonLat(toCoords);
-    const res = await fetch(url, { signal: controller.signal });
-    if(!res.ok) return null;
-    const data = await res.json();
-    const coords = data && data.features && data.features[0] && data.features[0].geometry && data.features[0].geometry.coordinates;
-    if(!coords || !coords.length) return null;
-    return coords.map(c => [c[1], c[0]]); // [lon,lat] -> [lat,lon] pour Leaflet
-  }catch(err){
-    return null; // réseau, timeout, quota dépassé, JSON invalide... on retombe sur la ligne droite
-  }finally{
-    clearTimeout(timeout);
-  }
-}
-
 function showTransition(nextIdx, callback) {
   const msg = TRANSITION_MSGS[currentLang][nextIdx - 1] || '';
   const loc = ENIGMAS[nextIdx][currentLang];
-  const fromCoords = ENIGMA_COORDS[nextIdx - 1];
+  const fromCoords = ENIGMA_END_COORDS[nextIdx - 1] || ENIGMA_COORDS[nextIdx - 1]; // fin du tronçon si la station précédente en est un
   const toCoords   = ENIGMA_COORDS[nextIdx];
 
   const labels = {
@@ -3130,8 +3212,10 @@ function showTransition(nextIdx, callback) {
       distStr = surPlace[currentLang];
     }
   } else {
-    const distM = haversine(fromCoords, toCoords);
-    distStr = distM < 20 ? '< 20 m' : distM + ' m';
+    // Distance = longueur du tracé à pied précalculé, arrondie à 10 m. Sans tracé fiable, on n'affiche rien.
+    const route = routeFor(nextIdx);
+    if(route){ const distM = routeLengthM(route); distStr = distM < 20 ? '< 20 m' : roundTo10(distM) + ' m'; }
+    else distStr = null;
   }
 
   // Build modal
@@ -3150,11 +3234,10 @@ function showTransition(nextIdx, callback) {
     <!-- Map -->
     <div id="navMapContainer" style="flex:1;position:relative;min-height:0;">
       <div id="navMap" style="width:100%;height:100%;background:#1a1a2e;"></div>
-      <div id="navRouteLoading" style="position:absolute;bottom:10px;right:10px;background:rgba(18,10,1,0.85);border:1px solid rgba(201,168,76,0.4);border-radius:6px;padding:0.3rem 0.6rem;font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.1em;color:rgba(201,168,76,0.7);z-index:1000;display:none">${L_.loading}</div>
-      <!-- Distance badge -->
-      <div style="position:absolute;top:10px;right:10px;background:rgba(18,10,1,0.92);border:1px solid rgba(201,168,76,0.5);border-radius:6px;padding:0.4rem 0.7rem;z-index:1000">
+      <!-- Distance badge (masqué tant qu'aucun tracé à pied n'est disponible) -->
+      <div style="${distStr?'':'display:none;'}position:absolute;top:10px;right:10px;background:rgba(18,10,1,0.92);border:1px solid rgba(201,168,76,0.5);border-radius:6px;padding:0.4rem 0.7rem;z-index:1000">
         <div style="font-family:var(--font-mono);font-size:0.5rem;letter-spacing:0.2em;color:rgba(201,168,76,0.55)">${L_.dist}</div>
-        <div style="font-family:var(--font-mono);font-size:1rem;font-weight:700;color:#c9a84c">${distStr}</div>
+        <div style="font-family:var(--font-mono);font-size:1rem;font-weight:700;color:#c9a84c">${distStr||''}</div>
       </div>
       <!-- Step badge -->
       <div style="position:absolute;top:10px;left:10px;background:rgba(18,10,1,0.92);border:1px solid rgba(201,168,76,0.5);border-radius:6px;padding:0.4rem 0.7rem;z-index:1000">
@@ -3178,8 +3261,9 @@ function showTransition(nextIdx, callback) {
 
   document.body.appendChild(modal);
 
-  // Fade in
-  requestAnimationFrame(() => { modal.style.opacity = '1'; });
+  // Fade in (sans requestAnimationFrame : le modal bloque l'écran tant qu'il est transparent)
+  void modal.offsetWidth;
+  modal.style.opacity = '1';
 
   // Init map after render
   let _navMap = null;
@@ -3191,19 +3275,18 @@ function showTransition(nextIdx, callback) {
       center: [(fromCoords[0]+toCoords[0])/2, (fromCoords[1]+toCoords[1])/2],
       zoom: 16,
       zoomControl: true,
-      attributionControl: false,
+      attributionControl: true,
       dragging: true,
       scrollWheelZoom: true,
       touchZoom: true,
       doubleClickZoom: true
     });
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      subdomains: 'abcd', maxZoom: 19
-    }).addTo(_navMap);
+    addTileLayer(_navMap);
 
     // Fit bounds with padding
-    const bounds = L.latLngBounds([fromCoords, toCoords]);
+    const segEnd = ENIGMA_END_COORDS[nextIdx]; // station-tronçon : on montre aussi sa fin
+    const bounds = L.latLngBounds((routeFor(nextIdx) || [fromCoords, toCoords]).concat(segEnd ? [segEnd] : []));
     _navMap.fitBounds(bounds.pad(0.35));
 
     // FROM marker (current position white dot)
@@ -3220,9 +3303,13 @@ function showTransition(nextIdx, callback) {
       .bindPopup(`<span style="font-family:serif;color:#c9a84c;font-size:12px">${loc.nav.title}</span>`)
       .addTo(_navMap)
       .openPopup();
+    if (segEnd) {
+      L.polyline([toCoords, segEnd], { color: '#c9a84c', weight: 4, opacity: 0.8 }).addTo(_navMap);
+      L.marker(segEnd, { icon: toIcon }).addTo(_navMap);
+    }
 
-    // Animated dashed path (ligne droite affichée immédiatement, remplacée si un vrai itinéraire arrive)
-    const path = L.polyline([fromCoords, toCoords], {
+    // Tracé à pied précalculé s'il existe, sinon ligne droite
+    const path = L.polyline(routeFor(nextIdx) || [fromCoords, toCoords], {
       color: '#c9a84c',
       weight: 3,
       opacity: 0,
@@ -3236,17 +3323,6 @@ function showTransition(nextIdx, callback) {
       path.setStyle({ opacity: Math.min(op, 0.85) });
       if (op >= 0.85) clearInterval(fadeIn);
     }, 30);
-
-    // Remplace la ligne droite par le vrai itinéraire à pied si disponible (silencieux en cas d'échec)
-    const loadingEl = document.getElementById('navRouteLoading');
-    if(ORS_API_KEY && loadingEl) loadingEl.style.display='block';
-    fetchWalkingRoute(fromCoords, toCoords).then(routeCoords => {
-      if(loadingEl) loadingEl.style.display='none';
-      if (!routeCoords || !_navMap) return; // API indisponible : on garde la ligne droite
-      path.setLatLngs(routeCoords);
-      const routeBounds = L.latLngBounds(routeCoords);
-      _navMap.fitBounds(routeBounds.pad(0.15));
-    });
 
     // GPS user position if available
     if (_userPos) {
@@ -3475,6 +3551,7 @@ function startMission(){
   G.fragments=Array(N_ENIGMAS).fill(null);G.clues=Array(N_ENIGMAS).fill(null);
   G.hintLevel=Array(N_ENIGMAS).fill(0);G.qcmSelected={};
   G.stepScored=Array(N_ENIGMAS).fill(false);G.stepFailed=Array(N_ENIGMAS).fill(false);
+  _stationFinished={};
   buildInventory();startGPS();saveGame();startTimer();showEnigma(0);
   try{ window.plausible && window.plausible('Jeu: Mission démarrée', {props:{langue: currentLang||'fr'}}); }catch(e){}
 }
@@ -3483,7 +3560,8 @@ function resumeMission(){
   document.getElementById('hud').style.display='flex';
   document.getElementById('inventory').style.display='flex';
   buildInventory();startGPS();startTimer();
-  showEnigma(G.currentStep);
+  if(G.currentStep>=N_ENIGMAS) showTraitorReveal(showMeta); // toutes les stations sont faites : on reprend à la révélation, puis à la méta
+  else showEnigma(G.currentStep);
 }
 
 /* ══════ GPS ══════ */
@@ -3496,28 +3574,11 @@ function startGPS(){
   );
 }
 function updateAllUserMarkers(){if(!_userPos)return;Object.keys(_maps).forEach(idx=>updateMapUserPos(parseInt(idx)));}
-const _routeCache={}, _routeFetchInFlight={}, _routeLastFetchTime={};
 function haversineM(a,b){
   const R=6371000, toRad=d=>d*Math.PI/180;
   const dLat=toRad(b[0]-a[0]), dLon=toRad(b[1]-a[1]);
   const x=Math.sin(dLat/2)**2+Math.cos(toRad(a[0]))*Math.cos(toRad(b[0]))*Math.sin(dLon/2)**2;
   return 2*R*Math.asin(Math.sqrt(x));
-}
-// Ne relance un appel API que si on a bougé de >40m ou si aucun itinéraire n'est encore en cache,
-// et jamais plus d'une fois toutes les 15s par énigme : protège le quota gratuit ORS.
-function maybeFetchLiveRoute(idx, fromCoords, toCoords){
-  if(!ORS_API_KEY) return;
-  const now = Date.now();
-  const cache = _routeCache[idx];
-  const movedFar = !cache || haversineM(cache.from, fromCoords) > 40;
-  const longEnoughSince = now - (_routeLastFetchTime[idx]||0) > 15000;
-  if(_routeFetchInFlight[idx] || !movedFar || !longEnoughSince) return;
-  _routeFetchInFlight[idx]=true;
-  _routeLastFetchTime[idx]=now;
-  fetchWalkingRoute(fromCoords, toCoords).then(routeCoords=>{
-    _routeFetchInFlight[idx]=false;
-    if(routeCoords) _routeCache[idx]={from:fromCoords, coords:routeCoords};
-  });
 }
 function updateMapUserPos(idx){
   if(!_maps[idx]||!_userPos)return;
@@ -3526,11 +3587,10 @@ function updateMapUserPos(idx){
   else{const icon=L.divIcon({className:'',html:'<div class="user-marker"></div>',iconSize:[14,14],iconAnchor:[7,7]});_userMarkers[idx]=L.marker(latlng,{icon}).addTo(_maps[idx]);}
   const target=L.latLng(ENIGMA_COORDS[idx][0],ENIGMA_COORDS[idx][1]);
   if(_polylines[idx]){_maps[idx].removeLayer(_polylines[idx]);}
-  const cached = _routeCache[idx];
-  const lineCoords = cached ? cached.coords : [latlng, target];
-  _polylines[idx]=L.polyline(lineCoords,{color:'#e74c3c',weight:2,opacity:0.7,dashArray:'6, 4'}).addTo(_maps[idx]);
-  try{_maps[idx].fitBounds(L.latLngBounds([latlng,target]).pad(0.3));}catch(e){}
-  maybeFetchLiveRoute(idx, _userPos, ENIGMA_COORDS[idx]);
+  // Ligne droite jusqu'à la station : la position du joueur ne part vers aucun service tiers.
+  _polylines[idx]=L.polyline([latlng, target],{color:'#e74c3c',weight:2,opacity:0.7,dashArray:'6, 4'}).addTo(_maps[idx]);
+  const segEnd=ENIGMA_END_COORDS[idx];
+  try{_maps[idx].fitBounds(L.latLngBounds(segEnd?[latlng,target,segEnd]:[latlng,target]).pad(0.3));}catch(e){}
 }
 
 /* ══════ MAP ══════ */
@@ -3540,9 +3600,17 @@ function initEnigmaMap(idx){
   const coords=ENIGMA_COORDS[idx];
   const map=L.map(container,{center:coords,zoom:16,zoomControl:true,attributionControl:true,dragging:true,scrollWheelZoom:false});
   _maps[idx]=map;
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap © CARTO',subdomains:'abcd',maxZoom:19}).addTo(map);
+  addTileLayer(map);
   const goldIcon=L.divIcon({className:'',html:`<div style="width:16px;height:16px;border-radius:50%;background:#c9a84c;border:2px solid #f0d060;box-shadow:0 0 10px rgba(201,168,76,0.8);"></div>`,iconSize:[16,16],iconAnchor:[8,8]});
-  _targetMarkers[idx]=L.marker(coords,{icon:goldIcon}).bindPopup(`<span style="font-family:serif;color:#c9a84c;font-size:12px">${ENIGMAS[idx][currentLang].nav.title}</span>`).addTo(map);
+  const endCoords=ENIGMA_END_COORDS[idx];
+  const popupTitle=ENIGMAS[idx][currentLang].nav.title+(endCoords?' ('+t('segStart')+')':'');
+  _targetMarkers[idx]=L.marker(coords,{icon:goldIcon}).bindPopup(`<span style="font-family:serif;color:#c9a84c;font-size:12px">${popupTitle}</span>`).addTo(map);
+  if(endCoords){
+    // Station-tronçon : on montre le début, la fin et le segment qui les relie.
+    L.polyline([coords,endCoords],{color:'#c9a84c',weight:4,opacity:0.8}).addTo(map);
+    L.marker(endCoords,{icon:goldIcon}).bindPopup(`<span style="font-family:serif;color:#c9a84c;font-size:12px">${ENIGMAS[idx][currentLang].nav.title} (${t('segEnd')})</span>`).addTo(map);
+    try{map.fitBounds(L.latLngBounds([coords,endCoords]).pad(0.5));}catch(e){}
+  }
   const msgEl=document.getElementById('map-msg-'+idx);if(!_userPos&&msgEl)msgEl.style.display='block';
   if(_userPos)updateMapUserPos(idx);
   setTimeout(()=>{try{map.invalidateSize();}catch(e){}},250);
@@ -3951,8 +4019,8 @@ function buildQCMGrid(e, idx){
 
 function showEnigma(idx){
   G.currentStep=idx;goToScreen('enigma-'+idx);updateProgress(idx);
-  // Mi-parcours : proposer un partage social après le 4e fragment récupéré
-  if(idx===5 && !G._midShareShown){ G._midShareShown=true; setTimeout(()=>showMidShare(),700); }
+  // Mi-parcours : proposer un partage social quand la moitié des stations est faite (arrivée à la 5e)
+  if(idx===N_ENIGMAS/2 && !G._midShareShown){ G._midShareShown=true; setTimeout(()=>showMidShare(),700); }
   // Sync per-enigma nav score/timer
   _navSyncInterval && clearInterval(_navSyncInterval);
   _navSyncInterval = setInterval(()=>{
@@ -4057,10 +4125,12 @@ function checkQCM(idx){
     saveGame();
   } else {
     // Deuxième essai raté : on passe
+    if(!finishStationOnce(idx))return;
     fb.className = 'feedback error'; fb.style.display = 'block';
     fb.textContent = t('wrong');
     playTone('wrong');
     shakeElement(document.getElementById('screen-enigma-'+idx));
+    G.currentStep=Math.min(idx+1,N_ENIGMAS); // station passée : la reprise rouvre la suivante
     saveGame();
     if(idx < N_ENIGMAS-1){setTimeout(()=>showTransition(idx+1, ()=>showEnigma(idx+1)),2000);}
     else{setTimeout(()=>showMeta(),2000);}
@@ -4080,6 +4150,7 @@ function selectQCM(idx, choice, el){
 
 /* ══════ TRIGGER CORRECT (shared) ══════ */
 function triggerCorrect(idx, withPoints){
+  if(!finishStationOnce(idx))return;
   const fb=document.getElementById('feedback-'+idx);
   const qcard=document.getElementById('qcard-'+idx);
   const clueWord=ENIGMAS[idx].clue;
@@ -4105,6 +4176,7 @@ function triggerCorrect(idx, withPoints){
   const fragEl=document.getElementById('fragmentCollected-'+idx);
   const fragVal=document.getElementById('fragmentValue-'+idx);
   if(fragEl&&fragVal){fragVal.textContent=fragLetter;fragEl.style.display='block';}
+  G.currentStep=Math.min(idx+1,N_ENIGMAS); // la reprise doit rouvrir la station suivante (N_ENIGMAS = tout est fait)
   saveGame();
   if(idx<N_ENIGMAS-1){
     if([1,4,6].includes(idx)){
@@ -4201,6 +4273,7 @@ function checkAnswer(idx){
       saveGame();
     }else{
       // Deuxième essai raté : on passe
+      if(!finishStationOnce(idx))return;
       G.stepScored[idx]=false;
       fb.className='feedback error';fb.style.display='block';
       fb.textContent=t('wrong');
@@ -4209,6 +4282,7 @@ function checkAnswer(idx){
       input.disabled=true;
       const confirmBtn=document.querySelector(`#answerArea-${idx} .btn-primary`);
       if(confirmBtn)confirmBtn.disabled=true;
+      G.currentStep=Math.min(idx+1,N_ENIGMAS); // station passée : la reprise rouvre la suivante
       saveGame();
       if(idx<N_ENIGMAS-1){setTimeout(()=>showTransition(idx+1, ()=>showEnigma(idx+1)),2000);}
       else{setTimeout(()=>showMeta(),2000);}
@@ -4288,13 +4362,13 @@ function showMeta(){
   for(let i=tiles.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[tiles[i],tiles[j]]=[tiles[j],tiles[i]];}
   tiles.forEach(o=>{
     const stationTitle=(ENIGMAS[o.st]&&ENIGMAS[o.st][currentLang]&&ENIGMAS[o.st][currentLang].nav.title)||('Station '+(o.st+1));
-    const t=document.createElement('div');t.className='meta-tile'+(o.collected?'':' meta-missing');t.dataset.ch=o.ch;
-    t.innerHTML=o.ch+'<span class="meta-st">'+stationTitle+'</span>';
-    t.onclick=()=>{ _metaAC(); document.querySelectorAll('.meta-tile').forEach(x=>x.classList.remove('meta-selected'));
-      if(_metaSelected===t){_metaSelected=null;return;} t.classList.add('meta-selected');_metaSelected=t;
+    const tile=document.createElement('div');tile.className='meta-tile'+(o.collected?'':' meta-missing');tile.dataset.ch=o.ch;
+    tile.innerHTML=o.ch+'<span class="meta-st">'+stationTitle+'</span>';
+    tile.onclick=()=>{ _metaAC(); document.querySelectorAll('.meta-tile').forEach(x=>x.classList.remove('meta-selected'));
+      if(_metaSelected===tile){_metaSelected=null;return;} tile.classList.add('meta-selected');_metaSelected=tile;
       const msg=document.getElementById('metaMsg'); if(msg) msg.textContent=t('metaTapSlot')+' « '+o.ch+' »';
     };
-    pool.appendChild(t);
+    pool.appendChild(tile);
   });
 
   const narrative=document.getElementById('metaNarrative');
@@ -4398,11 +4472,12 @@ function shareVictory(){
   shareOrCopy(text, 'victShare');
 }
 
-/* ══════ MIDGAME SHARE (4/8 fragments) ══════ */
+/* ══════ MIDGAME SHARE (à la moitié des stations) ══════ */
+function _fragmentCount(){ return G.fragments.filter(f=>f!==null).length; }
 function showMidShare(){
   try{ window.plausible && window.plausible('Jeu: Mi-parcours', {props:{langue: currentLang||'fr'}}); }catch(e){}
   document.getElementById('midShareTitle').textContent = t('midShareTitle');
-  document.getElementById('midShareMsg').textContent = t('midShareMsg');
+  document.getElementById('midShareMsg').textContent = t('midShareMsg', _fragmentCount());
   document.getElementById('midShareBtn').textContent = t('midShareBtn');
   document.getElementById('midShareDismiss').textContent = t('midShareDismiss');
   document.getElementById('midShareOverlay').classList.add('visible');
@@ -4411,7 +4486,7 @@ function closeMidShare(){
   document.getElementById('midShareOverlay').classList.remove('visible');
 }
 function shareMidProgress(){
-  const text=t('midShareText',G.teamName);
+  const text=t('midShareText',G.teamName,_fragmentCount());
   shareOrCopy(text, 'midShareBtn');
 }
 
@@ -4479,6 +4554,71 @@ function playTone(type){
 }
 function restartMission(){G.gameActive=false;document.getElementById('codeInput').value=G.savedCode;document.getElementById('teamInput').value=G.teamName;document.getElementById('codeError').style.display='none';goToScreen('code');}
 
+/* ══════ MODE TEST (localhost uniquement) ══════
+   Actif seulement si la page est servie par localhost / 127.0.0.1 / [::1] / *.localhost
+   ET que l'URL contient ?test=1 (option : &lang=fr|en|de). Sur un vrai domaine,
+   rien de ce bloc ne s'exécute. Permet de parcourir tout le jeu sans code ni GPS. */
+const AQ_TEST = isLocalHost(location.hostname) && /[?&]test=1(&|$)/.test(location.search);
+if(AQ_TEST){
+  window.AQTEST = {
+    start(){
+      G.teamName = G.teamName || 'Equipe test'; G.code = G.code || 'AQUILA-TESTTEST'; G.savedCode = G.code;
+      if(!G.gameActive) startMission();
+    },
+    async goTo(idx){
+      const fresh = !G.gameActive;
+      this.start();
+      if(fresh) await new Promise(r=>setTimeout(r, 450)); // laisse finir le changement d'écran de startMission
+      for(let i=0;i<idx;i++){ revealClue(i,false); G.stepScored[i]=true; }
+      showEnigma(idx);
+    },
+    async solve(idx){
+      if(idx==null) idx = G.currentStep;
+      const e = ENIGMAS[idx], type = e.type || 'text';
+      if(type==='text'){
+        document.getElementById('answerInput-'+idx).value = e.answers[0];
+        checkAnswer(idx);
+      } else if(type==='qcm'){
+        e.answers[0].split('+').forEach(L=>toggleQCM(idx, L, document.getElementById('qcm'+idx+'-'+L)));
+        checkQCM(idx);
+      } else {
+        for(let si=0; si<e.multiSteps.length; si++){
+          const s = e.multiSteps[si];
+          if(s.stepType==='text') document.getElementById(`msi-${idx}-${si}`).value = s.answers[0];
+          else selectMQCM(idx, si, s.correct);
+          checkMultiStep(idx, si);
+          await new Promise(r=>setTimeout(r, 900));
+        }
+      }
+    },
+    meta(){ this.start(); for(let i=0;i<N_ENIGMAS;i++) revealClue(i,false); showTraitorReveal(showMeta); },
+    victory(){ this.start(); showVictory(); },
+    reset(){ clearSave(); location.reload(); }
+  };
+  document.addEventListener('DOMContentLoaded',()=>{
+    const m = location.search.match(/[?&]lang=(fr|en|de)\b/);
+    if(m) setLang(m[1]);
+    const box = document.createElement('div');
+    box.id = 'aqTestPanel';
+    box.style.cssText = 'position:fixed;left:6px;bottom:6px;z-index:99999;background:rgba(0,0,0,.85);color:#fff;font:11px/1.3 monospace;padding:6px 8px;border:1px solid #c9a84c;border-radius:6px;display:flex;gap:4px;align-items:center;flex-wrap:wrap;max-width:96vw';
+    const btn = (label, fn)=>{ const b = document.createElement('button'); b.textContent = label; b.style.cssText = 'font:11px monospace;padding:3px 6px'; b.onclick = fn; return b; };
+    const sel = document.createElement('select');
+    sel.style.cssText = 'font:11px monospace';
+    for(let i=0;i<N_ENIGMAS;i++){ const o = document.createElement('option'); o.value = i; o.textContent = 'Station ' + (i+1); sel.appendChild(o); }
+    const tools = document.createElement('span');
+    tools.style.cssText = 'display:none;gap:4px;align-items:center;flex-wrap:wrap';
+    tools.append(sel,
+      btn('Aller', ()=>AQTEST.goTo(+sel.value)),
+      btn('Résoudre', ()=>AQTEST.solve()),
+      btn('Méta', ()=>AQTEST.meta()),
+      btn('Victoire', ()=>AQTEST.victory()),
+      btn('Effacer', ()=>AQTEST.reset()));
+    const head = btn('TEST', ()=>{ tools.style.display = tools.style.display==='none' ? 'flex' : 'none'; });
+    box.append(head, tools); // replié par défaut pour ne pas cacher les boutons du jeu
+    document.body.appendChild(box);
+  });
+}
+
 /* ══════ BOOT ══════ */
 document.addEventListener('DOMContentLoaded',()=>{
   applyTranslations();
@@ -4499,7 +4639,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       resumeDiv.id='resumeBanner';
       resumeDiv.style.cssText='background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.5);border-radius:6px;padding:0.8rem 1rem;margin-bottom:0.8rem;text-align:center;';
       resumeDiv.innerHTML=`<div style="font-family:Cinzel,serif;font-size:0.75rem;letter-spacing:0.15em;color:var(--gold);margin-bottom:0.5rem">🔱 MISSION EN COURS · ${G.teamName}</div>
-      <div style="font-size:0.85rem;color:rgba(250,247,240,0.7);margin-bottom:0.7rem">Étape ${G.currentStep+1}/${N_ENIGMAS} · ${G.score} pts</div>
+      <div style="font-size:0.85rem;color:rgba(250,247,240,0.7);margin-bottom:0.7rem">Étape ${Math.min(G.currentStep+1,N_ENIGMAS)}/${N_ENIGMAS} · ${G.score} pts</div>
       <button class="btn btn-primary" onclick="resumeMission()" style="width:100%;font-size:0.8rem;padding:0.6rem">⚔️ REPRENDRE LA MISSION</button>
       <div style="margin-top:0.5rem"><a onclick="clearSave();document.getElementById('resumeBanner').remove()" style="font-size:0.7rem;color:rgba(201,168,76,0.4);cursor:pointer;text-decoration:underline">Nouvelle partie</a></div>`;
       const card=document.querySelector('#screen-code .code-inner');
