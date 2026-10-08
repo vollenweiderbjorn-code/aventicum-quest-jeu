@@ -1380,7 +1380,7 @@ const translations = {
     ]
   },
   de: {
-    tagline: "Der Senat von Aventicum erwartet euch, Soldat.",
+    tagline: "Der Senat von Aventicum erwartet euch, Soldaten.",
     missionCode: "MISSIONSCODE",
     teamName: "TEAMNAME",
     teamPlaceholder: "Euer Teamname",
@@ -1390,7 +1390,7 @@ const translations = {
     invLabel: "GESAMMELTE FRAGMENTE",
     nextDest: "NÄCHSTES ZIEL",
     realTimePos: "ECHTZEIT-POSITION",
-    gpsOff: "Aktiviert die Ortung, um eure Position zu sehen",
+    gpsOff: "Aktiviert den Standortzugriff, um eure Position zu sehen",
     openMaps: "In Google Maps öffnen",
     segStart: "Anfang",
     segEnd: "Ende",
@@ -1410,7 +1410,7 @@ const translations = {
     traitorMsgLabel: "NACHRICHT DES VERRÄTERS",
     traitorIdLabel: "IDENTITÄT DES VERRÄTERS",
     resumeTitle: "MISSION LÄUFT",
-    resumeStep: (n,total,score) => `Station ${n}/${total} · ${score} pts`,
+    resumeStep: (n,total,score) => `Station ${n}/${total} · ${score} Pkt`,
     resumeBtn: "MISSION FORTSETZEN",
     resumeNew: "Neues Spiel",
     linkTerms: "AGB",
@@ -1461,12 +1461,12 @@ const translations = {
     selectTwoLabel: "WÄHLT 2 ELEMENTE",
     selectOneLabel: "WÄHLT DIE RICHTIGE ANTWORT",
     stepOfLabel: (si,total) => `SCHRITT ${si} / ${total}`,
-    codeError: "Der Senat lehnt diesen Code ab, Soldat. Prüft eure E-Mail.",
+    codeError: "Der Senat lehnt diesen Code ab, Soldaten. Prüft eure E-Mail.",
     codeChecking: "PRÜFUNG LÄUFT...",
     launchBtn: "MISSION STARTEN",
-    correctFirst: () => `Gut gemacht, Soldat! Hinweis enthüllt. +100 Pkt`,
+    correctFirst: () => `Gut gemacht, Soldaten! Hinweis enthüllt. +100 Pkt`,
     correctRetry: () => `Richtig. Hinweis enthüllt.`,
-    wrong: "Rom verzeiht keine Fehler, Soldat. Keine Punkte für diesen Schritt.",
+    wrong: "Rom verzeiht keine Fehler, Soldaten. Keine Punkte für diesen Schritt.",
     finalReveal: "ABSCHLUSSENTHÜLLUNG",
     aquilaReveals: "DIE AQUILA ENTHÜLLT SICH",
     metaNarrative: (n) => `${n} von 8 Fragmenten gesammelt. Setzt sie in der Reihenfolge eurer Reise auf das Feldzeichen.`,
@@ -1617,7 +1617,7 @@ Your mission, speculatores: follow the thief's trail through the city, solve the
 May Jupiter guide your steps, [TEAM]. Aventicum is counting on you.`,
   de: `Im Morgengrauen stiess der Hüter des Legionsschatzes einen Schrei aus, der ganz Aventicum durchdrang: die Nische der Aquila war leer, das Schloss unberührt. In dieser Nacht wagte ein Dieb das Undenkbare und stahl die Aquila der Legio XXI Rapax, den heiligen Adler, Symbol der Macht Roms. In 120 Minuten betritt Kaiser Hadrian den Boden unserer Stadt.
 
-Eure Mission, Speculatores: folgt der Spur des Diebes durch die Stadt, löst die 8 Rätsel auf seinem Weg, und bringt den Adler zurück. Jedes Monument gibt euch einen Buchstaben. Diese acht Buchstaben ergeben zusammen den Namen, den ihr sucht.
+Eure Mission, Speculatores: folgt der Spur des Diebes durch die Stadt, löst die 8 Rätsel auf seinem Weg und bringt den Adler zurück, bevor der Kaiser eintrifft. Jedes Monument gibt euch einen Buchstaben. Diese acht Buchstaben ergeben in der richtigen Reihenfolge den Namen, den ihr sucht.
 
 Möge Jupiter eure Schritte leiten, [TEAM]. Aventicum zählt auf euch.`
 };
@@ -1665,7 +1665,7 @@ const ENIGMAS = [
       question:`Walking the full length of Rue des Alpes, look closely at the buildings' façades themselves, the stone and wood, not shop windows or signs. Of these four ornaments (A, B, C, D), TWO are REALLY present on these façades. Select the two correct elements, then confirm.`,
       hints:[{text:"Walk the whole length of the street, lifting your eyes from the pavement to the walls and doors, from ground floor up to first-floor height. The two elements aren't hidden: you'll only miss them by not looking at the façades themselves.",cost:20},{text:"One is a carved animal linked to the legend of Rome's founding; the other is a round woven wooden pattern, at the centre of a door.",cost:40},{text:"The two elements present are the Roman she-wolf and the woven rosette on the wooden door. Select A and B, then press CONFIRM.",cost:80}]},
     de:{ nav:{title:'Rue des Alpes',desc:"Beobachtet die Gebäudefassaden entlang der Rue des Alpes.",address:'Rue des Alpes, 1580 Avenches',distance:'~{m} m vom Benneville-Turm, Strassenabschnitt von ~{s} m',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879617,7.041082'},
-      narrative:"Die Rue des Alpes verbindet das Rathaus mit dem Rest der Stadt. Sie sieht wie eine gewöhnliche Strasse aus. Doch der Verräter ging sie mit offenen Augen entlang und sah, was andere nie bemerken. Auf einer Fassade wacht eine steinerne Wölfin, die zwei Zwillinge säugt, die Gründungslegende Roms selbst, seit Generationen dort eingemeisselt. Etwas weiter trägt eine Holztür eine geflochtene Rosette, ein Detail lokaler Handwerkskunst, das niemand im Vorbeigehen bemerkt. Zwei Elemente in aller Öffentlichkeit, unsichtbar für jene, die nicht suchen.",
+      narrative:"Die Rue des Alpes verbindet das Rathaus mit dem Rest der Stadt. Sie sieht wie eine gewöhnliche Strasse aus. Doch der Verräter ging sie mit offenen Augen entlang und sah, was andere nie bemerken. Auf einer Fassade wacht eine steinerne Wölfin, die die Zwillinge Romulus und Remus säugt, die Gründungslegende Roms selbst, seit Generationen dort eingemeisselt. Etwas weiter trägt eine Holztür eine geflochtene Rosette, ein Detail lokaler Handwerkskunst, das niemand im Vorbeigehen bemerkt. Zwei Elemente, für alle sichtbar und doch unsichtbar für jene, die nicht suchen.",
       question:`Geht die ganze Rue des Alpes entlang und betrachtet genau die Fassaden der Gebäude selbst, Stein und Holz, nicht Schaufenster oder Schilder. Von diesen vier Ornamenten (A, B, C, D) befinden sich ZWEI WIRKLICH an diesen Fassaden. Wählt die zwei richtigen Elemente und bestätigt.`,
       hints:[{text:"Geht die ganze Strasse entlang und hebt den Blick vom Gehsteig zu den Wänden und Türen, vom Erdgeschoss bis zur Höhe des ersten Stockwerks. Die zwei Elemente sind nicht versteckt: man übersieht sie nur, wenn man nicht auf die Fassaden selbst schaut.",cost:20},{text:"Eines ist ein geschnitztes Tier, verbunden mit der Gründungslegende Roms; das andere ist ein rundes, geflochtenes Holzmuster in der Mitte einer Tür.",cost:40},{text:"Die zwei vorhandenen Elemente sind die römische Wölfin und die geflochtene Rosette auf der Holztür. Wählt A und B, dann drückt BESTÄTIGEN.",cost:80}]}
   },
@@ -1697,10 +1697,10 @@ const ENIGMAS = [
     de:{ nav:{title:'Cigognier-Heiligtum',desc:"Die einsame 12-Meter-Säule ist von der Strasse aus sichtbar.",address:'Chemin des Conches, 1580 Avenches',distance:'~{m} m vom Amphitheater',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.881942,7.046134'},
       narrative:"Ihr seid im Herzen des grössten Heiligtums von Aventicum. 1939 entdeckten Arbeiter den kostbarsten Schatz der römischen Schweiz in einem Abwasserkanal unter diesen Steinen: eine goldene Kaiserbüste. Der Verräter weiss, dass die Aquila in der Nähe dieses Ortes versteckt werden sollte. Aber zuerst: wer ist dieser Kaiser?",
       question:"1939 wurde eine goldene Kaiserbüste in den Abwasserkanälen dieses Heiligtums entdeckt, der grösste Schatz der römischen Schweiz. Dieser Kaiser herrschte von 161 bis 180 n. Chr., Krieger und Philosoph zugleich, Autor der Selbstbetrachtungen. Wer ist er? Gebt seinen Namen in Grossbuchstaben ein.",
-      hints:[{text:"Dieser Kaiser war auch stoischer Philosoph, selten für einen römischen Kriegsherrn. Seine Selbstbetrachtungen sind ein privates Tagebuch, geschrieben während seiner Feldzüge. Sein Buch wird noch heute gedruckt.",cost:20},{text:"Sein Vorname ist Marcus. Sein lateinischer Beiname kommt von aureus, \"golden\". Zwei Wörter. Das zweite bedeutet wörtlich \"der Goldene\" oder \"der wie Gold Glänzende\".",cost:40},{text:"Die Antwort ist MARK AUREL.",cost:80}]}
+      hints:[{text:"Dieser Kaiser war auch stoischer Philosoph, selten für einen römischen Kriegsherrn. Seine Selbstbetrachtungen sind ein privates Tagebuch, geschrieben während seiner Feldzüge. Sein Buch wird noch heute gedruckt.",cost:20},{text:"Sein Vorname ist Marcus. Sein lateinischer Beiname kommt von aureus, „golden“. Zwei Wörter. Das zweite bedeutet wörtlich „der Goldene“ oder „der wie Gold Glänzende“.",cost:40},{text:"Die Antwort ist MARK AUREL.",cost:80}]}
   },
   // ─── ÉNIGME 6 THÉÂTRE DU SELLEY (Claude Vision API) ───────────────────
-  { id:6, step:'VI', fragment:'T', clue:'CARTOUCHE-1902', type:'text', answers:['1902'], groupMission:{fr:'Cherchez ensemble le cartouche gravé dans la pierre. Il faut deux paires d\'yeux pour le repérer.',en:'Search together for the cartouche carved in the stone. It takes two pairs of eyes to spot it.',de:'Sucht gemeinsam das in den Stein gemeisselte Kartuschenfeld. Vier Augen sehen mehr als zwei.'},
+  { id:6, step:'VI', fragment:'T', clue:'CARTOUCHE-1902', type:'text', answers:['1902'], groupMission:{fr:'Cherchez ensemble le cartouche gravé dans la pierre. Il faut deux paires d\'yeux pour le repérer.',en:'Search together for the cartouche carved in the stone. It takes two pairs of eyes to spot it.',de:'Sucht gemeinsam die in den Stein gemeisselte Kartusche. Vier Augen sehen mehr als zwei.'},
     fr:{ nav:{title:'Théâtre du Selley',desc:"Le théâtre romain du Selley est visible depuis la route cantonale.",address:'Chemin du Selley, 1580 Avenches',distance:'~{m} m du Cigognier',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880602,7.048768'},
       narrative:"Le plus grand théâtre romain de Suisse : onze mille spectateurs. Deux mille ans plus tard, des restaurateurs sont venus sauver ce qui restait et ont signé leur travail dans la pierre. Parmi des centaines de blocs, ils ont gravé un cartouche octogonal : une initiale, une date. C'est l'indice le plus discret du parcours.",
       question:"Un cartouche octogonal a été sculpté dans la maçonnerie basse de la cavea. Il porte une initiale et une date à 4 chiffres. Cherche-le dans les gradins, à hauteur de genou ou de taille, petit, discret, en pierre calcaire. L'année gravée est ton code. Entre les 4 chiffres.",
@@ -1710,8 +1710,8 @@ const ENIGMAS = [
       question:"An octagonal cartouche was carved into the lower masonry of the cavea, bearing an initial and a 4-digit year. Find it in the seating tiers, small, discreet, at knee or waist height. The engraved year is your code. Enter the 4 digits.",
       hints:[{text:"Look for a limestone block with an 8-sided carved frame (an octagon) set into the low masonry of the seating tiers. It is not high up: it is within arm's reach.",cost:20},{text:"A single letter, initial of the word Restauration, precedes four digits. These digits designate a year from the very beginning of the 20th century.",cost:40},{text:"The code is 1902.",cost:0}]},
     de:{ nav:{title:'Selley-Theater',desc:"Das römische Selley-Theater ist von der Kantonsstrasse aus sichtbar.",address:'Chemin du Selley, 1580 Avenches',distance:'~{m} m vom Cigognier',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880602,7.048768'},
-      narrative:"Das grösste römische Theater der Schweiz: elftausend Zuschauer. Zweitausend Jahre später kamen Restauratoren, um das Verbliebene zu retten, und signierten ihre Arbeit im Stein. Unter Hunderten von Blöcken meisselten sie ein achteckiges Cartouche: einen Anfangsbuchstaben, eine Jahreszahl. Es ist der diskreteste Hinweis des gesamten Kurses.",
-      question:"Ein achteckiges Cartouche wurde in das untere Mauerwerk der Cavea gemeisselt, mit einem Anfangsbuchstaben und einer vierstelligen Jahreszahl. Findet es in den Sitzreihen, klein, diskret, auf Knie- oder Taillenhöhe. Die eingravierte Jahreszahl ist euer Code. Gebt die 4 Ziffern ein.",
+      narrative:"Das grösste römische Theater der Schweiz: elftausend Zuschauer. Zweitausend Jahre später kamen Restauratoren, um das Verbliebene zu retten, und signierten ihre Arbeit im Stein. Unter Hunderten von Blöcken meisselten sie eine achteckige Kartusche: einen Anfangsbuchstaben, eine Jahreszahl. Es ist der diskreteste Hinweis des gesamten Rundgangs.",
+      question:"Eine achteckige Kartusche wurde in das untere Mauerwerk der Cavea gemeisselt, mit einem Anfangsbuchstaben und einer vierstelligen Jahreszahl. Findet es in den Sitzreihen, klein, diskret, auf Knie- oder Taillenhöhe. Die eingravierte Jahreszahl ist euer Code. Gebt die 4 Ziffern ein.",
       hints:[{text:"Sucht nach einem Kalksteinblock mit einem 8-seitigen gemeisselten Rahmen (ein Achteck) im niedrigen Mauerwerk der Sitzreihen. Es ist nicht hoch oben: es ist in Reichweite.",cost:20},{text:"Ein einziger Buchstabe, Anfang des Wortes Restauration, steht vor vier Ziffern. Diese Ziffern bezeichnen ein Jahr vom ganz Anfang des 20. Jahrhunderts.",cost:40},{text:"Der Code ist 1902.",cost:0}]}
   },
   // ─── ÉNIGME 7 THERMES DU FORUM (TTS + STT) ────────────────────────────
@@ -1725,8 +1725,8 @@ const ENIGMAS = [
       question:"This underfloor area of the baths hides a Roman heating system. Its hundreds of small pillars, called pilae, held up a raised floor under which hot air circulated. What is the name of this underfloor heating system as a whole? Enter your answer in capital letters.",
       hints:[{text:"Look closely at the shape of the small columns in front of you: square bricks or terracotta discs, stacked like piles of coins, low enough to step over. Each individual pillar had its own precise Latin name, not the name of the whole system.",cost:20},{text:"Each pillar is called a pila (plural: pilae, Latin for \"stake\"). Together, these pilae held up a raised floor, under which hot air from a furnace (praefurnium) circulated: that whole underfloor heating system is what you need to name.",cost:40},{text:"The answer is HYPOCAUST.",cost:0}]},
     de:{ nav:{title:'Forumthermen',desc:"Die Fundamente der römischen Thermen sind von der Hauptstrasse aus sichtbar.",address:'Route de Berne, 1580 Avenches',distance:'~{m} m vom Selley-Theater',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.885937,7.050096'},
-      narrative:"Vor euch erstreckt sich der Unterboden der öffentlichen Bäder von Aventicum. Hunderte kleiner Ziegelsteinpfeiler stützen den verschwundenen Fussboden, auf dem die Römer lebten und badeten. Heissluft zirkulierte hier: das war das technische Herz des römischen Soziallebens. Der Verräter kennt diesen Mechanismus auswendig. Jetzt seid ihr an der Reihe, ihn zu entdecken.",
-      question:"Dieser Unterboden der Thermen verbirgt ein römisches Heizsystem. Die hunderten kleinen Pfeiler, pilae genannt, trugen einen erhöhten Boden, unter dem heisse Luft zirkulierte. Wie heisst dieses Fussbodenheizungssystem insgesamt? Gebt eure Antwort in Grossbuchstaben ein.",
+      narrative:"Vor euch erstreckt sich der Unterbau der öffentlichen Bäder von Aventicum. Hunderte kleiner Ziegelsteinpfeiler stützen den verschwundenen Fussboden, auf dem die Römer lebten und badeten. Heissluft zirkulierte hier: das war das technische Herz des römischen Soziallebens. Der Verräter kennt diesen Mechanismus auswendig. Jetzt seid ihr an der Reihe, ihn zu entdecken.",
+      question:"Dieser Unterbau der Thermen verbirgt ein römisches Heizsystem. Die Hunderte kleiner Pfeiler, pilae genannt, trugen einen erhöhten Boden, unter dem heisse Luft zirkulierte. Wie heisst dieses Fussbodenheizungssystem insgesamt? Gebt eure Antwort in Grossbuchstaben ein.",
       hints:[{text:"Betrachtet genau die Form der kleinen Säulen vor euch: quadratische Ziegel oder Terrakotta-Scheiben, aufeinandergestapelt wie Münztürme, niedrig genug, um darüber zu steigen. Jeder einzelne Pfeiler hatte einen eigenen lateinischen Namen, nicht den Namen des ganzen Systems.",cost:20},{text:"Jeder Pfeiler heisst pila (Mehrzahl: pilae, lateinisch für „Pfahl“). Zusammen trugen diese pilae einen erhöhten Boden, unter dem heisse Luft aus einem Ofen (Praefurnium) zirkulierte: genau dieses Fussbodenheizungssystem müsst ihr benennen.",cost:40},{text:"Die Antwort ist HYPOKAUST.",cost:0}]}
   },
   // ─── ÉNIGME 8 PORTE DE L'EST (Vision panoramique + Serment vocal) ──────
@@ -1741,7 +1741,7 @@ const ENIGMAS = [
       hints:[{text:"Look for the official information panel on or next to the East Gate: the city's name is written there. If the panel is inaccessible (ongoing restoration work), skip straight to the next hint: you don't need it to continue.",cost:20},{text:"It's the name you've read and heard at every stop of this quest, on the panels and in the traitor's story. It starts with A.",cost:40},{text:"The answer is AVENTICUM.",cost:0}]},
     de:{ nav:{title:"Osttor",desc:"Das monumentale römische Tor befindet sich auf der Ostseite der Stadtmauer.",address:"Route de Berne, 1580 Avenches",distance:'~{m} m von den Thermen',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.887844,7.058160'},
       narrative:"Ihr seid an den Toren des Imperiums. Das Osttor bewachte den Haupteingang von Aventicum, unter Vespasian um 72 n. Chr. erbaut. Hier versteckte der Verräter die Aquila, überzeugt, dass ihr nie so weit kommen würdet. Er irrte sich.",
-      question:"Am Osttor schliesst sich eine letzte Frage: Wie lautet der lateinische Name dieser Stadt, Hauptstadt des helvetischen Volkes, die ihr während dieser ganzen Suche durchquert habt? Gebt ihn in Grossbuchstaben ein.",
+      question:"Am Osttor wartet eine letzte Frage: Wie lautet der lateinische Name dieser Stadt, Hauptstadt des helvetischen Volkes, die ihr während dieser ganzen Suche durchquert habt? Gebt ihn in Grossbuchstaben ein.",
       hints:[{text:"Sucht nach der offiziellen Informationstafel am oder neben dem Osttor: der Stadtname steht dort. Ist die Tafel nicht zugänglich (laufende Restaurierungsarbeiten), geht direkt zum nächsten Hinweis weiter, ihr braucht sie nicht, um fortzufahren.",cost:20},{text:"Es ist der Name, den ihr bei jeder Station dieser Suche gelesen und gehört habt, auf den Tafeln und in der Geschichte des Verräters. Er beginnt mit A.",cost:40},{text:"Die Antwort ist AVENTICUM.",cost:0}]}
   }
 ];
@@ -2176,17 +2176,17 @@ const TRANSITION_MSGS = {
     // 0→1
     "Verlasst den Kirchplatz und geht nach Südosten, der Rue Centrale entlang. Der mittelalterliche Turm ist {d} entfernt. Der Dieb hat etwas in seinen Stein geritzt...",
     // 1→2
-    "Die Rue des Alpes beginnt {d} entfernt, im Norden. Geht sie von einem Ende zum anderen ab, in Richtung Nordosten: {s} zu Fuss. Untersucht dabei die Fassaden der Gebäude auf beiden Seiten. Der Dieb hat zwei Embleme beobachtet, die offen sichtbar versteckt sind. Haltet an und schaut hoch.",
+    "Die Rue des Alpes beginnt {d} entfernt, im Norden. Geht sie von einem Ende zum anderen, in Richtung Nordosten: {s} zu Fuss. Betrachtet unterwegs die Fassaden auf beiden Seiten genau. Der Dieb hat zwei Embleme bemerkt, die sich mitten im Blickfeld verbergen. Bleibt stehen und schaut nach oben.",
     // 2→3
-    "Am Ende der Rue des Alpes geht ihr auf die Rue Centrale und weiter nach Nordosten: Das römische Amphitheater ist {d} entfernt, in der Nähe des Schlosses. Ihr könnt es nicht verfehlen: seine antiken Steinmauern durchbrechen die Vegetation.",
+    "Am Ende der Rue des Alpes biegt ihr auf die Rue Centrale ein und geht weiter nach Nordosten: Das römische Amphitheater ist {d} entfernt, in der Nähe des Schlosses. Ihr könnt es nicht verfehlen: Seine antiken Steinmauern ragen aus dem Grün hervor.",
     // 3→4
-    "Vom Amphitheater aus geht ihr nach Osten, über die Avenue Jomini und dann die Route du Faubourg. Das Cigognier-Heiligtum ist {d} entfernt: Eine einsame 12-Meter-Säule steht in den Feldern. Sie ist von weitem sichtbar.",
+    "Vom Amphitheater aus geht ihr nach Osten, der Avenue Jomini und dann der Route du Faubourg entlang. Das Cigognier-Heiligtum ist {d} entfernt: Eine einsame 12-Meter-Säule steht in den Feldern. Sie ist von weitem sichtbar.",
     // 4→5
-    "Das Selley-Theater ist {d} entfernt, im Südosten des Heiligtums. Die Steinstufen des römischen Theaters enthüllen sich in der Landschaft. Theater und Cigognier bildeten einst ein heiliges Ensemble.",
+    "Das Selley-Theater ist {d} entfernt, im Südosten des Heiligtums. Die Steinstufen des römischen Theaters zeichnen sich in der Landschaft ab. Theater und Cigognier bildeten einst ein heiliges Ensemble.",
     // 5→6
     "Verlasst das Theater und geht nach Norden, dem Chemin du Selley entlang. Die Forum-Thermen sind {d} entfernt. Achtet auf die römischen Mauern, die teilweise von der Vegetation verborgen sind. Der Dieb hat sich hier aufgewärmt.",
     // 6→7
-    "Letzter Marsch, Speculator. Von den Thermen aus geht ihr nach Osten: Das Osttor ist {d} entfernt. Es enthüllt sich am Ende des Weges, mit dem Tornallaz-Turm als letztem Wächter. Die Aquila ist ganz nah."
+    "Letzter Marsch, Speculator. Von den Thermen aus geht ihr nach Osten: Das Osttor ist {d} entfernt. Es taucht am Ende des Weges auf, mit dem Tornallaz-Turm als letztem Wächter. Die Aquila ist ganz nah."
   ]
 };
 
@@ -2207,7 +2207,7 @@ function showTransition(nextIdx, callback) {
   const labels = {
     fr: { title:'PROCHAINE DESTINATION', dist:'DISTANCE', btn:'EN AVANT. BONNE CHANCE', loading:'Calcul de l\'itinéraire...' },
     en: { title:'NEXT DESTINATION',      dist:'DISTANCE', btn:'FORWARD. GOOD LUCK',     loading:'Calculating route...' },
-    de: { title:'NÄCHSTES ZIEL',         dist:'DISTANZ',  btn:'VORWÄRTS. VIEL ERFOLG',  loading:'Route berechnen...' }
+    de: { title:'NÄCHSTES ZIEL',         dist:'DISTANZ',  btn:'VORWÄRTS. VIEL ERFOLG',  loading:'Route wird berechnet...' }
   };
   const L_ = labels[currentLang];
 
@@ -2407,7 +2407,7 @@ const BC_TEXTS = {
     bc_overline1: "MORGENGRAUEN · DER LEGIONSSCHATZ",
     body1: "Im Morgengrauen stiess der Hüter des Legionsschatzes einen Schrei aus, der ganz Aventicum durchdrang: die Nische der <em class=\"bc-em\">Aquila</em> war leer, das Schloss unberührt.\n\nIn dieser Nacht wagte ein Dieb das Undenkbare und stahl den heiligen Adler der <em class=\"bc-em\">Legio XXI Rapax</em>, Symbol der Macht Roms.",
     bc_overline2: "MISSIONSBEFEHL",
-    body2: "In <em class=\"bc-em\">120 Minuten</em> betritt Kaiser Hadrian den Boden unserer Stadt.\n\nEure Mission, <em class=\"bc-em\">Speculatores</em>: folgt der Spur des Diebes durch die Stadt, löst die 8 Rätsel auf seinem Weg, und bringt den Adler zurück.",
+    body2: "In <em class=\"bc-em\">120 Minuten</em> betritt Kaiser Hadrian den Boden unserer Stadt.\n\nEure Mission, <em class=\"bc-em\">Speculatores</em>: folgt der Spur des Diebes durch die Stadt, löst die 8 Rätsel auf seinem Weg und bringt den Adler zurück.",
     bc_overline3: "MÖGE JUPITER EUCH LEITEN",
     bc_teamlabel: "SPECULATORES",
     body3: "Möge Jupiter eure Schritte leiten. Aventicum zählt auf euch.",
@@ -2424,7 +2424,7 @@ const BC_TEXTS = {
       { name:"SPÄHER", desc:"Sucht Hinweise im Gelände." },
       { name:"SCHREIBER", desc:"Notiert Antworten und Codes." },
       { name:"ZEITWÄCHTER", desc:"Überwacht den Timer." },
-      { name:"SPRECHER", desc:"Gibt Antworten in die App ein." }
+      { name:"SPRECHER", desc:"Gibt die Antworten in die App ein." }
     ]
   }
 };
