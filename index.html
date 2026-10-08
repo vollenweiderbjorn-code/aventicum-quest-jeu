@@ -32,6 +32,34 @@
     --font-body: 'Space Grotesk', system-ui, -apple-system, sans-serif;
     --font-mono: 'Space Mono', 'Courier New', Courier, monospace;
   }
+
+/* ── Bouton son (ajout, phase 4) : discret, coin haut gauche sous la barre de titre ── */
+#aqSoundBtn {
+  position: fixed;
+  z-index: 400;
+  left: 4px;
+  top: calc(var(--nav-h) + 4px);
+  width: 44px; height: 44px;
+  padding: 0; border: 0; background: transparent;
+  display: none;
+  align-items: center; justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+#aqSoundBtn.on { display: flex; }
+#aqSoundBtn span {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(28,24,18,0.5);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+#aqSoundBtn:active span { background: rgba(28,24,18,0.75); }
+#aqSoundBtn svg { width: 16px; height: 16px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+/* Écran d'assemblage : le titre centré occupe la largeur sous la barre, le bouton passe à droite dans la barre */
+body[data-screen="meta"] #aqSoundBtn { top: 4px; left: auto; right: 4px; }
+#aqSoundBtn .aq-snd-cross { display: none; }
+#aqSoundBtn[aria-pressed="true"] .aq-snd-waves { display: none; }
+#aqSoundBtn[aria-pressed="true"] .aq-snd-cross { display: inline; }
 </style>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
@@ -1998,6 +2026,7 @@ html, body {
 <div id="vignette"></div>
 <div id="scanLine"></div>
 <div id="flashOverlay"></div>
+<button id="aqSoundBtn" type="button" aria-pressed="false" aria-label="Son activé" title="Son activé" onclick="toggleSound()"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="aq-snd-waves" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/><path class="aq-snd-cross" d="M17 9l5 6M22 9l-5 6"/></svg></span></button>
 
 <!-- ═══════ MIDGAME SHARE MODAL ═══════ -->
 <div id="midShareOverlay" class="midshare-overlay">
@@ -2416,6 +2445,8 @@ const translations = {
     certDate: "DATE",
     certSeal: "QUE JUPITER GUIDE VOS PAS · S·P·Q·R",
     dateLocale: "fr-CH",
+    soundOn: "Son activé",
+    soundOff: "Son coupé",
     imageUnavailable: "Image indisponible",
     distAbout: (m) => `environ ${m} m`,
     distFallback: "une courte distance",
@@ -2515,6 +2546,8 @@ const translations = {
     certDate: "DATE",
     certSeal: "MAY JUPITER GUIDE YOUR STEPS · S·P·Q·R",
     dateLocale: "en-GB",
+    soundOn: "Sound on",
+    soundOff: "Sound off",
     imageUnavailable: "Image unavailable",
     distAbout: (m) => `about ${m} m`,
     distFallback: "a short distance",
@@ -2614,6 +2647,8 @@ const translations = {
     certDate: "DATUM",
     certSeal: "MÖGE JUPITER EURE SCHRITTE LEITEN · S·P·Q·R",
     dateLocale: "de-CH",
+    soundOn: "Ton an",
+    soundOff: "Ton aus",
     imageUnavailable: "Bild nicht verfügbar",
     distAbout: (m) => `etwa ${m} m`,
     distFallback: "ein kurzes Stück",
@@ -2707,6 +2742,7 @@ function applyTranslations() {
   set('victEmpire', t('empireMsg'));
   set('victReview', t('reviewBtn'));
   updateReviewButton();
+  updateSoundButton();
   // Textes statiques du HTML : data-t = texte, data-t-html = HTML maison (jamais de saisie du joueur)
   document.querySelectorAll('[data-t]').forEach(el=>{ const v=t(el.dataset.t); if(typeof v==='string') el.textContent=v; });
   document.querySelectorAll('[data-t-html]').forEach(el=>{ const v=t(el.dataset.tHtml); if(typeof v==='string') el.innerHTML=v; });
@@ -3148,7 +3184,7 @@ let _screenToken=0;
 function goToScreen(fullId){
   const token=++_screenToken;
   document.querySelectorAll('.screen.active').forEach(s=>{s.classList.remove('active');s.classList.add('exit');setTimeout(()=>{s.classList.remove('exit');s.style.display='none';},580);});
-  G.currentScreen=fullId;updateHUD();
+  G.currentScreen=fullId;document.body.setAttribute('data-screen',fullId);updateHUD();updateSoundButton();
   setTimeout(()=>{
     if(token!==_screenToken)return; // un appel plus récent a pris la main
     const el=document.getElementById('screen-'+fullId);
@@ -3693,7 +3729,7 @@ function startTimer(){
   },1000);
 }
 function startMission(){
-  triggerFlash();G.gameActive=true;G.startTime=Date.now();G.score=1000;G.currentStep=0;
+  triggerFlash();G.gameActive=true;aqWakeLockRequest();G.startTime=Date.now();G.score=1000;G.currentStep=0;
   G.fragments=Array(N_ENIGMAS).fill(null);G.clues=Array(N_ENIGMAS).fill(null);
   G.hintLevel=Array(N_ENIGMAS).fill(0);G.qcmSelected={};
   G.stepScored=Array(N_ENIGMAS).fill(false);G.stepFailed=Array(N_ENIGMAS).fill(false);
@@ -3702,7 +3738,7 @@ function startMission(){
   try{ window.plausible && window.plausible('Jeu: Mission démarrée', {props:{langue: currentLang||'fr'}}); }catch(e){}
 }
 function resumeMission(){
-  G.gameActive=true;
+  G.gameActive=true;aqWakeLockRequest();
   document.getElementById('hud').style.display='flex';
   document.getElementById('inventory').style.display='flex';
   buildInventory();startGPS();startTimer();
@@ -3815,7 +3851,7 @@ function revealClue(stepIndex, withAnim){
         flyEl.style.letterSpacing='0.05em';
         setTimeout(()=>{
           flyEl.remove();
-          slot.classList.add('revealed','dropping');
+          slot.classList.add('revealed','dropping'); playTone('fragment');
           setTimeout(()=>slot.classList.remove('dropping'),900);
         },650);
       },800);
@@ -4312,6 +4348,7 @@ function triggerCorrect(idx, withPoints){
   } else {
     playTone('correct');
     revealClue(idx,false);
+    setTimeout(()=>playTone('fragment'),550);
     fb.className='feedback success';fb.style.display='block';
     fb.innerHTML=t('correctRetry')+`<div style="font-family:var(--font-mono);font-size:22px;font-weight:700;letter-spacing:.2em;color:var(--gold);margin-top:8px;text-shadow:0 0 20px rgba(201,168,76,0.6)">✦ ${fragLetter} ✦</div><div style="font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;color:rgba(201,168,76,.5);margin-top:4px">${clueWord}</div>`;
   }
@@ -4470,21 +4507,21 @@ function useHint(idx,hintIdx,free){ // free = true : indice offert (premier indi
 /* ══════ META : assemblage du vexillum + révélation ══════ */
 const META_LETTERS = ['H','E','L','V','E','T','I','I'];
 const META_ROMAN = ['I','II','III','IV','V','VI','VII','VIII'];
-let _metaAudio=null, _metaSelected=null, _metaPlaced=0, _metaBuilt=false;
+let _metaSelected=null, _metaPlaced=0, _metaBuilt=false;
 
-function _metaAC(){ if(!_metaAudio) _metaAudio=new (window.AudioContext||window.webkitAudioContext)(); return _metaAudio; }
-function _metaChisel(){ try{ const a=_metaAC(),t=a.currentTime,b=a.createBuffer(1,a.sampleRate*0.06,a.sampleRate),d=b.getChannelData(0);
+function _metaAC(){ return aqCtx(); }
+function _metaChisel(){ try{ const a=_metaAC(); if(!aqAudioOn(a)) return; const t=a.currentTime,b=a.createBuffer(1,a.sampleRate*0.06,a.sampleRate),d=b.getChannelData(0);
   for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/d.length*6);
   const s=a.createBufferSource(),f=a.createBiquadFilter();f.type="bandpass";f.frequency.value=3000;f.Q.value=1.2;
   const g=a.createGain();g.gain.setValueAtTime(.5,t);s.buffer=b;s.connect(f);f.connect(g);g.connect(a.destination);s.start(t); }catch(e){} }
-function _metaCornu(){ try{ const a=_metaAC(),t=a.currentTime;
+function _metaCornu(){ try{ const a=_metaAC(); if(!aqAudioOn(a)) return; const t=a.currentTime;
   [[110,0,.9],[165,.45,1.4]].forEach(([f0,dt,dur])=>{ const o=a.createOscillator(),g=a.createGain(),v=a.createOscillator(),vg=a.createGain();
     o.type="sawtooth";o.frequency.setValueAtTime(f0,t+dt);
     v.frequency.value=5.5;vg.gain.value=3;v.connect(vg);vg.connect(o.frequency);v.start(t+dt);v.stop(t+dt+dur);
     g.gain.setValueAtTime(0,t+dt);g.gain.linearRampToValueAtTime(.28,t+dt+.06);g.gain.exponentialRampToValueAtTime(.001,t+dt+dur);
     const fl=a.createBiquadFilter();fl.type="lowpass";fl.frequency.value=1400;
     o.connect(fl);fl.connect(g);g.connect(a.destination);o.start(t+dt);o.stop(t+dt+dur); }); }catch(e){} }
-function _metaDrum(){ try{ const a=_metaAC(),t=a.currentTime;[0,.28,.56].forEach(dt=>{ const o=a.createOscillator(),g=a.createGain();
+function _metaDrum(){ try{ const a=_metaAC(); if(!aqAudioOn(a)) return; const t=a.currentTime;[0,.28,.56].forEach(dt=>{ const o=a.createOscillator(),g=a.createGain();
   o.type="sine";o.frequency.setValueAtTime(70,t+dt);o.frequency.exponentialRampToValueAtTime(45,t+dt+.18);
   g.gain.setValueAtTime(.6,t+dt);g.gain.exponentialRampToValueAtTime(.001,t+dt+.2);
   o.connect(g);g.connect(a.destination);o.start(t+dt);o.stop(t+dt+.22); }); }catch(e){} }
@@ -4528,8 +4565,8 @@ function _metaTapSlot(s){
   const msg=document.getElementById('metaMsg');
   if(_metaSelected.dataset.ch===s.dataset.ch){
     s.querySelector('.meta-letter').textContent=_metaSelected.dataset.ch;
-    s.classList.add('meta-filled','meta-flash'); _metaChisel(); if(navigator.vibrate)navigator.vibrate(40);
-    _metaSelected.classList.add('meta-gone');_metaSelected.classList.remove('meta-selected');_metaSelected=null;_metaPlaced++;
+    s.classList.add('meta-filled','meta-flash');
+    _metaSelected.classList.add('meta-gone');_metaSelected.classList.remove('meta-selected');_metaSelected=null;_metaPlaced++; playTone('place',_metaPlaced);
     const msgs=[t('metaMsg1'),t('metaMsg2'),t('metaMsg3')];
     if(msg) msg.textContent=msgs[_metaPlaced%3];
     if(_metaPlaced===META_LETTERS.length){ G.gameActive=false; clearSave(); setTimeout(_metaReveal,700); }
@@ -4542,13 +4579,13 @@ function _metaTapSlot(s){
 function _metaReveal(){
   const overlay=document.getElementById('metaRevealOverlay');
   overlay.classList.add('on');
-  if(navigator.vibrate)navigator.vibrate(300);
+  aqVibrate(300);
   setTimeout(()=>{ _metaCornu(); },900);
   setTimeout(()=>{ const w=document.getElementById('metaWordDisplay');
     META_LETTERS.forEach((ch,i)=>{ const sp=document.createElement('span');sp.textContent=ch;w.appendChild(sp);
       setTimeout(()=>{sp.style.opacity=1;_metaChisel();},1600+i*160); }); },0);
   setTimeout(()=>{ document.getElementById('metaEagleWrap').classList.add('meta-show');
-    document.getElementById('metaRays').classList.add('meta-show'); _metaCornu(); _metaDrum(); },3100);
+    document.getElementById('metaRays').classList.add('meta-show'); playTone('reveal'); },3100);
   setTimeout(()=>{ triggerFlash(); showVictory(); },5600);
 }
 
@@ -4556,7 +4593,7 @@ function _metaReveal(){
 function showVictory(){
   const elapsed=Math.floor((Date.now()-G.startTime)/1000);
   const mins=Math.floor(elapsed/60),secs=elapsed%60;
-  G.gameActive=false;
+  G.gameActive=false;aqWakeLockRelease();
   try{ window.plausible && window.plausible('Jeu: Mission terminée', {props:{langue: currentLang||'fr', duree_min: mins, score: G.score}}); }catch(e){}
   // Final scene text inject into victory screen narrative if element exists
   const finalSceneEl=document.getElementById('victoryFinalScene');
@@ -4572,7 +4609,7 @@ function showVictory(){
   if(_gpsWatchId!==null){navigator.geolocation.clearWatch(_gpsWatchId);_gpsWatchId=null;}
   if(_timerInterval){clearInterval(_timerInterval);_timerInterval=null;}
   goToScreen('victory');
-  setTimeout(()=>{const el=document.getElementById('victoryEagle');el.style.opacity='1';el.classList.add('eagle-victory');launchConfetti();},400);
+  setTimeout(()=>{const el=document.getElementById('victoryEagle');el.style.opacity='1';el.classList.add('eagle-victory');launchConfetti();playTone('victory');},400);
   document.getElementById('victoryTeam').textContent=G.teamName;
   document.getElementById('victoryTime').textContent=`${t('duration')} : ${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
   document.getElementById('victoryScore').textContent=G.score+' pts';
@@ -4620,6 +4657,7 @@ function shareVictory(){
 /* ══════ MIDGAME SHARE (à la moitié des stations) ══════ */
 function _fragmentCount(){ return G.fragments.filter(f=>f!==null).length; }
 function showMidShare(){
+  playTone('half');
   try{ window.plausible && window.plausible('Jeu: Mi-parcours', {props:{langue: currentLang||'fr'}}); }catch(e){}
   document.getElementById('midShareTitle').textContent = t('midShareTitle');
   document.getElementById('midShareMsg').textContent = t('midShareMsg', _fragmentCount());
@@ -4661,43 +4699,162 @@ function shareOrCopy(text, btnId){
 function shakeElement(el){el.classList.remove('shaking');void el.offsetWidth;el.classList.add('shaking');setTimeout(()=>el.classList.remove('shaking'),600);}
 function triggerFlash(){const fl=document.getElementById('flashOverlay');fl.classList.remove('flashing');void fl.offsetWidth;fl.classList.add('flashing');}
 
-/* ── WebAudio tones ── */
-const _audioCtx=window.AudioContext||window.webkitAudioContext?new(window.AudioContext||window.webkitAudioContext)():null;
-function playTone(type){
-  if(!_audioCtx)return;
+/* ══════ SON : contexte audio débloqué au premier appui, sons générés en code, bouton muet, vibration ══════
+   Aucun fichier audio : tout est synthétisé avec WebAudio. Le contexte est créé à la demande et relancé (resume)
+   à chaque appui tant qu'il n'est pas actif : iOS ne l'autorise qu'après un geste et le suspend quand on quitte
+   l'onglet (détour par Google Maps). Un son demandé alors que le contexte n'est pas encore actif n'est joué que
+   si le déblocage est immédiat : jamais de son en retard. */
+const SOUND_KEY = 'aq_sound_muted';
+let _soundMuted = false;
+try{ _soundMuted = localStorage.getItem(SOUND_KEY) === '1'; }catch(e){}
+let _ac = null, _acPrimed = false;
+function aqCtx(){
+  if(_ac) return _ac;
+  const C = window.AudioContext || window.webkitAudioContext;
+  if(!C) return null;
+  try{ _ac = new C(); }catch(e){ _ac = null; }
+  return _ac;
+}
+function aqUnlockAudio(){
+  const c = aqCtx(); if(!c) return;
   try{
-    const g=_audioCtx.createGain();
-    g.connect(_audioCtx.destination);
-    if(type==='correct'){
-      // Fanfare montante dorée
-      [[523,0],[659,0.12],[784,0.24],[1047,0.36]].forEach(([f,t])=>{
-        const o=_audioCtx.createOscillator();
-        o.type='sine';o.frequency.value=f;
-        const gn=_audioCtx.createGain();gn.gain.setValueAtTime(0,_audioCtx.currentTime+t);
-        gn.gain.linearRampToValueAtTime(0.12,_audioCtx.currentTime+t+0.04);
-        gn.gain.exponentialRampToValueAtTime(0.001,_audioCtx.currentTime+t+0.35);
-        o.connect(gn);gn.connect(_audioCtx.destination);
-        o.start(_audioCtx.currentTime+t);o.stop(_audioCtx.currentTime+t+0.35);
-      });
-    } else if(type==='wrong'){
-      // Son grave descendant
-      const o=_audioCtx.createOscillator();o.type='sawtooth';
-      o.frequency.setValueAtTime(220,_audioCtx.currentTime);
-      o.frequency.exponentialRampToValueAtTime(110,_audioCtx.currentTime+0.3);
-      const gn=_audioCtx.createGain();gn.gain.setValueAtTime(0.08,_audioCtx.currentTime);
-      gn.gain.exponentialRampToValueAtTime(0.001,_audioCtx.currentTime+0.3);
-      o.connect(gn);gn.connect(_audioCtx.destination);
-      o.start();o.stop(_audioCtx.currentTime+0.3);
-    } else if(type==='hint'){
-      const o=_audioCtx.createOscillator();o.type='sine';o.frequency.value=440;
-      const gn=_audioCtx.createGain();gn.gain.setValueAtTime(0.06,_audioCtx.currentTime);
-      gn.gain.exponentialRampToValueAtTime(0.001,_audioCtx.currentTime+0.2);
-      o.connect(gn);gn.connect(_audioCtx.destination);
-      o.start();o.stop(_audioCtx.currentTime+0.2);
+    if(c.state !== 'running'){ const p = c.resume(); if(p && p.catch) p.catch(()=>{}); }
+    if(!_acPrimed){ // jeton silencieux : certains iOS n'activent la sortie qu'après un premier son
+      const b = c.createBuffer(1,1,22050), src = c.createBufferSource();
+      src.buffer = b; src.connect(c.destination); src.start(0); _acPrimed = true;
     }
   }catch(e){}
 }
-function restartMission(){G.gameActive=false;document.getElementById('codeInput').value=G.savedCode;document.getElementById('teamInput').value=G.teamName;document.getElementById('codeError').style.display='none';goToScreen('code');}
+['pointerdown','touchend','click','keydown'].forEach(ev => document.addEventListener(ev, aqUnlockAudio, {capture:true, passive:true}));
+function aqAudioOn(c){ return !_soundMuted && !!c && c.state === 'running'; }
+
+/* Bouton muet : un seul réglage pour le son et la vibration, mémorisé sur l'appareil. */
+function updateSoundButton(){
+  const b = document.getElementById('aqSoundBtn'); if(!b) return;
+  const show = G.gameActive || G.currentScreen === 'meta' || G.currentScreen === 'victory';
+  b.classList.toggle('on', !!show);
+  b.setAttribute('aria-pressed', _soundMuted ? 'true' : 'false');
+  const label = t(_soundMuted ? 'soundOff' : 'soundOn');
+  b.setAttribute('aria-label', label); b.title = label;
+}
+function toggleSound(){
+  _soundMuted = !_soundMuted;
+  try{ if(_soundMuted) localStorage.setItem(SOUND_KEY,'1'); else localStorage.removeItem(SOUND_KEY); }catch(e){}
+  updateSoundButton();
+  if(!_soundMuted) aqUnlockAudio();
+}
+
+/* Vibration courte : seulement si l'API existe (Android). Rien sur iPhone, aucun contournement. */
+const AQ_VIBES = { correct:30, wrong:[30,50,30], fragment:20, half:[40,50,40], place:40, victory:[60,50,60,50,120] };
+function aqVibrate(p){
+  if(_soundMuted) return;
+  try{ if(typeof navigator.vibrate === 'function') navigator.vibrate(p); }catch(e){}
+}
+
+/* Une note : enveloppe courte, option filtre passe-bas. */
+function _tone(c, o){
+  const t0 = c.currentTime + (o.t||0), d = o.d||0.3, g = o.g||0.12, a = o.a||0.03;
+  const osc = c.createOscillator(), gn = c.createGain();
+  osc.type = o.type || 'sine';
+  osc.frequency.setValueAtTime(o.f, t0);
+  if(o.f2) osc.frequency.exponentialRampToValueAtTime(o.f2, t0+d);
+  gn.gain.setValueAtTime(0.0001, t0);
+  gn.gain.linearRampToValueAtTime(g, t0+a);
+  gn.gain.exponentialRampToValueAtTime(0.001, t0+d);
+  let node = osc;
+  if(o.lp){ const fl = c.createBiquadFilter(); fl.type = 'lowpass'; fl.frequency.value = o.lp; osc.connect(fl); node = fl; }
+  node.connect(gn); gn.connect(c.destination);
+  osc.start(t0); osc.stop(t0+d+0.02);
+}
+
+/* Sons du jeu. Types : correct, wrong, hint, fragment, half, place, reveal, victory. */
+function playTone(type, arg){
+  if(_soundMuted) return;
+  if(typeof AQ_TEST !== 'undefined' && AQ_TEST){ (window.__aqSoundLog = window.__aqSoundLog || []).push(type); }
+  if(AQ_VIBES[type] !== undefined) aqVibrate(AQ_VIBES[type]);
+  const c = aqCtx(); if(!c) return;
+  if(c.state === 'running'){ _aqSound(c, type, arg); return; }
+  const t0 = Date.now();
+  try{
+    const p = c.resume();
+    if(p && p.then) p.then(()=>{ if(!_soundMuted && Date.now()-t0 < 400 && c.state === 'running') _aqSound(c, type, arg); }).catch(()=>{});
+  }catch(e){}
+}
+function _aqSound(c, type, arg){
+  try{
+    if(type==='correct'){
+      // Fanfare montante dorée
+      [[523,0],[659,0.12],[784,0.24],[1047,0.36]].forEach(([f,t])=>{
+        const o=c.createOscillator();
+        o.type='sine';o.frequency.value=f;
+        const gn=c.createGain();gn.gain.setValueAtTime(0,c.currentTime+t);
+        gn.gain.linearRampToValueAtTime(0.12,c.currentTime+t+0.04);
+        gn.gain.exponentialRampToValueAtTime(0.001,c.currentTime+t+0.35);
+        o.connect(gn);gn.connect(c.destination);
+        o.start(c.currentTime+t);o.stop(c.currentTime+t+0.35);
+      });
+    } else if(type==='wrong'){
+      // Son grave descendant
+      const o=c.createOscillator();o.type='sawtooth';
+      o.frequency.setValueAtTime(220,c.currentTime);
+      o.frequency.exponentialRampToValueAtTime(110,c.currentTime+0.3);
+      const gn=c.createGain();gn.gain.setValueAtTime(0.08,c.currentTime);
+      gn.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);
+      o.connect(gn);gn.connect(c.destination);
+      o.start();o.stop(c.currentTime+0.3);
+    } else if(type==='hint'){
+      const o=c.createOscillator();o.type='sine';o.frequency.value=440;
+      const gn=c.createGain();gn.gain.setValueAtTime(0.06,c.currentTime);
+      gn.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.2);
+      o.connect(gn);gn.connect(c.destination);
+      o.start();o.stop(c.currentTime+0.2);
+    } else if(type==='fragment'){
+      // Tintement de cloche : la lettre se grave dans le carnet
+      _tone(c,{f:1568,d:0.55,g:0.10,a:0.005});
+      _tone(c,{f:2349,d:0.35,g:0.06,a:0.005});
+    } else if(type==='half'){
+      // Deux notes de cor : la moitié du chemin est faite
+      _tone(c,{f:196,type:'sawtooth',t:0,d:0.45,g:0.14,a:0.06,lp:900});
+      _tone(c,{f:294,type:'sawtooth',t:0.4,d:0.62,g:0.14,a:0.06,lp:1100});
+    } else if(type==='place'){
+      // Ciseau sur la pierre + note qui monte à chaque lettre posée
+      _metaChisel();
+      _tone(c,{f:392*(1+0.1*(arg||0)),t:0.02,d:0.2,g:0.07,a:0.01});
+    } else if(type==='reveal'){
+      _metaCornu(); _metaDrum();
+    } else if(type==='victory'){
+      // Fanfare : accord de cuivres puis accord plus haut, avec une cloche
+      [262,330,392].forEach(f=>_tone(c,{f,type:'sawtooth',t:0,d:0.55,g:0.07,a:0.05,lp:1500}));
+      [523,659,784].forEach(f=>_tone(c,{f,type:'sawtooth',t:0.5,d:1.1,g:0.08,a:0.05,lp:1800}));
+      _tone(c,{f:1047,t:0.5,d:1.0,g:0.05,a:0.01});
+    }
+  }catch(e){}
+}
+
+/* ══════ VEILLE DE L'ÉCRAN : Wake Lock pendant la partie ══════
+   Redemandé au retour sur l'onglet (le navigateur libère le verrou quand l'onglet est masqué, par exemple
+   après « Ouvrir dans Google Maps »). Repli silencieux si l'API manque (iOS avant 16.4) ou si la demande est refusée. */
+let _wakeLock = null, _wakeLockPending = false;
+function aqWakeLockRequest(){
+  if(!G.gameActive || !('wakeLock' in navigator) || !navigator.wakeLock || _wakeLock || _wakeLockPending) return;
+  if(document.visibilityState && document.visibilityState !== 'visible') return;
+  _wakeLockPending = true;
+  try{
+    Promise.resolve(navigator.wakeLock.request('screen')).then(lock=>{
+      _wakeLockPending = false;
+      if(!lock) return;
+      if(!G.gameActive){ try{ lock.release(); }catch(e){} return; }
+      _wakeLock = lock;
+      if(lock.addEventListener) lock.addEventListener('release',()=>{ if(_wakeLock===lock) _wakeLock = null; });
+    }).catch(()=>{ _wakeLockPending = false; _wakeLock = null; });
+  }catch(e){ _wakeLockPending = false; }
+}
+function aqWakeLockRelease(){
+  const l = _wakeLock; _wakeLock = null;
+  try{ if(l && l.release) l.release(); }catch(e){}
+}
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState === 'visible') aqWakeLockRequest(); });
+function restartMission(){G.gameActive=false;aqWakeLockRelease();document.getElementById('codeInput').value=G.savedCode;document.getElementById('teamInput').value=G.teamName;document.getElementById('codeError').style.display='none';goToScreen('code');}
 
 /* ══════ MODE TEST (localhost uniquement) ══════
    Actif seulement si la page est servie par localhost / 127.0.0.1 / [::1] / *.localhost
