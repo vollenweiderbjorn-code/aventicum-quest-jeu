@@ -8,7 +8,7 @@
 <title>Aventicum Quest Operatio Aquila</title>
 <meta name="robots" content="noindex, nofollow">
 <meta property="og:title" content="Aventicum Quest Operatio Aquila">
-<meta property="og:description" content="L'aigle de la Legio XXI a été volée. Résolvez 8 énigmes à travers les lieux emblématiques d'Avenches en environ 1h30 à 2h.">
+<meta property="og:description" content="L'aigle de la Legio XXI a été volée. Résous 8 énigmes à travers les lieux emblématiques d'Avenches en environ 1h30 à 2h.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://jeu.aventicumquest.ch">
 <meta property="og:image" content="https://aventicumquest.ch/images/og_image.jpg">
@@ -898,9 +898,9 @@ h1.aq-hdr-l { margin: 0; font: inherit; letter-spacing: inherit; text-transform:
       </div>
       <div class="aq-fgroup">
         <label class="aq-lbl" id="label-team-name" for="teamInput">NOM DE L'ÉQUIPE</label>
-        <input type="text" id="teamInput" class="aq-field" placeholder="Nom de votre équipe" autocomplete="off">
+        <input type="text" id="teamInput" class="aq-field" placeholder="Nom de ton équipe" autocomplete="off">
       </div>
-      <div id="codeError" class="feedback error" style="display:none" role="alert">Le Sénat rejette ce code. Vérifiez votre email.</div>
+      <div id="codeError" class="feedback error" style="display:none" role="alert">Le Sénat rejette ce code. Vérifie ton email.</div>
     </div>
   </div>
   <div class="aq-actions" id="codeActions">
@@ -1005,7 +1005,7 @@ h1.aq-hdr-l { margin: 0; font: inherit; letter-spacing: inherit; text-transform:
         <div class="bc-rays"></div>
       </div>
       <div class="bc-content">
-        <div class="bc-overline" data-i18n="bc_overline3">QUE JUPITER VOUS GUIDE</div>
+        <div class="bc-overline" data-i18n="bc_overline3">QUE JUPITER TE GUIDE</div>
         <div class="bc-team-badge">
           <div class="bc-team-label" data-i18n="bc_teamlabel">SPECULATORES</div>
           <div class="bc-team-name" id="bc3TeamName"></div>
@@ -1122,7 +1122,7 @@ h1.aq-hdr-l { margin: 0; font: inherit; letter-spacing: inherit; text-transform:
         <div class="cert-stat"><div class="val" id="certDate"></div><div class="lbl" data-t="certDate">DATE</div></div>
       </div>
       <div class="sep-sm sep" style="margin:0.8rem auto 0.5rem"></div>
-      <div class="cert-seal" data-t="certSeal">QUE JUPITER GUIDE VOS PAS · S·P·Q·R</div>
+      <div class="cert-seal" data-t="certSeal">QUE JUPITER GUIDE TES PAS · S·P·Q·R</div>
     </div>
   </div>
   <div class="aq-actions">
@@ -1142,17 +1142,17 @@ function isLocalHost(h){
 
 const translations = {
   fr: {
-    tagline: "Le Sénat d'Aventicum vous attend, soldat.",
+    tagline: "Le Sénat d'Aventicum t'attend, soldat.",
     missionCode: "CODE DE MISSION",
     teamName: "NOM DE L'ÉQUIPE",
-    teamPlaceholder: "Nom de votre équipe",
+    teamPlaceholder: "Nom de ton équipe",
     briefingLabel: "BRIEFING DE MISSION",
     startBtn: "JE SUIS PRÊT. QUE LA MISSION COMMENCE",
     scoreLabel: "SCORE",
     invLabel: "FRAGMENTS COLLECTÉS",
     nextDest: "PROCHAINE DESTINATION",
     realTimePos: "POSITION EN TEMPS RÉEL",
-    gpsOff: "Activez la localisation pour voir votre position",
+    gpsOff: "Active la localisation pour voir ta position",
     openMaps: "Ouvrir dans Google Maps",
     segStart: "début",
     segEnd: "fin",
@@ -1185,7 +1185,7 @@ const translations = {
     certPoints: "POINTS",
     certDuration: "DURÉE",
     certDate: "DATE",
-    certSeal: "QUE JUPITER GUIDE VOS PAS · S·P·Q·R",
+    certSeal: "QUE JUPITER GUIDE TES PAS · S·P·Q·R",
     dateLocale: "fr-CH",
     themeLabel: "Thème sombre",
     soundOn: "Son activé",
@@ -1194,7 +1194,7 @@ const translations = {
     distAbout: (m) => `environ ${m} m`,
     distFallback: "une courte distance",
     stepLabel: "ÉTAPE",
-    answerPlaceholder: "Votre réponse...",
+    answerPlaceholder: "Ta réponse...",
     confirmBtn: "CONFIRMER",
     hintDlgTitle: "Débloquer cet indice ?",
     hintDlgBody: (c) => `Il coûte ${c} points, retirés du score.`,
@@ -1223,7 +1223,7 @@ const translations = {
     selectTwoLabel: "SÉLECTIONNE 2 ÉLÉMENTS",
     selectOneLabel: "SÉLECTIONNE LA BONNE RÉPONSE",
     stepOfLabel: (si,total) => `ÉTAPE ${si} / ${total}`,
-    codeError: "Le Sénat rejette ce code, soldat. Vérifiez votre email.",
+    codeError: "Le Sénat rejette ce code, soldat. Vérifie ton email.",
     codeChecking: "VÉRIFICATION...",
     launchBtn: "LANCER LA MISSION",
     correctFirst: () => `Bien joué, soldat ! Indice révélé. +100 pts`,
@@ -1243,12 +1243,12 @@ const translations = {
     cityAvenched: "AVENTICUM EST SAUVÉE",
     duration: "Durée",
     victoryMsg: (t) => `L'opération Aquila est neutralisée. La cité romaine est sauve. Le Sénat d'Aventicum salue l'équipe ${t}, qui a percé les secrets de la légion.`,
-    empireMsg: "L'Empire s'étend. Lausanne, Fribourg, Sion vous appellent. D'autres missions arrivent bientôt.",
+    empireMsg: "L'Empire s'étend. Lausanne, Fribourg, Sion t'appellent. D'autres missions arrivent bientôt.",
     reviewBtn: "LAISSER UN AVIS",
     shareBtn: "PARTAGER MA VICTOIRE",
     shareText: (s,t) => `Mission accomplie ! J'ai terminé Aventicum Quest avec ${s} pts en équipe « ${t} » ! #AventicumQuest`,
     midShareTitle: "MI-PARCOURS !",
-    midShareMsg: (n) => `Vous avez récupéré ${n} fragments sur 8. La moitié du parcours est faite, l'Aquila se rapproche !`,
+    midShareMsg: (n) => `Tu as récupéré ${n} fragments sur 8. La moitié du parcours est faite, l'Aquila se rapproche !`,
     midShareBtn: "Partager ma progression",
     midShareText: (t, n) => `À mi-chemin sur Aventicum Quest ! Mon équipe « ${t} » a déjà récupéré ${n} fragments sur 8. #AventicumQuest`,
     midShareDismiss: "Continuer la mission",
@@ -1607,9 +1607,9 @@ const ENIGMA_END_COORDS = { 2: [46.880465, 7.041880] };  // 2 Rue des Alpes, FIN
 const BRIEFING_TEXTS = {
   fr: `L'aquila est volée. L'aigle d'or de la Legio XXI Rapax, insigne sacré de la légion et symbole de l'honneur de Rome, a disparu cette nuit. Un traître, connu de nos rangs, l'a dissimulée quelque part dans Aventicum. Avant l'aube, il a semé des indices à travers la ville. L'Empereur Hadrien arrive dans cent vingt minutes. Il attend l'aigle. Pas d'excuses. Pas de retard. Tu es l'agent envoyé par le légat. Ta mission : suivre la piste du traître monument par monument, déchiffrer ses indices, et ramener l'aquila. Huit monuments. Huit fragments. Un seul code. Chaque monument te livrera une lettre. Ces huit lettres, dans le bon ordre, forment le nom que tu cherches. Si tu échoues, la légion est dissoute. Commence. Le temps presse. LEGIO XXI Rapax : l'aigle sacrée, symbole de la puissance de Rome. Dans 120 minutes, l'Empereur Hadrien foule le sol de notre cité.
 
-Votre mission, speculatores : suivez la piste du voleur à travers la ville, résolvez les 8 énigmes qu'il a semées sur son chemin, et rapportez l'aigle avant l'arrivée impériale.
+Ta mission, speculatores : suis la piste du voleur à travers la ville, résous les 8 énigmes qu'il a semées sur son chemin, et rapporte l'aigle avant l'arrivée impériale.
 
-Que Jupiter guide vos pas, [TEAM]. Aventicum compte sur vous.`,
+Que Jupiter guide tes pas, [TEAM]. Aventicum compte sur toi.`,
   en: `At dawn, the keeper of the legionary treasury let out a cry that echoed across all of Aventicum: the aquila's alcove was empty, the lock untouched. Tonight, a thief dared the unthinkable, stealing the aquila of the Legio XXI Rapax, the sacred eagle, symbol of Rome's power. In 120 minutes, Emperor Hadrian will set foot in our city.
 
 Your mission, speculatores: follow the thief's trail through the city, solve the 8 riddles left in his wake, and return the eagle before the imperial arrival. Each monument will give you a letter. These eight letters, in the right order, spell the name you seek.
@@ -1640,7 +1640,7 @@ const ENIGMAS = [
       hints:[{text:"Die Sonnenuhr ist an der Wand der Kirche Sainte-Madeleine eingraviert, direkt gegenüber dem Rathaus. Sucht nach den Monatsnamen: einer davon ist mit einer Ziffer gefolgt von „bre“ abgekürzt.",cost:20},{text:"„7bre“ steht für September. Auf Lateinisch bedeutet septem sieben. Überlegt, welcher Monat das römische Jahr eröffnen musste, damit September wirklich ihr siebter Monat war.",cost:40},{text:"Die Antwort ist A: Das römische Jahr begann im März, dem Monat des Gottes Mars.",cost:80}]}
   },
   // ─── ÉNIGME 2 TOUR DE BENNEVILLE ───────────────────────────────────────
-  { id:2, step:'II', fragment:'E', clue:'CIGOGNIER', answers:['CIGOGNIER','LE CIGOGNIER','CIGOGNER'], warning:{fr:'Tour ouverte de 9h à 21h (du 1er mai au 30 sept.) et de 9h à 17h le reste de l\'année. Max. 20 personnes en même temps dans la tour.',en:'Tower open 9am to 9pm (May 1 to Sept 30) and 9am to 5pm the rest of the year. Max. 20 people inside the tower at once.',de:'Turm geöffnet 9 bis 21 Uhr (1. Mai bis 30. Sept.) und 9 bis 17 Uhr den Rest des Jahres. Max. 20 Personen gleichzeitig im Turm.'}, groupMission:{fr:'Montez ensemble au sommet, puis répartissez-vous : chacun regarde par une fenêtre différente. Qui repère la colonne solitaire dans les champs ?',en:'Climb to the top together, then split up: each person looks through a different window. Who spots the lone column in the fields?',de:'Steigt gemeinsam zum Gipfel, dann verteilt euch: jeder schaut durch ein anderes Fenster. Wer entdeckt die einsame Säule in den Feldern?'},
+  { id:2, step:'II', fragment:'E', clue:'CIGOGNIER', answers:['CIGOGNIER','LE CIGOGNIER','CIGOGNER'], warning:{fr:'Tour ouverte de 9h à 21h (du 1er mai au 30 sept.) et de 9h à 17h le reste de l\'année. Max. 20 personnes en même temps dans la tour.',en:'Tower open 9am to 9pm (May 1 to Sept 30) and 9am to 5pm the rest of the year. Max. 20 people inside the tower at once.',de:'Turm geöffnet 9 bis 21 Uhr (1. Mai bis 30. Sept.) und 9 bis 17 Uhr den Rest des Jahres. Max. 20 Personen gleichzeitig im Turm.'}, groupMission:{fr:'Monte au sommet avec ton équipe : chacun regarde par une fenêtre différente. Qui repère la colonne solitaire dans les champs ?',en:'Climb to the top together, then split up: each person looks through a different window. Who spots the lone column in the fields?',de:'Steigt gemeinsam zum Gipfel, dann verteilt euch: jeder schaut durch ein anderes Fenster. Wer entdeckt die einsame Säule in den Feldern?'},
     fr:{ nav:{title:'Tour de Benneville',desc:"La tour médiévale se dresse à quelques pas de l'Hôtel de Ville.",address:'Passage de Benneville, 1580 Avenches',distance:'~{m} m de l\'Hôtel de Ville',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879440,7.041184'},
       narrative:"La Tour de Benneville domine la plaine depuis le XIIIe siècle : cinq niveaux, des meurtrières, une vue imprenable. C'est d'ici que le traître a repéré sa cachette. Au loin, dans les champs, se dresse la dernière colonne du plus grand sanctuaire d'Aventicum. Pendant des siècles, des cigognes ont niché à son sommet, et les habitants ont fini par baptiser le monument du nom de cet oiseau. Monte, et trouve ce que le traître a vu.",
       question:"Monte jusqu'au sommet de la tour. Depuis la fenêtre donnant sur la plaine, repère la colonne romaine qui se dresse seule dans les champs. Son nom vient de l'oiseau qui nichait à son sommet, la cigogne. Quel est le nom de ce monument ? Entre-le en majuscules, sans espace.",
@@ -1656,10 +1656,10 @@ const ENIGMAS = [
   },
   // ─── ÉNIGME 3 RUE DES ALPES (QCM visuel) ──────────────────────────────
   { id:3, step:'III', fragment:'L', clue:'LOUVE', type:'qcm', qcmRequired:2, answers:['A+B'], qcmImages:['qcm-louve.jpg','qcm-rosace.jpg','qcm-lion.jpg','qcm-porte-fer.jpg'], /* Images à la racine du repo, à côté d'index.html : qcm-louve.jpg (Louve), qcm-rosace.jpg (rosace tressée), qcm-lion.jpg (leurre), qcm-porte-fer.jpg (leurre). */ qcmLabels:{fr:['A. Louve romaine','B. Rosace tressée sur porte en bois','C. Lion sculpté','D. Porte en fer forgé'],en:['A. Roman she-wolf','B. Woven rosette on a wooden door','C. Carved lion','D. Wrought-iron gate'],de:['A. Römische Wölfin','B. Geflochtene Rosette an einer Holztür','C. Geschnitzter Löwe','D. Schmiedeeisernes Tor']},
-    fr:{ nav:{title:'Rue des Alpes',desc:"Observez les façades des immeubles le long de la Rue des Alpes.",address:'Rue des Alpes, 1580 Avenches',distance:'~{m} m de la Tour de Benneville, tronçon de ~{s} m',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879617,7.041082'},
+    fr:{ nav:{title:'Rue des Alpes',desc:"Observe les façades des immeubles le long de la Rue des Alpes.",address:'Rue des Alpes, 1580 Avenches',distance:'~{m} m de la Tour de Benneville, tronçon de ~{s} m',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879617,7.041082'},
       narrative:"La Rue des Alpes relie l'Hôtel de Ville au reste de la cité. En apparence, une rue ordinaire. Mais le traître l'a longée les yeux ouverts, et il y a vu ce que personne d'autre ne voit. Sur une façade veille une louve de pierre, allaitant deux jumeaux, la légende même de la fondation de Rome, gravée là depuis des générations. Un peu plus loin, une porte en bois porte une rosace tressée, un détail d'artisanat local que personne ne remarque en passant. Deux éléments en pleine vue, invisibles à qui ne cherche pas.",
       question:`En remontant toute la Rue des Alpes, observe attentivement les façades des bâtiments eux-mêmes, la pierre et le bois, pas les vitrines ni les enseignes commerciales. Parmi ces quatre ornements ci-dessous (A, B, C, D), deux sont RÉELLEMENT présents sur ces façades. Sélectionne les deux bons éléments, puis confirme.`,
-      hints:[{text:"Parcours toute la longueur de la rue en levant les yeux du trottoir vers les murs et les portes, du rez-de-chaussée jusqu'au premier étage. Les deux éléments ne sont pas cachés : on les manque seulement si on ne regarde pas les façades elles-mêmes.",cost:20},{text:"L'un des deux est un animal sculpté lié à la légende de la fondation de Rome ; l'autre est un motif circulaire tressé, en bois, au centre d'une porte.",cost:40},{text:"Les deux éléments présents sont la louve romaine et la rosace tressée sur la porte en bois. Sélectionnez A et B, puis appuyez sur CONFIRMER.",cost:80}]},
+      hints:[{text:"Parcours toute la longueur de la rue en levant les yeux du trottoir vers les murs et les portes, du rez-de-chaussée jusqu'au premier étage. Les deux éléments ne sont pas cachés : on les manque seulement si on ne regarde pas les façades elles-mêmes.",cost:20},{text:"L'un des deux est un animal sculpté lié à la légende de la fondation de Rome ; l'autre est un motif circulaire tressé, en bois, au centre d'une porte.",cost:40},{text:"Les deux éléments présents sont la louve romaine et la rosace tressée sur la porte en bois. Sélectionne A et B, puis appuie sur CONFIRMER.",cost:80}]},
     en:{ nav:{title:'Rue des Alpes',desc:"Observe the building facades along Rue des Alpes.",address:'Rue des Alpes, 1580 Avenches',distance:'~{m} m from Benneville Tower, street section of ~{s} m',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.879617,7.041082'},
       narrative:"Rue des Alpes connects the Town Hall to the rest of the city. It looks like an ordinary street. But the traitor walked it with open eyes, and saw what others never notice. On one façade watches a stone she-wolf, nursing two twins, the very legend of Rome's founding, carved there for generations. A little further on, a wooden door bears a woven rosette, a piece of local craftsmanship nobody notices walking by. Two elements in plain sight, invisible to those not looking.",
       question:`Walking the full length of Rue des Alpes, look closely at the buildings' façades themselves, the stone and wood, not shop windows or signs. Of these four ornaments (A, B, C, D), TWO are REALLY present on these façades. Select the two correct elements, then confirm.`,
@@ -1670,7 +1670,7 @@ const ENIGMAS = [
       hints:[{text:"Geht die ganze Strasse entlang und hebt den Blick vom Gehsteig zu den Wänden und Türen, vom Erdgeschoss bis zur Höhe des ersten Stockwerks. Die zwei Elemente sind nicht versteckt: man übersieht sie nur, wenn man nicht auf die Fassaden selbst schaut.",cost:20},{text:"Eines ist ein geschnitztes Tier, verbunden mit der Gründungslegende Roms; das andere ist ein rundes, geflochtenes Holzmuster in der Mitte einer Tür.",cost:40},{text:"Die zwei vorhandenen Elemente sind die römische Wölfin und die geflochtene Rosette auf der Holztür. Wählt A und B, dann drückt BESTÄTIGEN.",cost:80}]}
   },
   // ─── ÉNIGME 4 ARÈNES (Amphithéâtre) ───────────────────────────────────
-  { id:4, step:'IV', fragment:'V', clue:'ARÈNE', answers:['6'], groupMission:{fr:'Cherchez ensemble le panneau du plan de restauration sur la terrasse couverte du musée, qui représente l\'amphithéâtre vu du dessus, divisé en zones numérotées.',en:'Search together for the restoration plan panel on the museum\'s covered terrace, showing the amphitheatre from above, divided into numbered zones.',de:'Sucht gemeinsam das Schild mit dem Restaurierungsplan auf der überdachten Museumsterrasse, das das Amphitheater von oben zeigt, in nummerierte Zonen unterteilt.'},
+  { id:4, step:'IV', fragment:'V', clue:'ARÈNE', answers:['6'], groupMission:{fr:'Cherche avec ton équipe le panneau du plan de restauration sur la terrasse couverte du musée, qui représente l\'amphithéâtre vu du dessus, divisé en zones numérotées.',en:'Search together for the restoration plan panel on the museum\'s covered terrace, showing the amphitheatre from above, divided into numbered zones.',de:'Sucht gemeinsam das Schild mit dem Restaurierungsplan auf der überdachten Museumsterrasse, das das Amphitheater von oben zeigt, in nummerierte Zonen unterteilt.'},
     fr:{ nav:{title:'Amphithéâtre Romain',desc:"L'amphithéâtre romain se trouve à l'entrée est de la ville d'Avenches.",address:'Avenue Jomini, 1580 Avenches',distance:'~{m} m de la fin de la Rue des Alpes',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880776,7.042174'},
       narrative:"Quatorze mille spectateurs, des gladiateurs, du sang sur le sable. L'amphithéâtre d'Avenches, construit au IIe siècle puis agrandi jusqu'à cette capacité, est l'un des mieux conservés de Suisse. Le traître a caché son message dans les chiffres mêmes de ce monument. Entre dans l'arène et compte.",
       question:"Sur la terrasse couverte du musée romain, juste à côté de l'amphithéâtre, un panneau affiche le plan officiel de restauration du monument : un schéma vu du dessus, divisant l'amphithéâtre en plusieurs zones numérotées. Repère sur ce plan le numéro attribué à la terrasse couverte où tu te trouves. Entre ce numéro.",
@@ -1700,7 +1700,7 @@ const ENIGMAS = [
       hints:[{text:"Dieser Kaiser war auch stoischer Philosoph, selten für einen römischen Kriegsherrn. Seine Selbstbetrachtungen sind ein privates Tagebuch, geschrieben während seiner Feldzüge. Sein Buch wird noch heute gedruckt.",cost:20},{text:"Sein Vorname ist Marcus. Sein lateinischer Beiname kommt von aureus, „golden“. Zwei Wörter. Das zweite bedeutet wörtlich „der Goldene“ oder „der wie Gold Glänzende“.",cost:40},{text:"Die Antwort ist MARK AUREL.",cost:80}]}
   },
   // ─── ÉNIGME 6 THÉÂTRE DU SELLEY (Claude Vision API) ───────────────────
-  { id:6, step:'VI', fragment:'T', clue:'CARTOUCHE-1902', type:'text', answers:['1902'], groupMission:{fr:'Cherchez ensemble le cartouche gravé dans la pierre. Il faut deux paires d\'yeux pour le repérer.',en:'Search together for the cartouche carved in the stone. It takes two pairs of eyes to spot it.',de:'Sucht gemeinsam die in den Stein gemeisselte Kartusche. Vier Augen sehen mehr als zwei.'},
+  { id:6, step:'VI', fragment:'T', clue:'CARTOUCHE-1902', type:'text', answers:['1902'], groupMission:{fr:'Cherche avec ton équipe le cartouche gravé dans la pierre. Il faut deux paires d\'yeux pour le repérer.',en:'Search together for the cartouche carved in the stone. It takes two pairs of eyes to spot it.',de:'Sucht gemeinsam die in den Stein gemeisselte Kartusche. Vier Augen sehen mehr als zwei.'},
     fr:{ nav:{title:'Théâtre du Selley',desc:"Le théâtre romain du Selley est visible depuis la route cantonale.",address:'Chemin du Selley, 1580 Avenches',distance:'~{m} m du Cigognier',mapsUrl:'https://www.google.com/maps/search/?api=1&query=46.880602,7.048768'},
       narrative:"Le plus grand théâtre romain de Suisse : onze mille spectateurs. Deux mille ans plus tard, des restaurateurs sont venus sauver ce qui restait et ont signé leur travail dans la pierre. Parmi des centaines de blocs, ils ont gravé un cartouche octogonal : une initiale, une date. C'est l'indice le plus discret du parcours.",
       question:"Un cartouche octogonal a été sculpté dans la maçonnerie basse de la cavea. Il porte une initiale et une date à 4 chiffres. Cherche-le dans les gradins, à hauteur de genou ou de taille, petit, discret, en pierre calcaire. L'année gravée est ton code. Entre les 4 chiffres.",
@@ -2151,19 +2151,19 @@ const TRANSITION_MSGS = {
      « à gauche / à droite » : elles ne sont pas vérifiables. */
   fr: [
     // 0→1 : place de l'Église → Tour de Benneville
-    "Quittez la place de l'Église et dirigez-vous vers le sud-est, en suivant la Rue Centrale. La tour médiévale se trouve à {d}. Le voleur a gravé quelque chose sur sa pierre...",
+    "Quitte la place de l'Église et dirige-toi vers le sud-est, en suivant la Rue Centrale. La tour médiévale se trouve à {d}. Le voleur a gravé quelque chose sur sa pierre...",
     // 1→2 : Tour de Benneville → début de la Rue des Alpes
-    "La Rue des Alpes commence à {d}, vers le nord. Parcourez-la d'un bout à l'autre, en direction du nord-est : {s} à pied. En chemin, scrutez attentivement les façades des bâtiments de chaque côté. Le voleur a observé deux emblèmes cachés en pleine vue. Arrêtez-vous et levez les yeux.",
+    "La Rue des Alpes commence à {d}, vers le nord. Parcours-la d'un bout à l'autre, en direction du nord-est : {s} à pied. En chemin, scrute attentivement les façades des bâtiments de chaque côté. Le voleur a observé deux emblèmes cachés en pleine vue. Arrête-toi et lève les yeux.",
     // 2→3 : fin de la Rue des Alpes → Amphithéâtre
-    "Au bout de la Rue des Alpes, rejoignez la Rue Centrale et poursuivez vers le nord-est : l'amphithéâtre romain se trouve à {d}, près du château. Vous ne pouvez pas le manquer : ses murs de pierre antique percent la végétation.",
+    "Au bout de la Rue des Alpes, rejoins la Rue Centrale et poursuis vers le nord-est : l'amphithéâtre romain se trouve à {d}, près du château. Tu ne peux pas le manquer : ses murs de pierre antique percent la végétation.",
     // 3→4 : Amphithéâtre → Cigognier
-    "Depuis l'amphithéâtre, prenez la direction de l'est, par l'Avenue Jomini puis la Route du Faubourg. Le Sanctuaire du Cigognier se trouve à {d} : une colonne solitaire de 12 mètres se dresse dans les champs. On la voit de loin.",
+    "Depuis l'amphithéâtre, prends la direction de l'est, par l'Avenue Jomini puis la Route du Faubourg. Le Sanctuaire du Cigognier se trouve à {d} : une colonne solitaire de 12 mètres se dresse dans les champs. On la voit de loin.",
     // 4→5 : Cigognier → Théâtre du Selley
     "Le Théâtre du Selley se trouve à {d}, vers le sud-est du sanctuaire. Les gradins de pierre du théâtre romain se dévoilent dans le paysage. Le théâtre et le Cigognier formaient un seul ensemble sacré.",
     // 5→6 : Théâtre → Thermes du Forum
-    "Quittez le théâtre et prenez la direction du nord, par le Chemin du Selley. Les Thermes du Forum se trouvent à {d}. Guettez les murs romains partiellement cachés par la végétation. Le voleur s'y est réchauffé.",
+    "Quitte le théâtre et prends la direction du nord, par le Chemin du Selley. Les Thermes du Forum se trouvent à {d}. Guette les murs romains partiellement cachés par la végétation. Le voleur s'y est réchauffé.",
     // 6→7 : Thermes → Porte de l'Est
-    "Ultime déplacement, speculator. Depuis les thermes, prenez la direction de l'est : la Porte de l'Est se trouve à {d}. Elle se révèle au bout du chemin, avec sa tour Tornallaz qui se dresse comme un dernier rempart. L'aquila est toute proche."
+    "Ultime déplacement, speculator. Depuis les thermes, prends la direction de l'est : la Porte de l'Est se trouve à {d}. Elle se révèle au bout du chemin, avec sa tour Tornallaz qui se dresse comme un dernier rempart. L'aquila est toute proche."
   ],
   en: [
     // 0→1
@@ -2364,19 +2364,19 @@ const BC_TEXTS = {
     bc_overline1: "AUBE · LE TRÉSOR LÉGIONNAIRE",
     body1: "À l'aube, le gardien du trésor légionnaire a poussé un cri qui a traversé tout Aventicum : l'alcôve de l'<em class=\"bc-em\">aquila</em> était vide, et la serrure intacte.\n\nCette nuit, un voleur a osé l'impensable : dérober l'aigle sacrée de la <em class=\"bc-em\">Legio XXI Rapax</em>, symbole de la puissance de Rome.",
     bc_overline2: "ORDRE DE MISSION",
-    body2: "Dans <em class=\"bc-em\">120 minutes</em>, l'Empereur Hadrien foule le sol de notre cité.\n\nVotre mission, <em class=\"bc-em\">speculatores</em> : suivez la piste du voleur à travers la ville, résolvez les 8 énigmes qu'il a semées sur son chemin, et rapportez l'aigle avant l'arrivée impériale.",
-    bc_overline3: "QUE JUPITER VOUS GUIDE",
+    body2: "Dans <em class=\"bc-em\">120 minutes</em>, l'Empereur Hadrien foule le sol de notre cité.\n\nTa mission, <em class=\"bc-em\">speculatores</em> : suis la piste du voleur à travers la ville, résous les 8 énigmes qu'il a semées sur son chemin, et rapporte l'aigle avant l'arrivée impériale.",
+    bc_overline3: "QUE JUPITER TE GUIDE",
     bc_teamlabel: "SPECULATORES",
-    body3: "Que Jupiter guide vos pas. Aventicum compte sur vous.",
+    body3: "Que Jupiter guide tes pas. Aventicum compte sur toi.",
     bc_next: "CONTINUER",
     bc_start: "COMMENCER LA MISSION",
     rules: [
-      { text:"Rendez-vous à chaque monument indiqué sur la carte." },
-      { text:"Observez, déduisez, entrez votre réponse." },
+      { text:"Rends-toi à chaque monument indiqué sur la carte." },
+      { text:"Observe, déduis, entre ta réponse." },
       { text:"Chaque indice utilisé coûte des points." },
-      { text:"Trouvez l'aquila et rapportez-la avant Hadrien !" }
+      { text:"Trouve l'aquila et rapporte-la avant Hadrien !" }
     ],
-    roles_title: "DÉSIGNEZ VOS RÔLES",
+    roles_title: "RÉPARTIS LES RÔLES",
     roles: [
       { name:"ÉCLAIREUR", desc:"Cherche les indices sur le terrain." },
       { name:"SCRIBE", desc:"Note les réponses et codes." },
