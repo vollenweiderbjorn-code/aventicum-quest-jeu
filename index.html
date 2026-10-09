@@ -2098,12 +2098,18 @@ async function submitCode(){
   btn.disabled = true;
   btn.textContent = t('codeChecking');
 
+  // Choix volontaire : si le serveur ne répond pas en 8 secondes (ou en cas d'erreur réseau), on ne bloque
+  // pas le joueur. Sur le parcours la réception est parfois mauvaise : on retombe sur la validation du
+  // format faite à l'étape 1 (serverValid reste null). Seule une réponse explicite {"valid":false} refuse.
   let serverValid = null; // null = serveur injoignable, true/false = réponse reçue
+  const ctrl = new AbortController();
+  const killer = setTimeout(()=>ctrl.abort(), 8000);
   try {
     const resp = await fetch(CODE_VALIDATION_ENDPOINT, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({code})
+      body: JSON.stringify({code}),
+      signal: ctrl.signal
     });
     if(resp.ok){
       const data = await resp.json();
@@ -2111,9 +2117,12 @@ async function submitCode(){
     }
   } catch(e) {
     serverValid = null;
+  } finally {
+    clearTimeout(killer);
   }
 
   btn.disabled = false;
+  btn.textContent = originalBtnText;
 
   if(serverValid === false){
     btn.textContent = originalBtnText;
