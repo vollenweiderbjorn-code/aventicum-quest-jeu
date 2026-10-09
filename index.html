@@ -3806,7 +3806,9 @@ if(AQ_TEST){
 
 /* ══════ BOOT ══════ */
 document.addEventListener('DOMContentLoaded',()=>{
+  const urlCode=aqCodeFromUrl(), urlLang=aqLangFromUrl();
   try{ const sl=localStorage.getItem('aq-lang'); if(['fr','en','de'].includes(sl)) setLang(sl); }catch(e){}
+  if(urlLang) setLang(urlLang);
   applyTranslations();
   patchMultiSteps();
   buildEnigmaScreens();
@@ -3825,10 +3827,34 @@ document.addEventListener('DOMContentLoaded',()=>{
       // pre-fill inputs
       aqSetCode(G.savedCode);const ti=document.getElementById('teamInput');
       if(ti)ti.value=G.teamName;
-      setLang(currentLang);
+      setLang(urlLang||currentLang);
+    } else if(urlCode){
+      // Nouveau joueur arrivé par le lien de l'email : code prérempli, focus sur le nom d'équipe, pas de soumission
+      aqSetCode(urlCode.slice(7));
+      setTimeout(()=>{ const ti=document.getElementById('teamInput'); if(ti && G.currentScreen==='code') try{ ti.focus({preventScroll:true}); }catch(e){} },700);
     }
   },3500);
 });
+
+/* Lien de l'email de confirmation : /?code=AQUILA-XXXXXXXX. Le paramètre est lu et retiré de l'URL au chargement
+   (les autres, dont lang, sont conservés). Le code n'est écrit dans le champ qu'après la reprise de partie
+   éventuelle (voir BOOT) et jamais si une partie sauvegardée existe. Rien n'est soumis : le joueur saisit le nom d'équipe. */
+const AQ_CODE_RE = /^AQUILA-[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{8}$/;
+function aqCodeFromUrl(){
+  let raw=null;
+  try{
+    const u=new URL(location.href);
+    raw=u.searchParams.get('code');
+    if(u.searchParams.has('code')){ u.searchParams.delete('code'); history.replaceState(null,'',u.pathname+u.search+u.hash); }
+  }catch(e){ return ''; }
+  if(raw==null) return '';
+  let v=String(raw).trim().toUpperCase();
+  if(v.indexOf('AQUILA-')!==0) v='AQUILA-'+v;
+  return AQ_CODE_RE.test(v) ? v : '';
+}
+function aqLangFromUrl(){
+  try{ const l=new URL(location.href).searchParams.get('lang'); return ['fr','en','de'].includes(l) ? l : ''; }catch(e){ return ''; }
+}
 
 /* Carte « reprendre la partie » : (re)construite à chaque changement de langue. « Nouvelle partie » demande confirmation. */
 function aqRenderResume(){
