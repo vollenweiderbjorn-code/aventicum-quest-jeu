@@ -1956,13 +1956,25 @@ function applyMapTheme(){
 }
 function aqIconStation(idx){ return L.divIcon({className:'',html:'<div class="aq-mk-st"><i></i><b>'+ENIGMAS[idx].step+'</b></div>',iconSize:[24,24],iconAnchor:[12,12]}); }
 function aqIconMe(){ return L.divIcon({className:'',html:'<div class="aq-mk-me"></div>',iconSize:[22,22],iconAnchor:[11,11]}); }
-/* Recentre la carte de la station sur la station (et la fin du tronçon, et le joueur s'il est localisé) */
+/* Vue d'une station (bande de 128 px) : zoom 17, jamais sous 15. Joueur proche et lisible : station et joueur ; sinon la station seule. */
+const AQ_MAP_ZOOM=17,AQ_MAP_MINZOOM=15,AQ_MAP_NEAR_M=300,AQ_MAP_PAD=[28,28];
+function aqPlayerNear(idx){ return !!_userPos && [ENIGMA_COORDS[idx],ENIGMA_END_COORDS[idx]].some(c=>c&&haversineM(_userPos,c)<=AQ_MAP_NEAR_M); }
+function aqFitStation(idx,withPlayer){
+  const m=_maps[idx]; if(!m) return;
+  try{
+    const pts=[ENIGMA_COORDS[idx],ENIGMA_END_COORDS[idx]].filter(Boolean).map(c=>L.latLng(c));
+    if(withPlayer && _userPos){
+      const b=L.latLngBounds(pts.concat([L.latLng(_userPos)]));
+      if(m.getBoundsZoom(b,false,L.point(56,56))>=16){ m.fitBounds(b,{padding:AQ_MAP_PAD,maxZoom:AQ_MAP_ZOOM}); return; }
+    }
+    m.fitBounds(L.latLngBounds(pts),{padding:AQ_MAP_PAD,maxZoom:AQ_MAP_ZOOM});
+  }catch(e){}
+}
+/* Recentrage : joueur proche = station et joueur ; joueur loin = sur le joueur ; sans position = sur la station */
 function aqRecenter(idx){
   const m=_maps[idx]; if(!m) return;
-  const pts=[L.latLng(ENIGMA_COORDS[idx][0],ENIGMA_COORDS[idx][1])];
-  const se=ENIGMA_END_COORDS[idx]; if(se) pts.push(L.latLng(se[0],se[1]));
-  if(_userPos) pts.push(L.latLng(_userPos[0],_userPos[1]));
-  try{ if(pts.length===1) m.setView(pts[0],16); else m.fitBounds(L.latLngBounds(pts).pad(0.3)); }catch(e){}
+  if(_userPos && !aqPlayerNear(idx)){ try{ m.setView(_userPos,AQ_MAP_ZOOM); }catch(e){} return; }
+  aqFitStation(idx,true);
 }
 
 /* ══════ MAP STATE ══════ */
@@ -2286,6 +2298,7 @@ function showTransition(nextIdx, callback) {
     _navMap = L.map(container, {
       center: [(fromCoords[0]+toCoords[0])/2, (fromCoords[1]+toCoords[1])/2],
       zoom: 16,
+      minZoom: AQ_MAP_MINZOOM,
       zoomControl: false,
       attributionControl: true,
       dragging: true,
@@ -2601,16 +2614,15 @@ function updateMapUserPos(idx){
   if(_polylines[idx]){_maps[idx].removeLayer(_polylines[idx]);}
   // Ligne droite jusqu'à la station : la position du joueur ne part vers aucun service tiers.
   _polylines[idx]=L.polyline([latlng, target],{className:'aq-path aq-path-me',color:'#1C1812',weight:3,opacity:0.8,dashArray:'6, 6'}).addTo(_maps[idx]);
-  const segEnd=ENIGMA_END_COORDS[idx];
-  try{_maps[idx].fitBounds(L.latLngBounds(segEnd?[latlng,target,segEnd]:[latlng,target]).pad(0.3));}catch(e){}
+  if(aqPlayerNear(idx)) aqFitStation(idx,true); // joueur loin ou imprécis : la vue reste sur la station
 }
 
 /* ══════ MAP ══════ */
 function initEnigmaMap(idx){
-  if(_maps[idx]){setTimeout(()=>{try{_maps[idx].invalidateSize();}catch(e){}},220);if(_userPos)updateMapUserPos(idx);return;}
+  if(_maps[idx]){setTimeout(()=>{try{_maps[idx].invalidateSize();}catch(e){} aqFitStation(idx,aqPlayerNear(idx));},220);if(_userPos)updateMapUserPos(idx);return;}
   const container=document.getElementById('map-'+idx);if(!container)return;
   const coords=ENIGMA_COORDS[idx];
-  const map=L.map(container,{center:coords,zoom:16,zoomControl:false,attributionControl:true,dragging:true,scrollWheelZoom:false});
+  const map=L.map(container,{center:coords,zoom:AQ_MAP_ZOOM,minZoom:AQ_MAP_MINZOOM,zoomControl:false,attributionControl:true,dragging:true,scrollWheelZoom:false});
   _maps[idx]=map;
   addTileLayer(map);
   const endCoords=ENIGMA_END_COORDS[idx];
@@ -2620,11 +2632,11 @@ function initEnigmaMap(idx){
     // Station-tronçon : on montre le début, la fin et le segment qui les relie.
     L.polyline([coords,endCoords],{className:'aq-path',color:'#8A2E1C',weight:4,opacity:0.9}).addTo(map);
     L.marker(endCoords,{icon:aqIconStation(idx)}).bindPopup(`<span class="aq-pop">${ENIGMAS[idx][currentLang].nav.title} (${t('segEnd')})</span>`,{closeButton:false}).addTo(map);
-    try{map.fitBounds(L.latLngBounds([coords,endCoords]).pad(0.5));}catch(e){}
+    aqFitStation(idx,false);
   }
   const msgEl=document.getElementById('map-msg-'+idx);if(!_userPos&&msgEl)msgEl.style.display='block';
   if(_userPos)updateMapUserPos(idx);
-  setTimeout(()=>{try{map.invalidateSize();}catch(e){}},250);
+  setTimeout(()=>{try{map.invalidateSize();}catch(e){} aqFitStation(idx,aqPlayerNear(idx));},250);
 }
 
 /* ══════ SCORE ══════ */
