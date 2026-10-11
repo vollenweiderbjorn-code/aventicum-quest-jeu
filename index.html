@@ -1934,9 +1934,9 @@ function tileConfig(host, key, provider, theme){
     invert:false
   };
   if(provider==='carto' && key && !isLocalNetworkHost(host)){
-    // Jour : fond clair (light_all) ; Nuit : fond sombre (dark_all)
+    // Jour : fond en couleur (Voyager) ; Nuit : fond sombre (dark_all)
     return {
-      url:'https://{s}.basemaps.cartocdn.com/'+(theme==='nuit'?'dark_all':'light_all')+'/{z}/{x}/{y}{r}.png?key='+encodeURIComponent(key),
+      url:'https://{s}.basemaps.cartocdn.com/'+(theme==='nuit'?'dark_all':'rastertiles/voyager')+'/{z}/{x}/{y}{r}.png?key='+encodeURIComponent(key),
       options:{attribution:'© '+_OSM_LINK+', © '+_CARTO_LINK, subdomains:'abcd', maxZoom:19},
       invert:false
     };
