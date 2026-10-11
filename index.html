@@ -1926,6 +1926,13 @@ function tileConfig(host, key, provider, theme){
   key = key===undefined ? CARTO_KEY : key;
   provider = provider===undefined ? TILE_PROVIDER : provider;
   theme = theme===undefined ? getTheme() : theme;
+  // Essai swisstopo, désactivé par défaut : ?fond=swisstopo (couleur) ou ?fond=swisstopo-grau (WMTS Web Mercator, © swisstopo obligatoire)
+  const f=(location.search.match(/[?&]fond=(swisstopo(?:-grau)?)(?:&|$)/)||[])[1];
+  if(f) return {
+    url:'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-'+(f==='swisstopo'?'farbe':'grau')+'/default/current/3857/{z}/{x}/{y}.jpeg',
+    options:{attribution:'© <a href="https://www.swisstopo.admin.ch/" target="_blank" rel="noopener">swisstopo</a>', maxZoom:19},
+    invert:false
+  };
   if(provider==='carto' && key && !isLocalNetworkHost(host)){
     // Jour : fond clair (light_all) ; Nuit : fond sombre (dark_all)
     return {
