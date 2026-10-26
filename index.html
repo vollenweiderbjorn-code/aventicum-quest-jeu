@@ -1225,6 +1225,7 @@ const translations = {
     stepOfLabel: (si,total) => `ÉTAPE ${si} / ${total}`,
     codeError: "Le Sénat rejette ce code, soldat. Vérifie ton email.",
     codeChecking: "VÉRIFICATION...",
+    codeServerDown: "Impossible de vérifier ton code pour le moment. Vérifie ta connexion et réessaie.",
     launchBtn: "LANCER LA MISSION",
     correctFirst: () => `Bien joué, soldat ! Indice révélé. +100 pts`,
     correctRetry: () => `Correct. Indice révélé.`,
@@ -1344,6 +1345,7 @@ const translations = {
     stepOfLabel: (si,total) => `STEP ${si} / ${total}`,
     codeError: "The Senate rejects this code, soldier. Check your email.",
     codeChecking: "CHECKING...",
+    codeServerDown: "We could not check your code right now. Check your connection and try again.",
     launchBtn: "LAUNCH THE MISSION",
     correctFirst: () => `Well done, soldier! Clue revealed. +100 pts`,
     correctRetry: () => `Correct. Clue revealed.`,
@@ -1463,6 +1465,7 @@ const translations = {
     stepOfLabel: (si,total) => `SCHRITT ${si} / ${total}`,
     codeError: "Der Senat lehnt diesen Code ab, Soldaten. Prüft eure E-Mail.",
     codeChecking: "PRÜFUNG LÄUFT...",
+    codeServerDown: "Der Code konnte gerade nicht geprüft werden. Prüft eure Verbindung und versucht es erneut.",
     launchBtn: "MISSION STARTEN",
     correctFirst: () => `Gut gemacht, Soldaten! Hinweis enthüllt. +100 Pkt`,
     correctRetry: () => `Richtig. Hinweis enthüllt.`,
@@ -2108,18 +2111,15 @@ async function submitCode(){
     return;
   }
 
-  // ── Étape 2 : vérification serveur que le code correspond à un vrai
-  // paiement. Si le serveur est injoignable (mauvaise réception sur le
-  // terrain), on ne bloque pas le joueur et on retombe sur la validation
-  // locale du format ci-dessus.
+  // ── Étape 2 : vérification serveur que le code correspond à un vrai paiement.
+  // Le serveur doit répondre explicitement {"valid":true}. S'il est injoignable (réseau, erreur, délai
+  // de 8 secondes), le code est refusé avec un message clair et le joueur peut réessayer : un code au
+  // bon format ne suffit plus à ouvrir le jeu. La saisie du code se fait au départ, là où le réseau est bon.
   errEl.style.display='none';
   const originalBtnText = btn.textContent;
   btn.disabled = true;
   btn.textContent = t('codeChecking');
 
-  // Choix volontaire : si le serveur ne répond pas en 8 secondes (ou en cas d'erreur réseau), on ne bloque
-  // pas le joueur. Sur le parcours la réception est parfois mauvaise : on retombe sur la validation du
-  // format faite à l'étape 1 (serverValid reste null). Seule une réponse explicite {"valid":false} refuse.
   let serverValid = null; // null = serveur injoignable, true/false = réponse reçue
   const ctrl = new AbortController();
   const killer = setTimeout(()=>ctrl.abort(), 8000);
@@ -2143,9 +2143,8 @@ async function submitCode(){
   btn.disabled = false;
   btn.textContent = originalBtnText;
 
-  if(serverValid === false){
-    btn.textContent = originalBtnText;
-    errEl.textContent = t('codeError');
+  if(serverValid !== true){
+    errEl.textContent = (serverValid === false) ? t('codeError') : t('codeServerDown');
     errEl.style.display='block';
     aqCodeKo(true);
     shakeElement(document.getElementById('codeWrap'));
