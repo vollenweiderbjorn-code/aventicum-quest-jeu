@@ -8,7 +8,7 @@
 <title>Aventicum Quest Operatio Aquila</title>
 <meta name="robots" content="noindex, nofollow">
 <meta property="og:title" content="Aventicum Quest Operatio Aquila">
-<meta property="og:description" content="L'aigle de la Legio XXI a été volée. Résous 8 énigmes à travers les lieux emblématiques d'Avenches en environ 1h30 à 2h.">
+<meta property="og:description" content="L'aigle de la Legio XI Claudia a été volée. Résous 8 énigmes à travers les lieux emblématiques d'Avenches en environ 1h30 à 2h.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://jeu.aventicumquest.ch">
 <meta property="og:image" content="https://aventicumquest.ch/images/og_image.jpg">
@@ -1115,7 +1115,7 @@ h1.aq-hdr-l { margin: 0; font: inherit; letter-spacing: inherit; text-transform:
       <div class="sep-sm sep" style="margin:0.4rem auto 0.7rem"></div>
       <div class="cert-body" data-t="certBody1">L'Empire romain certifie que l'équipe</div>
       <div class="cert-team" id="certTeam"></div>
-      <div class="cert-body" data-t-html="certBody2">a accompli la mission <em>Operatio Aquila</em> avec bravoure,<br>restituant l'aigle sacrée de la Legio XXI Rapax.</div>
+      <div class="cert-body" data-t-html="certBody2">a accompli la mission <em>Operatio Aquila</em> avec bravoure,<br>restituant l'aigle sacrée de la Legio XI Claudia.</div>
       <div class="cert-stats">
         <div class="cert-stat"><div class="val" id="certScore"></div><div class="lbl" data-t="certPoints">POINTS</div></div>
         <div class="cert-stat"><div class="val" id="certTime"></div><div class="lbl" data-t="certDuration">DURÉE</div></div>
@@ -1181,7 +1181,7 @@ const translations = {
     stepCorrect: "Correct ! Étape suivante…",
     stepWrong: "Réponse incorrecte. Essaie encore.",
     certBody1: "L'Empire romain certifie que l'équipe",
-    certBody2: "a accompli la mission <em>Operatio Aquila</em> avec bravoure,<br>restituant l'aigle sacrée de la Legio XXI Rapax.",
+    certBody2: "a accompli la mission <em>Operatio Aquila</em> avec bravoure,<br>restituant l'aigle sacrée de la Legio XI Claudia.",
     certPoints: "POINTS",
     certDuration: "DURÉE",
     certDate: "DATE",
@@ -1300,7 +1300,7 @@ const translations = {
     stepCorrect: "Correct! Next step…",
     stepWrong: "Incorrect. Try again.",
     certBody1: "The Roman Empire certifies that team",
-    certBody2: "has completed the mission <em>Operatio Aquila</em> with courage,<br>returning the sacred eagle of the Legio XXI Rapax.",
+    certBody2: "has completed the mission <em>Operatio Aquila</em> with courage,<br>returning the sacred eagle of the Legio XI Claudia.",
     certPoints: "POINTS",
     certDuration: "DURATION",
     certDate: "DATE",
@@ -1419,7 +1419,7 @@ const translations = {
     stepCorrect: "Richtig! Nächster Schritt…",
     stepWrong: "Falsch. Versucht es noch einmal.",
     certBody1: "Das Römische Reich bescheinigt, dass das Team",
-    certBody2: "die Mission <em>Operatio Aquila</em> mit Tapferkeit erfüllt<br>und den heiligen Adler der Legio XXI Rapax zurückgebracht hat.",
+    certBody2: "die Mission <em>Operatio Aquila</em> mit Tapferkeit erfüllt<br>und den heiligen Adler der Legio XI Claudia zurückgebracht hat.",
     certPoints: "PUNKTE",
     certDuration: "ZEIT",
     certDate: "DATUM",
@@ -1605,17 +1605,17 @@ const ENIGMA_COORDS = [
 const ENIGMA_END_COORDS = { 2: [46.880465, 7.041880] };  // 2 Rue des Alpes, FIN du tronçon
 
 const BRIEFING_TEXTS = {
-  fr: `L'aquila est volée. L'aigle d'or de la Legio XXI Rapax, insigne sacré de la légion et symbole de l'honneur de Rome, a disparu cette nuit. Un traître, connu de nos rangs, l'a dissimulée quelque part dans Aventicum. Avant l'aube, il a semé des indices à travers la ville. L'Empereur Hadrien arrive dans cent vingt minutes. Il attend l'aigle. Pas d'excuses. Pas de retard. Tu es l'agent envoyé par le légat. Ta mission : suivre la piste du traître monument par monument, déchiffrer ses indices, et ramener l'aquila. Huit monuments. Huit fragments. Un seul code. Chaque monument te livrera une lettre. Ces huit lettres, dans le bon ordre, forment le nom que tu cherches. Si tu échoues, la légion est dissoute. Commence. Le temps presse. LEGIO XXI Rapax : l'aigle sacrée, symbole de la puissance de Rome. Dans 120 minutes, l'Empereur Hadrien foule le sol de notre cité.
+  fr: `L'aquila est volée. L'aigle d'or de la Legio XI Claudia, insigne sacré de la légion et symbole de l'honneur de Rome, a disparu cette nuit. Un traître, connu de nos rangs, l'a dissimulée quelque part dans Aventicum. Avant l'aube, il a semé des indices à travers la ville. L'Empereur Hadrien arrive dans cent vingt minutes. Il attend l'aigle. Pas d'excuses. Pas de retard. Tu es l'agent envoyé par le légat. Ta mission : suivre la piste du traître monument par monument, déchiffrer ses indices, et ramener l'aquila. Huit monuments. Huit fragments. Un seul code. Chaque monument te livrera une lettre. Ces huit lettres, dans le bon ordre, forment le nom que tu cherches. Si tu échoues, la légion est dissoute. Commence. Le temps presse. LEGIO XI Claudia : l'aigle sacrée, symbole de la puissance de Rome. Dans 120 minutes, l'Empereur Hadrien foule le sol de notre cité.
 
 Ta mission, speculatores : suis la piste du voleur à travers la ville, résous les 8 énigmes qu'il a semées sur son chemin, et rapporte l'aigle avant l'arrivée impériale.
 
 Que Jupiter guide tes pas, [TEAM]. Aventicum compte sur toi.`,
-  en: `At dawn, the keeper of the legionary treasury let out a cry that echoed across all of Aventicum: the aquila's alcove was empty, the lock untouched. Tonight, a thief dared the unthinkable, stealing the aquila of the Legio XXI Rapax, the sacred eagle, symbol of Rome's power. In 120 minutes, Emperor Hadrian will set foot in our city.
+  en: `At dawn, the keeper of the legionary treasury let out a cry that echoed across all of Aventicum: the aquila's alcove was empty, the lock untouched. Tonight, a thief dared the unthinkable, stealing the aquila of the Legio XI Claudia, the sacred eagle, symbol of Rome's power. In 120 minutes, Emperor Hadrian will set foot in our city.
 
 Your mission, speculatores: follow the thief's trail through the city, solve the 8 riddles left in his wake, and return the eagle before the imperial arrival. Each monument will give you a letter. These eight letters, in the right order, spell the name you seek.
 
 May Jupiter guide your steps, [TEAM]. Aventicum is counting on you.`,
-  de: `Im Morgengrauen stiess der Hüter des Legionsschatzes einen Schrei aus, der ganz Aventicum durchdrang: die Nische der Aquila war leer, das Schloss unberührt. In dieser Nacht wagte ein Dieb das Undenkbare und stahl die Aquila der Legio XXI Rapax, den heiligen Adler, Symbol der Macht Roms. In 120 Minuten betritt Kaiser Hadrian den Boden unserer Stadt.
+  de: `Im Morgengrauen stiess der Hüter des Legionsschatzes einen Schrei aus, der ganz Aventicum durchdrang: die Nische der Aquila war leer, das Schloss unberührt. In dieser Nacht wagte ein Dieb das Undenkbare und stahl die Aquila der Legio XI Claudia, den heiligen Adler, Symbol der Macht Roms. In 120 Minuten betritt Kaiser Hadrian den Boden unserer Stadt.
 
 Eure Mission, Speculatores: folgt der Spur des Diebes durch die Stadt, löst die 8 Rätsel auf seinem Weg und bringt den Adler zurück, bevor der Kaiser eintrifft. Jedes Monument gibt euch einen Buchstaben. Diese acht Buchstaben ergeben in der richtigen Reihenfolge den Namen, den ihr sucht.
 
@@ -2382,7 +2382,7 @@ const BC_TEXTS = {
     bc_overline0: "AVENTICUM · ANNO DOMINI 117",
     bc_sub0: "L'aigle est volée. Rome attend.",
     bc_overline1: "AUBE · LE TRÉSOR LÉGIONNAIRE",
-    body1: "À l'aube, le gardien du trésor légionnaire a poussé un cri qui a traversé tout Aventicum : l'alcôve de l'<em class=\"bc-em\">aquila</em> était vide, et la serrure intacte.\n\nCette nuit, un voleur a osé l'impensable : dérober l'aigle sacrée de la <em class=\"bc-em\">Legio XXI Rapax</em>, symbole de la puissance de Rome.",
+    body1: "À l'aube, le gardien du trésor légionnaire a poussé un cri qui a traversé tout Aventicum : l'alcôve de l'<em class=\"bc-em\">aquila</em> était vide, et la serrure intacte.\n\nCette nuit, un voleur a osé l'impensable : dérober l'aigle sacrée de la <em class=\"bc-em\">Legio XI Claudia</em>, symbole de la puissance de Rome.",
     bc_overline2: "ORDRE DE MISSION",
     body2: "Dans <em class=\"bc-em\">120 minutes</em>, l'Empereur Hadrien foule le sol de notre cité.\n\nTa mission, <em class=\"bc-em\">speculatores</em> : suis la piste du voleur à travers la ville, résous les 8 énigmes qu'il a semées sur son chemin, et rapporte l'aigle avant l'arrivée impériale.",
     bc_overline3: "QUE JUPITER TE GUIDE",
@@ -2408,7 +2408,7 @@ const BC_TEXTS = {
     bc_overline0: "AVENTICUM · ANNO DOMINI 117",
     bc_sub0: "The eagle is stolen. Rome awaits.",
     bc_overline1: "DAWN · THE LEGIONARY TREASURY",
-    body1: "At dawn, the keeper of the legionary treasury let out a cry that echoed across all of Aventicum: the <em class=\"bc-em\">aquila</em>'s alcove was empty, the lock untouched.\n\nTonight, a thief dared the unthinkable: stealing the sacred eagle of the <em class=\"bc-em\">Legio XXI Rapax</em>, symbol of Rome's power.",
+    body1: "At dawn, the keeper of the legionary treasury let out a cry that echoed across all of Aventicum: the <em class=\"bc-em\">aquila</em>'s alcove was empty, the lock untouched.\n\nTonight, a thief dared the unthinkable: stealing the sacred eagle of the <em class=\"bc-em\">Legio XI Claudia</em>, symbol of Rome's power.",
     bc_overline2: "MISSION ORDER",
     body2: "In <em class=\"bc-em\">120 minutes</em>, Emperor Hadrian will set foot in our city.\n\nYour mission, <em class=\"bc-em\">speculatores</em>: follow the thief's trail through the city, solve the 8 riddles left in his wake, and return the eagle before the imperial arrival.",
     bc_overline3: "MAY JUPITER GUIDE YOU",
@@ -2434,7 +2434,7 @@ const BC_TEXTS = {
     bc_overline0: "AVENTICUM · ANNO DOMINI 117",
     bc_sub0: "Der Adler ist gestohlen. Rom wartet.",
     bc_overline1: "MORGENGRAUEN · DER LEGIONSSCHATZ",
-    body1: "Im Morgengrauen stiess der Hüter des Legionsschatzes einen Schrei aus, der ganz Aventicum durchdrang: die Nische der <em class=\"bc-em\">Aquila</em> war leer, das Schloss unberührt.\n\nIn dieser Nacht wagte ein Dieb das Undenkbare und stahl den heiligen Adler der <em class=\"bc-em\">Legio XXI Rapax</em>, Symbol der Macht Roms.",
+    body1: "Im Morgengrauen stiess der Hüter des Legionsschatzes einen Schrei aus, der ganz Aventicum durchdrang: die Nische der <em class=\"bc-em\">Aquila</em> war leer, das Schloss unberührt.\n\nIn dieser Nacht wagte ein Dieb das Undenkbare und stahl den heiligen Adler der <em class=\"bc-em\">Legio XI Claudia</em>, Symbol der Macht Roms.",
     bc_overline2: "MISSIONSBEFEHL",
     body2: "In <em class=\"bc-em\">120 Minuten</em> betritt Kaiser Hadrian den Boden unserer Stadt.\n\nEure Mission, <em class=\"bc-em\">Speculatores</em>: folgt der Spur des Diebes durch die Stadt, löst die 8 Rätsel auf seinem Weg und bringt den Adler zurück.",
     bc_overline3: "MÖGE JUPITER EUCH LEITEN",
@@ -3192,19 +3192,19 @@ const TRAITOR_TEXTS = {
   fr: {
     label: 'IDENTITÉ DU TRAÎTRE',
     name: 'CAIUS VALERIUS RUFUS',
-    text: "Il s'appelait Caius Valerius Rufus. Centurion de la Legio XXI Rapax, dix-huit ans de campagnes sur le Rhin. Convaincu qu'Hadrien dissoudrait la légion pour pacifier la Bretagne, il a volé l'aquila pour le forcer à trancher. Il n'avait pas prévu un speculator comme toi.",
+    text: "Il s'appelait Caius Valerius Rufus. Centurion de la Legio XI Claudia, dix-huit ans de campagnes sur le Rhin. Convaincu qu'Hadrien dissoudrait la légion pour pacifier la Bretagne, il a volé l'aquila pour le forcer à trancher. Il n'avait pas prévu un speculator comme toi.",
     bridge: "Le traître t'a mené jusqu'ici. Huit monuments. Huit lettres. Regarde ce que tu as assemblé, soldat : le nom du peuple même dont ce sol était la capitale. C'est le code qu'il croyait que tu ne trouverais jamais."
   },
   en: {
     label: "THE TRAITOR'S IDENTITY",
     name: 'CAIUS VALERIUS RUFUS',
-    text: "His name was Caius Valerius Rufus. Centurion of Legio XXI Rapax, eighteen years of campaigns on the Rhine. Convinced Hadrian would dissolve the legion to pacify Britain, he stole the aquila to force his hand. He had not anticipated a speculator like you.",
+    text: "His name was Caius Valerius Rufus. Centurion of Legio XI Claudia, eighteen years of campaigns on the Rhine. Convinced Hadrian would dissolve the legion to pacify Britain, he stole the aquila to force his hand. He had not anticipated a speculator like you.",
     bridge: "The traitor led you here. Eight monuments. Eight letters. Look at what you have assembled, soldier: the name of the very people whose capital stood on this soil. The code he believed you would never find."
   },
   de: {
     label: 'IDENTITÄT DES VERRÄTERS',
     name: 'CAIUS VALERIUS RUFUS',
-    text: "Er hiess Caius Valerius Rufus. Zenturio der Legio XXI Rapax, achtzehn Jahre Feldzüge am Rhein. Überzeugt, dass Hadrian die Legion auflösen würde, um Britannien zu befrieden, stahl er die Aquila, um ihn zu zwingen. Er hatte keinen Speculator wie euch eingeplant.",
+    text: "Er hiess Caius Valerius Rufus. Zenturio der Legio XI Claudia, achtzehn Jahre Feldzüge am Rhein. Überzeugt, dass Hadrian die Legion auflösen würde, um Britannien zu befrieden, stahl er die Aquila, um ihn zu zwingen. Er hatte keinen Speculator wie euch eingeplant.",
     bridge: "Der Verräter hat euch hierher geführt. Acht Monumente. Acht Buchstaben. Schaut, was ihr zusammengesetzt habt, Soldaten: der Name des Volkes, dessen Hauptstadt auf diesem Boden stand. Der Code, von dem er glaubte, ihr würdet ihn nie finden."
   }
 };
@@ -3425,9 +3425,9 @@ function showVictory(){
   const finalSceneEl=document.getElementById('victoryFinalScene');
   if(finalSceneEl){
     const scenes={
-      fr:`Un son de cor roule sur les collines de la Broye quand la légion répond.<br><br>L'aquila est dans tes mains. L'aigle d'or de la Legio XXI Rapax, récupéré, protégé, sauvé de l'infamie. Au loin, sur la route du Rhin, la poussière du cortège impérial se lève. Hadrien arrive.<br><br>Le légat te fait face. Il ne dit rien. Il n'a pas besoin de parler : son regard dit tout. Tu as lu dans les pierres, compté dans les ruines, observé les façades. Tu as fait ce qu'aucun autre n'aurait accompli.<br><br><em>La Legio XXI Rapax t'accueille dans ses rangs.</em><br><br><strong>Aventicum est sauvée.</strong>`,
-      en:`A horn call rolls over the hills of the Broye as the legion answers.<br><br>The aquila is in your hands. The golden eagle of Legio XXI Rapax, recovered, protected, saved from disgrace. In the distance, on the road from the Rhine, the dust of the imperial cortege rises. Hadrian is coming.<br><br>The legate faces you. He says nothing. He does not need to speak: his gaze says everything. You read the stones, counted among the ruins, studied the facades. You did what no other could have accomplished.<br><br><em>Legio XXI Rapax welcomes you into its ranks.</em><br><br><strong>Aventicum is saved.</strong>`,
-      de:`Ein Hornruf rollt über die Hügel der Broye, als die Legion antwortet.<br><br>Die Aquila ist in euren Händen. Der goldene Adler der Legio XXI Rapax, zurückgeholt, geschützt, vor der Schande bewahrt. In der Ferne, auf der Strasse vom Rhein, erhebt sich der Staub des kaiserlichen Zuges. Hadrian kommt.<br><br>Der Legat steht euch gegenüber. Er sagt nichts. Er muss nicht sprechen: Sein Blick sagt alles. Ihr habt die Steine gelesen, in den Ruinen gezählt, die Fassaden studiert. Ihr habt getan, was kein anderer hätte vollbringen können.<br><br><em>Die Legio XXI Rapax heisst euch in ihren Reihen willkommen.</em><br><br><strong>Aventicum ist gerettet.</strong>`
+      fr:`Un son de cor roule sur les collines de la Broye quand la légion répond.<br><br>L'aquila est dans tes mains. L'aigle d'or de la Legio XI Claudia, récupéré, protégé, sauvé de l'infamie. Au loin, sur la route du Rhin, la poussière du cortège impérial se lève. Hadrien arrive.<br><br>Le légat te fait face. Il ne dit rien. Il n'a pas besoin de parler : son regard dit tout. Tu as lu dans les pierres, compté dans les ruines, observé les façades. Tu as fait ce qu'aucun autre n'aurait accompli.<br><br><em>La Legio XI Claudia t'accueille dans ses rangs.</em><br><br><strong>Aventicum est sauvée.</strong>`,
+      en:`A horn call rolls over the hills of the Broye as the legion answers.<br><br>The aquila is in your hands. The golden eagle of Legio XI Claudia, recovered, protected, saved from disgrace. In the distance, on the road from the Rhine, the dust of the imperial cortege rises. Hadrian is coming.<br><br>The legate faces you. He says nothing. He does not need to speak: his gaze says everything. You read the stones, counted among the ruins, studied the facades. You did what no other could have accomplished.<br><br><em>Legio XI Claudia welcomes you into its ranks.</em><br><br><strong>Aventicum is saved.</strong>`,
+      de:`Ein Hornruf rollt über die Hügel der Broye, als die Legion antwortet.<br><br>Die Aquila ist in euren Händen. Der goldene Adler der Legio XI Claudia, zurückgeholt, geschützt, vor der Schande bewahrt. In der Ferne, auf der Strasse vom Rhein, erhebt sich der Staub des kaiserlichen Zuges. Hadrian kommt.<br><br>Der Legat steht euch gegenüber. Er sagt nichts. Er muss nicht sprechen: Sein Blick sagt alles. Ihr habt die Steine gelesen, in den Ruinen gezählt, die Fassaden studiert. Ihr habt getan, was kein anderer hätte vollbringen können.<br><br><em>Die Legio XI Claudia heisst euch in ihren Reihen willkommen.</em><br><br><strong>Aventicum ist gerettet.</strong>`
     };
     finalSceneEl.innerHTML=scenes[currentLang]||scenes.fr;
     finalSceneEl.style.display='block';
@@ -3911,17 +3911,17 @@ function aqAskNewGame(){
 const TRAITOR_MESSAGES={
   fr:{
     1:"Rufus a gravé sur la pierre : « Ils abandonneront avant la colonne. Ils abandonnent toujours. »",
-    4:"Un message griffonné sur un parchemin trouvé dans les fondations : « Marc-Aurèle comprendrait ce que j'ai fait. Lui aussi a choisi sa légion. »",
+    4:"Un message griffonné sur un parchemin trouvé dans les fondations : « Trajan comprendrait ce que j'ai fait. Lui aussi a choisi ses légions. »",
     6:"Dernière trace de Rufus, sur un tegula brisé : « Un seul monument me sépare d'eux. La Porte de l'Est. C'est là que tout finit. »"
   },
   en:{
     1:"Rufus carved into the stone: \"They will give up before the column. They always give up.\"",
-    4:"A note scrawled on parchment found in the foundations: \"Marcus Aurelius would understand what I have done. He too chose his legion.\"",
+    4:"A note scrawled on parchment found in the foundations: \"Trajan would understand what I have done. He too chose his legions.\"",
     6:"Rufus's final trace, on a broken tegula: \"Only one monument separates me from them. The East Gate. That is where it all ends.\""
   },
   de:{
     1:"Rufus hat in den Stein gemeisselt: „Sie werden vor der Säule aufgeben. Sie geben immer auf.“",
-    4:"Eine auf Pergament gekritzelte Notiz, in den Fundamenten gefunden: „Marc Aurel würde verstehen, was ich getan habe. Auch er hat seine Legion gewählt.“",
+    4:"Eine auf Pergament gekritzelte Notiz, in den Fundamenten gefunden: „Trajan würde verstehen, was ich getan habe. Auch er hat seine Legionen gewählt.“",
     6:"Letzte Spur von Rufus, auf einer zerbrochenen Tegula: „Nur ein Monument trennt mich noch von ihnen. Das Osttor. Dort endet alles.“"
   }
 };
